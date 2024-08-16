@@ -1,12 +1,12 @@
 const testUrl = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
-const showMLBData = document.getElementById("display-data");
+const showData = document.getElementById("display-data");
 
 const fetchTodaysMLBGames = async () => {
     try {
         const response = await fetch(testUrl);
         const result = await response.json();
         const events = result.events;
-        showMLBData.innerHTML = `
+        showData.innerHTML = `
             <h1>Games Today: ${events.length}</h1>
             <h3>MLB</h3>
         `;
@@ -33,7 +33,7 @@ const fetchTodaysMLBGames = async () => {
             } else if (checkStatus === 'STATUS_FINAL') {
                 displayText += `Final: ${awayTeam.team.displayName} ${awayScore} - ${homeTeam.team.displayName} ${homeScore}`;
             }
-            showMLBData.innerHTML += `<p>${displayText}</p>`;
+            showData.innerHTML += `<p>${displayText}</p>`;
         });
     } catch (err) {
         console.error(err);
