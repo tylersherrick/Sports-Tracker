@@ -1,14 +1,15 @@
-const testUrl = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
-const showData = document.getElementById("display-data");
+const baseballURL = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
+const showMLBData = document.getElementById("mlb-data");
+const showNFLData = document.getElementById("nfl-data");
 
 const fetchTodaysMLBGames = async () => {
     try {
-        const response = await fetch(testUrl);
+        const response = await fetch(baseballURL);
         const result = await response.json();
         const events = result.events;
-        showData.innerHTML = `
-            <h1>Games Today: ${events.length}</h1>
-            <h3>MLB</h3>
+        showMLBData.innerHTML = `
+            <h1>MLB</h1>
+            <h3>Games Today: ${events.length}</h3>
         `;
         events.forEach(event => {
             const checkStatus = event.status.type.name;
@@ -33,13 +34,19 @@ const fetchTodaysMLBGames = async () => {
             } else if (checkStatus === 'STATUS_FINAL') {
                 displayText += `Final: ${awayTeam.team.displayName} ${awayScore} - ${homeTeam.team.displayName} ${homeScore}`;
             }
-            showData.innerHTML += `<p>${displayText}</p>`;
+            showMLBData.innerHTML += `<p>${displayText}</p>`;
         });
     } catch (err) {
         console.error(err);
     }
 }
 
+const fetchTodaysNFLGames = () => {
+    showNFLData.innerHTML = `<h1>NFL</h1>`
+}
+
+
 fetchTodaysMLBGames();
+fetchTodaysNFLGames();
 
 setInterval(fetchTodaysMLBGames, 6000);
