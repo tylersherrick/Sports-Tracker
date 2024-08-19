@@ -1,10 +1,11 @@
-const baseballURL = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
+const mlbURL = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
+const nflURL = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
 const showMLBData = document.getElementById("mlb-data");
 const showNFLData = document.getElementById("nfl-data");
 
 const fetchTodaysMLBGames = async () => {
     try {
-        const response = await fetch(baseballURL);
+        const response = await fetch(mlbURL);
         const result = await response.json();
         const events = result.events;
         showMLBData.innerHTML = `
@@ -41,12 +42,18 @@ const fetchTodaysMLBGames = async () => {
     }
 }
 
-const fetchTodaysNFLGames = () => {
-    showNFLData.innerHTML = `<h1>NFL</h1>`
+const fetchTodaysNFLGames = async () => {
+    const response = await fetch(nflURL);
+    const result = await response.json();
+    const events = result.events;
+    showMLBData.innerHTML = `
+        <h1>NFL</h1>
+    `;
+    console.log(events);
 }
 
 
 fetchTodaysMLBGames();
 fetchTodaysNFLGames();
 
-setInterval(fetchTodaysMLBGames, 6000);
+setInterval(fetchTodaysMLBGames, 1000);
