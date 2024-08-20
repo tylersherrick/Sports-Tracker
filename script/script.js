@@ -21,10 +21,11 @@ const fetchTodaysMLBGames = async () => {
             const awayTeam = event.competitions[0].competitors.find(c => c.homeAway === "away");
             const homeScore = homeTeam.score;
             const awayScore = awayTeam.score;
-            const scheduledDate = event.status.type.detail;
+            const scheduledStatus = event.status.type.detail;
+            const shortDetail = event.status.type.shortDetail;
             let displayText = ``;
             if (checkStatus === 'STATUS_SCHEDULED') {
-                displayText += `${event.name} - ${scheduledDate}`;
+                displayText += `${event.name} - ${scheduledStatus} - ${shortDetail}`;
             } else if (checkStatus === 'STATUS_IN_PROGRESS') {
                 displayText += `${awayTeam.team.displayName} ${awayScore} - ${homeTeam.team.displayName} ${homeScore} (${inning})`;
             } else if (checkStatus === 'STATUS_FINAL') {
@@ -93,7 +94,6 @@ const fetchTodaysNHLGames = async () => {
                 displayText += `Final: ${awayTeam.team.displayName} ${awayScore} - ${homeTeam.team.displayName} ${homeScore}`;
             } 
             showNHLData.innerHTML += `<p>${displayText}</p>`;
-            console.log(events);
         });
     } catch (err) {
         console.log(err);
