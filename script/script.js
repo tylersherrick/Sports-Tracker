@@ -1,7 +1,9 @@
 const mlbURL = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
 const nflURL = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
+const nhlURL = 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard';
 const showMLBData = document.getElementById("mlb-data");
 const showNFLData = document.getElementById("nfl-data");
+const showNHLData = document.getElementById("nhl-data");
 
 const fetchTodaysMLBGames = async () => {
     try {
@@ -19,17 +21,10 @@ const fetchTodaysMLBGames = async () => {
             const awayTeam = event.competitions[0].competitors.find(c => c.homeAway === "away");
             const homeScore = homeTeam.score;
             const awayScore = awayTeam.score;
+            const scheduledDate = event.status.type.detail;
             let displayText = ``;
             if (checkStatus === 'STATUS_SCHEDULED') {
-                const gameDate = new Date(event.date);
-                const options = {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true,
-                    timeZoneName: 'short' 
-                };
-                const localTime = new Intl.DateTimeFormat('en-US', options).format(gameDate);
-                displayText += `${localTime} - ${event.name}`;
+                displayText += `${event.name} - ${scheduledDate}`;
             } else if (checkStatus === 'STATUS_IN_PROGRESS') {
                 displayText += `${awayTeam.team.displayName} ${awayScore} - ${homeTeam.team.displayName} ${homeScore} (${inning})`;
             } else if (checkStatus === 'STATUS_FINAL') {
@@ -42,11 +37,6 @@ const fetchTodaysMLBGames = async () => {
     }
 }
 
-const getTodaysDateUTC = () => {
-    const today = new Date();
-    return today.toISOString().split('T')[0]; // Returns the date in YYYY-MM-DD format, in UTC
-};
-
 const fetchTodaysNFLGames = async () => {
     try {
         const response = await fetch(nflURL);
@@ -58,37 +48,62 @@ const fetchTodaysNFLGames = async () => {
         `;
         events.forEach(event => {
             const checkStatus = event.status.type.name;
-            const quarter = event.status.type.detail;
             const homeTeam = event.competitions[0].competitors.find(c => c.homeAway === "home");
             const awayTeam = event.competitions[0].competitors.find(c => c.homeAway === "away");
             const homeScore = homeTeam.score;
             const awayScore = awayTeam.score;
+            const scheduledDate = event.status.type.detail;
             let displayText = ``;
             if (checkStatus === 'STATUS_SCHEDULED') {
-                const gameDate = new Date(event.date);
-                const options = {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true,
-                    timeZoneName: 'short' 
-                };
-                const localTime = new Intl.DateTimeFormat('en-US', options).format(gameDate);
-                displayText += `${localTime} - ${event.name}`;
+                displayText += `${event.name} - ${scheduledDate}`;
             } else if (checkStatus === 'STATUS_IN_PROGRESS') {
-                displayText += `${awayTeam.team.displayName} ${awayScore} - ${homeTeam.team.displayName} ${homeScore} (${quarter})`;
+                displayText += `${awayTeam.team.displayName} ${awayScore} - ${homeTeam.team.displayName} ${homeScore}`;
             } else if (checkStatus === 'STATUS_FINAL') {
                 displayText += `Final: ${awayTeam.team.displayName} ${awayScore} - ${homeTeam.team.displayName} ${homeScore}`;
-            }
+            } 
             showNFLData.innerHTML += `<p>${displayText}</p>`;
         });
-        console.log(events);
     } catch (err) {
         console.error(err);
     }
 }
 
+const fetchTodaysNHLGames = async () => {
+    try {
+        const response = await fetch(nhlURL);
+        const result = await response.json();
+        const events = result.events;
+        showNHLData.innerHTML = `
+            <h1>NHL</h1>
+            <h3>Games Today: ${events.length}</h3>
+        `;
+        events.forEach(event => {
+            const checkStatus = event.status.type.name;
+            const homeTeam = event.competitions[0].competitors.find(c => c.homeAway === "home");
+            const awayTeam = event.competitions[0].competitors.find(c => c.homeAway === "away");
+            const homeScore = homeTeam.score;
+            const awayScore = awayTeam.score;
+            const scheduledDate = event.status.type.detail;
+            let displayText = ``;
+            if (checkStatus === 'STATUS_SCHEDULED') {
+                displayText += `${event.name} - ${scheduledDate}`;
+            } else if (checkStatus === 'STATUS_IN_PROGRESS') {
+                displayText += `${awayTeam.team.displayName} ${awayScore} - ${homeTeam.team.displayName} ${homeScore}`;
+            } else if (checkStatus === 'STATUS_FINAL') {
+                displayText += `Final: ${awayTeam.team.displayName} ${awayScore} - ${homeTeam.team.displayName} ${homeScore}`;
+            } 
+            showNHLData.innerHTML += `<p>${displayText}</p>`;
+            console.log(events);
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 fetchTodaysMLBGames();
 fetchTodaysNFLGames();
+fetchTodaysNHLGames();
 
-setInterval(fetchTodaysMLBGames, 6000);
-setInterval(fetchTodaysNFLGames, 6000);
+setInterval(fetchTodaysMLBGames, 1000);
+setInterval(fetchTodaysNFLGames, 1000);
+setInterval(fetchTodaysNHLGames, 1000);
