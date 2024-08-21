@@ -1,5 +1,7 @@
 const sportsDiv = document.getElementById("sports-data");
-
+const mlbData = document.getElementById("mlb-data");
+const nflData = document.getElementById("nfl-data");
+const nhlData = document.getElementById("nhl-data");
 const sportsData = {
     MLB: [],
     NFL: [],
@@ -29,10 +31,8 @@ const fetchAllSportsData = async () => {
 };
 
 fetchAllSportsData().then(() => {
-    sportsDiv.innerHTML += `
-        <h1>Active Sporting Events</h1>
-        <h3 id="show-all-mlb">MLB</h3>
-    `;
+    sportsDiv.innerHTML += `<h1>Active Sporting Events</h1>`;
+    mlbData.innerHTML += `<h3>MLB</h3>`
     const activeMLBGames = sportsData.MLB.filter(event => 
         event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED" 
     ).slice(0, 3);
@@ -44,17 +44,17 @@ fetchAllSportsData().then(() => {
         const inning = event.status.type.detail;
         const gameStatus = event.status.type.shortDetail;
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            sportsDiv.innerHTML += `<p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>`;
+            mlbData.innerHTML += `<p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>`;
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            sportsDiv.innerHTML += `<p>${awayTeam} at ${homeTeam} - ${inning} for ${gameStatus}`;
+            mlbData.innerHTML += `<p>${awayTeam} at ${homeTeam} - ${inning} for ${gameStatus}`;
         }
     });
     if(activeMLBGames.length == 0) {
-        sportsDiv.innerHTML += `<p>There are no games active or scheduled today</p>`;
+        mlbData.innerHTML += `<p>There are no games active or scheduled today</p>`;
     }
 
-    sportsDiv.innerHTML += `<h3>NFL</h3>`;
+    nflData.innerHTML += `<h3>NFL</h3>`;
     const activeNFLGames = sportsData.NFL.filter(event => 
         event.status.type.name === "STATUS_IN_PROGRESS"
     ).slice(0, 3);
@@ -64,15 +64,15 @@ fetchAllSportsData().then(() => {
         const awayScore = event.competitions[0].competitors[1].score;
         const homeScore = event.competitions[0].competitors[0].score;
         const inning = event.status.type.detail;
-        sportsDiv.innerHTML += `
+        nflData.innerHTML += `
             <p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>
         `;
     });
     if(activeNFLGames.length == 0) {
-        sportsDiv.innerHTML += `<p>There are no games active or scheduled today</p>`;
+        nflData.innerHTML += `<p>There are no games active or scheduled today</p>`;
     }
 
-    sportsDiv.innerHTML += `<h3>NHL</h3>`;
+    nhlData.innerHTML += `<h3>NHL</h3>`;
     const activeNHLGames = sportsData.NHL.filter(event => 
         event.status.type.name === "STATUS_IN_PROGRESS"
     ).slice(0, 3);
@@ -82,12 +82,12 @@ fetchAllSportsData().then(() => {
         const awayScore = event.competitions[0].competitors[1].score;
         const homeScore = event.competitions[0].competitors[0].score;
         const inning = event.status.type.detail;
-        sportsDiv.innerHTML += `
+        nhlData.innerHTML += `
             <p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>
         `;
     });
     if(activeNHLGames.length == 0) {
-        sportsDiv.innerHTML += `<p>There are no games active or scheduled today</p>`;
+        nhlData.innerHTML += `<p>There are no games active or scheduled today</p>`;
     }
 });
 
