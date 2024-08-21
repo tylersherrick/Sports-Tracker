@@ -42,9 +42,13 @@ fetchAllSportsData().then(() => {
         const awayScore = event.competitions[0].competitors[1].score;
         const homeScore = event.competitions[0].competitors[0].score;
         const inning = event.status.type.detail;
-        sportsDiv.innerHTML += `
-            <p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>
-        `;
+        const gameStatus = event.status.type.shortDetail;
+        if(event.status.type.name === "STATUS_IN_PROGRESS") {
+            sportsDiv.innerHTML += `<p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>`;
+        }
+        if(event.status.type.name === "STATUS_SCHEDULED") {
+            sportsDiv.innerHTML += `<p>${awayTeam} at ${homeTeam} - ${inning} for ${gameStatus}`;
+        }
     });
     if(activeMLBGames.length == 0) {
         sportsDiv.innerHTML += `<p>There are no games active or scheduled today</p>`;
@@ -86,5 +90,5 @@ fetchAllSportsData().then(() => {
         sportsDiv.innerHTML += `<p>There are no games active or scheduled today</p>`;
     }
 });
-setInterval(fetchAllSportsData, 6000);
 
+setInterval(fetchAllSportsData, 6000);
