@@ -29,9 +29,12 @@ const fetchAllSportsData = async () => {
 };
 
 fetchAllSportsData().then(() => {
-    sportsDiv.innerHTML += `<h3>MLB</h3>`;
+    sportsDiv.innerHTML += `
+        <h1>Active Sporting Events</h1>
+        <h3 id="show-all-mlb">MLB</h3>
+    `;
     const activeMLBGames = sportsData.MLB.filter(event => 
-        event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED"
+        event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED" 
     ).slice(0, 3);
     activeMLBGames.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
@@ -43,16 +46,45 @@ fetchAllSportsData().then(() => {
             <p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>
         `;
     });
-    console.log(sportsData.MLB)
+    if(activeMLBGames.length == 0) {
+        sportsDiv.innerHTML += `<p>There are no games active or scheduled today</p>`;
+    }
 
     sportsDiv.innerHTML += `<h3>NFL</h3>`;
-    sportsData.NFL.forEach(event => {
-        sportsDiv.innerHTML += `<p>${event.name}</p>`;
+    const activeNFLGames = sportsData.NFL.filter(event => 
+        event.status.type.name === "STATUS_IN_PROGRESS"
+    ).slice(0, 3);
+    activeNFLGames.forEach(event => {
+        const awayTeam = event.competitions[0].competitors[1].team.displayName;
+        const homeTeam = event.competitions[0].competitors[0].team.displayName;
+        const awayScore = event.competitions[0].competitors[1].score;
+        const homeScore = event.competitions[0].competitors[0].score;
+        const inning = event.status.type.detail;
+        sportsDiv.innerHTML += `
+            <p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>
+        `;
     });
+    if(activeNFLGames.length == 0) {
+        sportsDiv.innerHTML += `<p>There are no games active or scheduled today</p>`;
+    }
 
     sportsDiv.innerHTML += `<h3>NHL</h3>`;
-    sportsData.NHL.forEach(event => {
-        sportsDiv.innerHTML += `<p>${event.name}</p>`;
+    const activeNHLGames = sportsData.NHL.filter(event => 
+        event.status.type.name === "STATUS_IN_PROGRESS"
+    ).slice(0, 3);
+    activeNHLGames.forEach(event => {
+        const awayTeam = event.competitions[0].competitors[1].team.displayName;
+        const homeTeam = event.competitions[0].competitors[0].team.displayName;
+        const awayScore = event.competitions[0].competitors[1].score;
+        const homeScore = event.competitions[0].competitors[0].score;
+        const inning = event.status.type.detail;
+        sportsDiv.innerHTML += `
+            <p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>
+        `;
     });
+    if(activeNHLGames.length == 0) {
+        sportsDiv.innerHTML += `<p>There are no games active or scheduled today</p>`;
+    }
 });
+setInterval(fetchAllSportsData, 6000);
 
