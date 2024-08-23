@@ -57,7 +57,7 @@ const displayMainView = () => {
 
     nflData.innerHTML = `<h3 id="show-all-nfl">NFL</h3>`;
     const activeNFLGames = sportsData.NFL.filter(event => 
-        event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED"
+        event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED" || event.status.type.name === "STATUS_HALFTIME"
     ).slice(0, 3);
     activeNFLGames.forEach(event => {
         const gameDate = event.date;
@@ -70,12 +70,12 @@ const displayMainView = () => {
         const awayScore = event.competitions[0].competitors[1].score;
         const homeScore = event.competitions[0].competitors[0].score;
         const inning = event.status.type.detail;
-        if(today === adjustedDate && event.status.type.name === "STATUS_SCHEDULED") {
+        if(event.status.type.name === "STATUS_SCHEDULED") {
             nflData.innerHTML += `
                 <p>${awayTeam} at ${homeTeam} - ${inning}</p>
             `;
         }
-        if(today === adjustedDate && event.status.type.name === "STATUS_IN_PROGRESS") {
+        if(event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_HALFTIME") {
             nflData.innerHTML += `
                 <p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>
             `;
@@ -147,7 +147,10 @@ const displayNFLSection = () => {
         const outs = event.competitions[0].outsText;
         const gameStatus = event.status.type.shortDetail;
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            nflData.innerHTML += `<p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning} - ${outs}</p>`;
+            nflData.innerHTML += `<p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>`;
+        }
+        if(event.status.type.name === "STATUS_HALFTIME") {
+            nflData.innerHTML += `<p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>`;
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
             nflData.innerHTML += `<p>${awayTeam} at ${homeTeam} - ${inning} ${gameStatus}</p>`;
