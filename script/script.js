@@ -153,7 +153,7 @@ const displayNFLSection = () => {
             nflData.innerHTML += `<p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>`;
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            nflData.innerHTML += `<p>${awayTeam} at ${homeTeam} - ${inning} ${gameStatus}</p>`;
+            nflData.innerHTML += `<p>${awayTeam} at ${homeTeam} - ${inning}</p>`;
         }
         if(event.status.type.name === "STATUS_FINAL") {
             nflData.innerHTML += `<p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning}</p>`;
