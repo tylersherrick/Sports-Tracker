@@ -8,7 +8,7 @@ const sportsData = {
     NFL: [],
     NHL: []
 };
-
+let isViewingAllMLB = false;
 const fetchAllSportsData = async () => {
     try {
         const mlbURL = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
@@ -26,6 +26,9 @@ const fetchAllSportsData = async () => {
         sportsData.NFL = nflData.events;
         sportsData.NHL = nhlData.events;
         console.log('All sports data fetched and stored:', sportsData);
+        if(!isViewingAllMLB) {
+            MLB();
+        }
     } catch (error) {
         console.error('Error fetching sports data:', error);
     }
@@ -37,7 +40,20 @@ const MLB = () => {
         const shortGamesList = games.map(event => {
             const awayTeam = event.competitions[0].competitors[1].team.displayName;
             const homeTeam = event.competitions[0].competitors[0].team.displayName;
-            return `<p>${awayTeam} at ${homeTeam}</p>`;
+            const awayScore = event.competitions[0].competitors[1].score;
+            const homeScore = event.competitions[0].competitors[0].score;
+            const inning = event.status.type.detail;
+            const gameStatus = event.status.type.shortDetail;
+            const outs = event.competitions[0].outsText;
+            if(event.status.type.name === "STATUS_IN_PROGRESS") {
+                return `<p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning} - ${outs}</p>`;
+            }
+            if(event.status.type.name === "STATUS_SCHEDULED") {
+                return `<p>${awayTeam} at ${homeTeam} - ${inning} ${gameStatus}</p>`;
+            }
+            if(shortGamesList.length === 0) {
+                return `<p>There are no active or scheduled games today</p>`;
+            }
         }).slice(0, 3).join('');
         
         sportsDiv.innerHTML = `<h1>Todays Sporting Events</h1>`;
@@ -51,7 +67,20 @@ const MLB = () => {
         const longGamesList = games.map(event => {
             const awayTeam = event.competitions[0].competitors[1].team.displayName;
             const homeTeam = event.competitions[0].competitors[0].team.displayName;
-            return `<p>${awayTeam} at ${homeTeam}</p>`;
+            const awayScore = event.competitions[0].competitors[1].score;
+            const homeScore = event.competitions[0].competitors[0].score;
+            const inning = event.status.type.detail;
+            const gameStatus = event.status.type.shortDetail;
+            const outs = event.competitions[0].outsText;
+            if(event.status.type.name === "STATUS_IN_PROGRESS") {
+                return `<p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${inning} - ${outs}</p>`;
+            }
+            if(event.status.type.name === "STATUS_SCHEDULED") {
+                return `<p>${awayTeam} at ${homeTeam} - ${inning} ${gameStatus}</p>`;
+            }
+            if(shortGamesList.length === 0) {
+                return `<p>There are no active or scheduled games today</p>`;
+            }
         }).join('');
         
         sportsDiv.innerHTML = '';
@@ -61,6 +90,7 @@ const MLB = () => {
             ${longGamesList}
         `;
         document.getElementById("back-to-main").addEventListener("click", showLessMLB);
+        isViewingAllMLB = true;
     }
     showLessMLB();
 }
@@ -197,6 +227,5 @@ const MLB = () => {
 // }
 
 // fetchAllSportsData().then(displayMainView);
-fetchAllSportsData().then(MLB);
-setInterval(fetchAllSportsData, 6000);
+fetchAllSportsData().then(() => setInterval(fetchAllSportsData, 5000));
 
