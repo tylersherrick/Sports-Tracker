@@ -163,4 +163,5 @@ const displayNFLSection = () => {
 }
 
 fetchAllSportsData().then(displayMainView);
-setInterval(fetchAllSportsData, 6000);
+setInterval(fetchAllSportsData, 1000);
+
