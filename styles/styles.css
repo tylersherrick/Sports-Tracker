@@ -1,3 +1,14 @@
+@media (max-width: 600px) {
+    .game-row {
+        width: 80%;
+    }
+    
+    .base-map {
+        width: 20px; /* Adjust base-map size for smaller screens if needed */
+    }
+}
+
+
 .base-map {
     display: grid;
     grid-template-columns: repeat(3, 10px);
