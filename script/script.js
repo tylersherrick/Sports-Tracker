@@ -24,8 +24,11 @@ const updateViews = () => {
 };
 
 const showLessMLB = () => {
-    sportsDiv.innerHTML = `<h1>Todays Sporting Events</h1>`;
-    mlbData.innerHTML = `<h3 id="show-all-test">MLB</h3>`;
+    sportsDiv.innerHTML = `
+        <h1>Todays Sporting Events</h1>
+        <h3 id="show-all-mlb">MLB</h3>
+    `;
+    mlbData.innerHTML = ``;
     const limitedGames = sportsData.MLB.slice(0, 3).filter(event => 
         event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED"
     );
@@ -48,10 +51,12 @@ const showLessMLB = () => {
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            <b>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore}</b> - ${inning}
+                            ${inning} </br></br>
+                            ${awayTeam} -  ${awayScore} </br>
+                            ${homeTeam} -  ${homeScore}
                         </p>
                         <p class="game-details">
-                            Count: ${balls}-${strikes} - ${outs}
+                            ${balls}-${strikes} - ${outs}
                         </p>
                     </div>
                     <div class="base-map">
@@ -77,7 +82,7 @@ const showLessMLB = () => {
             `;
         }
     });
-    document.getElementById("show-all-test").addEventListener("click", showAllMLB);
+    document.getElementById("show-all-mlb").addEventListener("click", showAllMLB);
     currentView = 'showLess';
 };
 
@@ -100,16 +105,18 @@ const showAllMLB = () => {
         const isThird = situation ? situation.onThird : 'N/A';
         if (event.status.type.name === "STATUS_IN_PROGRESS") {
             return `
-                <div class="game-row" style="display: flex; align-items: center;">
+                <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            <b>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore}</b> - ${inning}
+                            ${inning} </br></br>
+                            ${awayTeam} -  ${awayScore} </br>
+                            ${homeTeam} -  ${homeScore}
                         </p>
                         <p class="game-details">
-                            Count: ${balls}-${strikes} - ${outs}
+                            ${balls}-${strikes} - ${outs}
                         </p>
                     </div>
-                    <div class="base-map" style="margin-left: 10px;">
+                    <div class="base-map">
                         <div class="base first-base ${isFirst ? 'occupied' : ''}"></div>
                         <div class="base second-base ${isSecond ? 'occupied' : ''}"></div>
                         <div class="base third-base ${isThird ? 'occupied' : ''}"></div>

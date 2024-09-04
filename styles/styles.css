@@ -1,14 +1,3 @@
-@media (max-width: 600px) {
-    .game-row {
-        width: 80%;
-    }
-    
-    .base-map {
-        width: 20px; /* Adjust base-map size for smaller screens if needed */
-    }
-}
-
-
 .base-map {
     display: grid;
     grid-template-columns: repeat(3, 10px);
@@ -46,15 +35,23 @@
     background-color: lightblue;
 }
 
+#mlb-data {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 10px;
+    margin-left: 2%;
+}
+
 .game-row {
     display: flex;
     align-items: center;
     border: 1px solid black;
     padding: 1%;
-    margin: 2%;
-    width: 48%;
+    margin: 0; 
+    width: calc(30% - 10px); 
     box-sizing: border-box; 
 }
+
 
 .game-info {
     display: flex;
@@ -81,5 +78,14 @@
 
 .base-map {
     margin-left: auto; 
-    margin-top: -3%;
+    margin-top: 5%;
+}
+
+@media (max-width: 600px) {
+    .game-row {
+        width: calc(100% - 10px); 
+    }
+    .base-map {
+        margin-right: 1%;
+    }
 }
