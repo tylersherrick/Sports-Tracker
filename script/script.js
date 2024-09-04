@@ -1,5 +1,6 @@
 const sportsDiv = document.getElementById("sports-data");
 const mlbData = document.getElementById("mlb-data");
+const nflName = document.getElementById("nfl-name")
 const nflData = document.getElementById("nfl-data");
 const sportsData = { MLB: [], NFL: [], NHL: [] };
 let currentView = 'showLess';
@@ -34,10 +35,8 @@ const updateViews = () => {
 };
 
 const showLessMLB = () => {
-    sportsDiv.innerHTML = `
-        <h1>Todays Sporting Events</h1>
-        <h3 id="show-all-mlb">MLB</h3>
-    `;
+    sportsDiv.innerHTML = `<h1>Todays Sporting Events</h1>`;
+    sportsDiv.innerHTML += `<h3 id="show-all-mlb">MLB</h3>`;
     mlbData.innerHTML = ``;
     const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
@@ -85,10 +84,12 @@ const showLessMLB = () => {
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${awayTeam} at ${homeTeam}
+                        ${inning} ${gameStatus} </br></br>
+                        ${awayTeam} </br>
+                        ${homeTeam}
                         </p>
                         <p class="game-details">
-                            ${inning} ${gameStatus}
+                            
                         </p>
                     </div>
                 </div>
@@ -152,10 +153,12 @@ const showAllMLB = () => {
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${awayTeam} at ${homeTeam}
+                        ${inning} ${gameStatus} </br></br>
+                        ${awayTeam} </br>
+                        ${homeTeam}
                         </p>
                         <p class="game-details">
-                            ${inning} ${gameStatus}
+                            
                         </p>
                     </div>
                 </div>
@@ -180,27 +183,40 @@ const showAllMLB = () => {
     },
     document.getElementById("back-to-main").addEventListener("click", showLessMLB));
     currentView = 'showAll';
+    nflName.innerHTML = '';
 };
 
 const showLessNFL = () => {
-    nflData.innerHTML = '<h3>NFL</h3>';
+    nflData.innerHTML = '';
+    nflName.innerHTML = '<h3>NFL</h3>';
     if (!sportsData.NFL || sportsData.NFL.length === 0) {
         nflData.innerHTML += '<h4>No NFL games available.</h4>';
     }
-    smallNFLList = sportsData.NFL.slice(0, 3);
+    const inProgress = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const yetToStart = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const smallNFLList = [...inProgress, ...yetToStart].slice(0, 3).filter(event => 
+        event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED"
+    );
     smallNFLList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
-
-        nflData.innerHTML += `
-            <div class="game-row">
-                <div class="game-info">
-                    <p class="game-details">
-                        ${awayTeam} at ${homeTeam}
-                    </p>
+        const gameStatus = event.status.type.shortDetail;
+        if (event.status.type.name === "STATUS_SCHEDULED") {
+            nflData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            Scheduled ${gameStatus} </br></br>
+                            ${awayTeam} </br>
+                            ${homeTeam}
+                        </p>
+                        <p class="game-details">
+                            
+                        </p>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
     });
 };
 

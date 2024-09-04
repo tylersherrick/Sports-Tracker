@@ -35,7 +35,7 @@
     background-color: lightblue;
 }
 
-#mlb-data {
+#mlb-data, #nfl-data {
     display: flex;
     flex-wrap: wrap; 
     gap: 10px;
