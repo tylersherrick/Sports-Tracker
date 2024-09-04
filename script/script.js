@@ -7,8 +7,8 @@ let currentView = 'showLess';
 
 const fetchGamesData = async () => {
     try {
-        const mlbURL = 'http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
-        const nflURL = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
+        const mlbURL = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
+        const nflURL = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
         const [mlbResponse, nflResponse] = await Promise.all([
             fetch(mlbURL),
             fetch(nflURL)
