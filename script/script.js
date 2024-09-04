@@ -29,7 +29,9 @@ const showLessMLB = () => {
         <h3 id="show-all-mlb">MLB</h3>
     `;
     mlbData.innerHTML = ``;
-    const limitedGames = sportsData.MLB.slice(0, 3).filter(event => 
+    const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const limitedGames = [...inProgress, ...yetToStart].slice(0, 3).filter(event => 
         event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED"
     );
     limitedGames.forEach(event => {
@@ -87,9 +89,15 @@ const showLessMLB = () => {
 };
 
 const showAllMLB = () => {
-    sportsDiv.innerHTML = `<h1>All MLB Games Today</h1>`;
+    sportsDiv.innerHTML = `
+        <h1>All MLB Games Today</h1>
+        <button id="back-to-main">Back</button>
+    `;
     mlbData.innerHTML = '';
-    const longGamesList = sportsData.MLB.map(event => {
+    const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const alreadyFinal = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_FINAL");
+    const longGamesList = [...inProgress, ...yetToStart, ...alreadyFinal].forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
         const awayScore = event.competitions[0].competitors[1].score;
@@ -103,8 +111,8 @@ const showAllMLB = () => {
         const isFirst = situation ? situation.onFirst : 'N/A';
         const isSecond = situation ? situation.onSecond : 'N/A';
         const isThird = situation ? situation.onThird : 'N/A';
-        if (event.status.type.name === "STATUS_IN_PROGRESS") {
-            return `
+        if(event.status.type.name === "STATUS_IN_PROGRESS") {
+            mlbData.innerHTML += `
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
@@ -125,22 +133,37 @@ const showAllMLB = () => {
             `;
         }
         if (event.status.type.name === "STATUS_SCHEDULED") {
-            return `<p>${awayTeam} at ${homeTeam}</p> 
-                    <p>${inning} ${gameStatus}</p>`;
+            mlbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${awayTeam} at ${homeTeam}
+                        </p>
+                        <p class="game-details">
+                            ${inning} ${gameStatus}
+                        </p>
+                    </div>
+                </div>
+            `;
         }
         if (event.status.type.name === "STATUS_FINAL") {
-            return `<p>${awayTeam} ${awayScore} at ${homeTeam} ${homeScore} - ${gameStatus}</p>`;
+            mlbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${inning} </br></br>
+                            ${awayTeam} -  ${awayScore} </br>
+                            ${homeTeam} -  ${homeScore}
+                        </p>
+                        <p class="game-details">
+                            
+                        </p>
+                    </div>
+                </div>
+            `;
         }
-    }).join('');
-    if (longGamesList.length === 0) {
-        mlbData.innerHTML = `<p>There are no active or scheduled games today</p>`;
-    } else {
-        mlbData.innerHTML = `
-            <button id="back-to-main">Back</button>
-            ${longGamesList}
-        `;
-    }
-    document.getElementById("back-to-main").addEventListener("click", showLessMLB);
+    },
+    document.getElementById("back-to-main").addEventListener("click", showLessMLB));
     currentView = 'showAll';
 };
 
