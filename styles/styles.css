@@ -1,2 +1,64 @@
+.base-map {
+    display: grid;
+    grid-template-columns: repeat(3, 10px);
+    grid-template-rows: repeat(3, 10px);
+    justify-items: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    margin-top: -2%;
+}
 
+.base {
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border: 1px solid black;
+}
 
+.first-base {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+.second-base {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.third-base {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.occupied {
+    background-color: lightblue;
+}
+
+.game-row {
+    display: flex;
+    align-items: center;
+}
+
+.game-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.game-details {
+    margin: 0;
+    margin-bottom: 5%; /* Adjusted spacing between lines here */
+}
+
+#back-to-main {
+    margin-bottom: 2%;
+}
+
+#mlb-data {
+    margin-left: 2%;
+}
+
+#show-all-test {
+    margin-left: -2%;
+}
