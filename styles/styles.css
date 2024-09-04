@@ -7,7 +7,6 @@
     width: 30px;
     height: 30px;
     margin-left: 10px;
-    margin-top: -2%;
 }
 
 .base {
@@ -39,16 +38,22 @@
 .game-row {
     display: flex;
     align-items: center;
+    border: 1px solid black;
+    padding: 1%;
+    margin: 2%;
+    width: 48%;
+    box-sizing: border-box; 
 }
 
 .game-info {
     display: flex;
     flex-direction: column;
+    flex: 1; 
 }
 
 .game-details {
     margin: 0;
-    margin-bottom: 5%; /* Adjusted spacing between lines here */
+    margin-bottom: 2%; 
 }
 
 #back-to-main {
@@ -61,4 +66,9 @@
 
 #show-all-test {
     margin-left: -2%;
+}
+
+.base-map {
+    margin-left: auto; 
+    margin-top: -3%;
 }
