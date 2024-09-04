@@ -1,23 +1,33 @@
 const sportsDiv = document.getElementById("sports-data");
 const mlbData = document.getElementById("mlb-data");
+const nflData = document.getElementById("nfl-data");
 const sportsData = { MLB: [], NFL: [], NHL: [] };
 let currentView = 'showLess';
 
 const fetchGamesData = async () => {
     try {
         const mlbURL = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
-        const [mlbResponse] = await Promise.all([fetch(mlbURL)]);
+        const nflURL = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
+        const [mlbResponse, nflResponse] = await Promise.all([
+            fetch(mlbURL),
+            fetch(nflURL)
+        ]);
         const mlbData = await mlbResponse.json();
+        const nflData = await nflResponse.json();
         sportsData.MLB = mlbData.events;
+        sportsData.NFL = nflData.events;
+
         updateViews();
     } catch (error) {
         console.error('Error fetching sports data:', error);
     }
 };
 
+
 const updateViews = () => {
     if (currentView === 'showLess') {
         showLessMLB();
+        showLessNFL();
     } else if (currentView === 'showAll') {
         showAllMLB();
     }
@@ -34,6 +44,7 @@ const showLessMLB = () => {
     const limitedGames = [...inProgress, ...yetToStart].slice(0, 3).filter(event => 
         event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED"
     );
+    const gameTotal = limitedGames.length;
     limitedGames.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
@@ -84,6 +95,9 @@ const showLessMLB = () => {
             `;
         }
     });
+    if (limitedGames.length === 0) {
+        mlbData.innerHTML += `<h4>There are no active games.</h4>`;
+    }
     document.getElementById("show-all-mlb").addEventListener("click", showAllMLB);
     currentView = 'showLess';
 };
@@ -94,6 +108,7 @@ const showAllMLB = () => {
         <button id="back-to-main">Back</button>
     `;
     mlbData.innerHTML = '';
+    nflData.innerHTML = '';
     const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const alreadyFinal = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_FINAL");
@@ -166,5 +181,28 @@ const showAllMLB = () => {
     document.getElementById("back-to-main").addEventListener("click", showLessMLB));
     currentView = 'showAll';
 };
+
+const showLessNFL = () => {
+    nflData.innerHTML = '<h3>NFL</h3>';
+    if (!sportsData.NFL || sportsData.NFL.length === 0) {
+        nflData.innerHTML += '<h4>No NFL games available.</h4>';
+    }
+    smallNFLList = sportsData.NFL.slice(0, 3);
+    smallNFLList.forEach(event => {
+        const awayTeam = event.competitions[0].competitors[1].team.displayName;
+        const homeTeam = event.competitions[0].competitors[0].team.displayName;
+
+        nflData.innerHTML += `
+            <div class="game-row">
+                <div class="game-info">
+                    <p class="game-details">
+                        ${awayTeam} at ${homeTeam}
+                    </p>
+                </div>
+            </div>
+        `;
+    });
+};
+
 
 fetchGamesData().then(() => setInterval(fetchGamesData, 1000));
