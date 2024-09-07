@@ -192,9 +192,9 @@ const showLessNFL = () => {
     if (!sportsData.NFL || sportsData.NFL.length === 0) {
         nflData.innerHTML += '<h4>No NFL games available.</h4>';
     }
-    const inProgress = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
-    const yetToStart = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
-    const smallNFLList = [...inProgress, ...yetToStart].slice(0, 3).filter(event => 
+    const nflInProgress = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const nflScheduled = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const smallNFLList = [...nflInProgress, ...nflScheduled].slice(0, 3).filter(event => 
         event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED"
     );
     smallNFLList.forEach(event => {
@@ -204,7 +204,6 @@ const showLessNFL = () => {
         const awayScore = event.competitions[0].competitors[1].score;
         const homeScore = event.competitions[0].competitors[0].score;
         const time = event.status.type.detail;
-        const fieldMarker = event.competitions[0].situation.downDistanceText;
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
             nflData.innerHTML += `
                 <div class="game-row">
@@ -215,28 +214,27 @@ const showLessNFL = () => {
                             ${homeTeam} -  ${homeScore}
                         </p>
                         <p class="game-details">
-                            ${fieldMarker}
                         </p>
                     </div>
                 </div>
             `;
         }
-        if (event.status.type.name === "STATUS_SCHEDULED") {
+        if(event.status.type.name === "STATUS_SCHEDULED") {
             nflData.innerHTML += `
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            Scheduled ${gameStatus} </br></br>
-                            ${awayTeam} </br>
-                            ${homeTeam}
+                            ${time} </br></br>
+                            ${awayTeam} -  ${awayScore} </br>
+                            ${homeTeam} -  ${homeScore}
                         </p>
                         <p class="game-details">
-                            
                         </p>
                     </div>
                 </div>
             `;
         }
+        
     });
     console.log(smallNFLList);
 };
