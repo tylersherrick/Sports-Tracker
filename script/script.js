@@ -2,21 +2,27 @@ const sportsDiv = document.getElementById("sports-data");
 const mlbData = document.getElementById("mlb-data");
 const nflName = document.getElementById("nfl-name")
 const nflData = document.getElementById("nfl-data");
-const sportsData = { MLB: [], NFL: [], NHL: [] };
+const cfbName = document.getElementById("cfb-name")
+const cfbData = document.getElementById("cfb-data");
+const sportsData = { MLB: [], NFL: [], CFB: [] };
 let currentView = 'showLess';
 
 const fetchGamesData = async () => {
     try {
-        const mlbURL = 'http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
-        const nflURL = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
-        const [mlbResponse, nflResponse] = await Promise.all([
+        const mlbURL = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
+        const nflURL = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
+        const cfbURL = 'https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard';
+        const [mlbResponse, nflResponse, cfbResponse] = await Promise.all([
             fetch(mlbURL),
-            fetch(nflURL)
+            fetch(nflURL),
+            fetch(cfbURL)
         ]);
         const mlbData = await mlbResponse.json();
         const nflData = await nflResponse.json();
+        const cfbData = await cfbResponse.json();
         sportsData.MLB = mlbData.events;
         sportsData.NFL = nflData.events;
+        sportsData.CFB = cfbData.events;
 
         updateViews();
     } catch (error) {
@@ -29,6 +35,7 @@ const updateViews = () => {
     if (currentView === 'showLess') {
         showLessMLB();
         showLessNFL();
+        showLessCFB();
     } else if (currentView === 'showAll') {
         showAllMLB();
     }
@@ -225,8 +232,8 @@ const showLessNFL = () => {
                     <div class="game-info">
                         <p class="game-details">
                             ${time} </br></br>
-                            ${awayTeam} -  ${awayScore} </br>
-                            ${homeTeam} -  ${homeScore}
+                            ${awayTeam} </br>
+                            ${homeTeam}
                         </p>
                         <p class="game-details">
                         </p>
@@ -236,8 +243,56 @@ const showLessNFL = () => {
         }
         
     });
-    console.log(smallNFLList);
 };
+
+const showLessCFB = () => {
+    cfbData.innerHTML = '';
+    cfbName.innerHTML = `<h3>CFB</h3>`;
+    if (!sportsData.CFB || sportsData.CFB === 0) {
+        cfbData.innerHTML = `<h4>No CFB games available.</h4>`;
+    }
+    const cfbInProgress = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const cfbScheduled = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const cfbSmallList = [...cfbInProgress, ...cfbScheduled].slice(0, 6);
+    cfbSmallList.forEach(event => {
+        const awayTeam = event.competitions[0].competitors[1].team.shortDisplayName;
+        const homeTeam = event.competitions[0].competitors[0].team.shortDisplayName;
+        const gameStatus = event.status.type.shortDetail;
+        const awayScore = event.competitions[0].competitors[1].score;
+        const homeScore = event.competitions[0].competitors[0].score;
+        const time = event.status.type.detail;
+        if(event.status.type.name === "STATUS_IN_PROGRESS") {
+            cfbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} -  ${awayScore} </br>
+                            ${homeTeam} -  ${homeScore}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_SCHEDULED") {
+            cfbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} </br>
+                            ${homeTeam}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+    });
+}
 
 
 fetchGamesData().then(() => setInterval(fetchGamesData, 1000));
