@@ -117,6 +117,9 @@ const showAllMLB = () => {
     `;
     mlbData.innerHTML = '';
     nflData.innerHTML = '';
+    nflName.innerHTML = '';
+    cfbData.innerHTML = '';
+    cfbName.innerHTML = '';
     const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const alreadyFinal = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_FINAL");
@@ -190,7 +193,6 @@ const showAllMLB = () => {
     },
     document.getElementById("back-to-main").addEventListener("click", showLessMLB));
     currentView = 'showAll';
-    nflName.innerHTML = '';
 };
 
 const showLessNFL = () => {
@@ -251,24 +253,52 @@ const showLessCFB = () => {
     if (!sportsData.CFB || sportsData.CFB === 0) {
         cfbData.innerHTML = `<h4>No CFB games available.</h4>`;
     }
+    const cfbHalfTime = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
     const cfbInProgress = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const cfbScheduled = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
-    const cfbSmallList = [...cfbInProgress, ...cfbScheduled].slice(0, 6);
+    const cfbSmallList = [...cfbInProgress, ...cfbHalfTime, ...cfbScheduled].slice(0, 6);
     cfbSmallList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.shortDisplayName;
         const homeTeam = event.competitions[0].competitors[0].team.shortDisplayName;
+        let awayID = event.competitions[0].competitors[1].id;
+        let homeID = event.competitions[0].competitors[0].id;
         const gameStatus = event.status.type.shortDetail;
         const awayScore = event.competitions[0].competitors[1].score;
         const homeScore = event.competitions[0].competitors[0].score;
         const time = event.status.type.detail;
+        let awayRank = event.competitions[0].competitors[1].curatedRank.current;
+        let homeRank = event.competitions[0].competitors[0].curatedRank.current;
+        awayRank = awayRank > 25 ? "" : awayRank;
+        homeRank = homeRank > 25 ? "" : homeRank;
+        const situation = event.competitions[0].situation || null;
+        const ballPosition = situation && situation.downDistanceText ? situation.downDistanceText : 'Switching Posession';
+        const possession = situation && situation.possession ? situation.possession : '';
+        awayID = possession === awayID ? "🏈" : "";
+        homeID = possession === homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
             cfbData.innerHTML += `
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
                             ${time} </br></br>
-                            ${awayTeam} -  ${awayScore} </br>
-                            ${homeTeam} -  ${homeScore}
+                            ${awayRank} ${awayTeam} -  ${awayScore} ${awayID}</br>
+                            ${homeRank} ${homeTeam} -  ${homeScore} ${homeID}</br></br>
+                        </p>
+                        <p class="game-details">
+                            ${ballPosition}
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_HALFTIME") {
+            cfbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayRank} ${awayTeam} -  ${awayScore} </br>
+                            ${homeRank} ${homeTeam} -  ${homeScore} </br></br>
                         </p>
                         <p class="game-details">
                         </p>
@@ -292,6 +322,7 @@ const showLessCFB = () => {
             `;
         }
     });
+    console.log(sportsData.CFB);
 }
 
 
