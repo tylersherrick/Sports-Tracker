@@ -7,8 +7,8 @@ let currentView = 'showLess';
 
 const fetchGamesData = async () => {
     try {
-        const mlbURL = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
-        const nflURL = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
+        const mlbURL = 'http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
+        const nflURL = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
         const [mlbResponse, nflResponse] = await Promise.all([
             fetch(mlbURL),
             fetch(nflURL)
@@ -201,6 +201,26 @@ const showLessNFL = () => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
         const gameStatus = event.status.type.shortDetail;
+        const awayScore = event.competitions[0].competitors[1].score;
+        const homeScore = event.competitions[0].competitors[0].score;
+        const time = event.status.type.detail;
+        const fieldMarker = event.competitions[0].situation.downDistanceText;
+        if(event.status.type.name === "STATUS_IN_PROGRESS") {
+            nflData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} -  ${awayScore} </br>
+                            ${homeTeam} -  ${homeScore}
+                        </p>
+                        <p class="game-details">
+                            ${fieldMarker}
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
         if (event.status.type.name === "STATUS_SCHEDULED") {
             nflData.innerHTML += `
                 <div class="game-row">
@@ -218,6 +238,7 @@ const showLessNFL = () => {
             `;
         }
     });
+    console.log(smallNFLList);
 };
 
 
