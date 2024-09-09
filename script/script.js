@@ -443,8 +443,8 @@ const showLessCFB = () => {
                     <div class="game-info">
                         <p class="game-details">
                             ${time} </br></br>
-                            ${awayTeam} </br>
-                            ${homeTeam}
+                            ${awayRank} ${awayTeam} </br>
+                            ${homeRank} ${homeTeam}
                         </p>
                         <p class="game-details">
                         </p>
@@ -527,8 +527,8 @@ const showAllCFB = () => {
                     <div class="game-info">
                         <p class="game-details">
                             ${time} </br></br>
-                            ${awayTeam} </br>
-                            ${homeTeam}
+                            ${awayRank} ${awayTeam} -  ${awayScore} </br>
+                            ${homeRank} ${homeTeam} -  ${homeScore} </br></br>
                         </p>
                         <p class="game-details">
                         </p>
@@ -542,8 +542,8 @@ const showAllCFB = () => {
                     <div class="game-info">
                         <p class="game-details">
                             ${time} </br></br>
-                            ${awayRank} ${awayTeam} -  ${awayScore} </br>
-                            ${homeRank} ${homeTeam} -  ${homeScore} </br></br>
+                            ${awayRank} ${awayTeam} </br>
+                            ${homeRank} ${homeTeam} </br></br>
                         </p>
                         <p class="game-details">
                         </p>
