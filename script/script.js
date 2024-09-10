@@ -56,6 +56,7 @@ const showLessMLB = () => {
     sportsDiv.innerHTML = `<h1>Todays Sporting Events</h1>`;
     sportsDiv.innerHTML += `<h3 id="show-all-mlb">MLB</h3>`;
     mlbData.innerHTML = ``;
+    console.log(sportsData)
     const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const limitedGames = [...inProgress, ...yetToStart].slice(0, 3).filter(event => 
@@ -76,6 +77,8 @@ const showLessMLB = () => {
         const isFirst = situation ? situation.onFirst : 'N/A';
         const isSecond = situation ? situation.onSecond : 'N/A';
         const isThird = situation ? situation.onThird : 'N/A';
+        const gameId = event.id;
+        console.log(gameId)
         if (event.status.type.name === "STATUS_IN_PROGRESS") {
             mlbData.innerHTML += `
                 <div class="game-row">
@@ -556,5 +559,5 @@ const showAllCFB = () => {
     currentView = 'cfb';
 }
 
-
 fetchGamesData().then(() => setInterval(fetchGamesData, 1000));
+
