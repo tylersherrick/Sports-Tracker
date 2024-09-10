@@ -209,9 +209,6 @@ const showAllMLB = () => {
 const showLessNFL = () => {
     nflData.innerHTML = '';
     nflName.innerHTML = '<h3 id="show-all-nfl">NFL</h3>';
-    if (!sportsData.NFL || sportsData.NFL.length === 0) {
-        nflData.innerHTML += '<h4>No NFL games available.</h4>';
-    }
     const nflHalfTime = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
     const nflInProgress = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nflScheduled = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
@@ -280,6 +277,9 @@ const showLessNFL = () => {
     },
     document.getElementById("show-all-nfl").addEventListener("click", showAllNFL));
     currentView = 'showLess';
+    if (smallNFLList.length === 0) {
+        nflData.innerHTML += `<h4>There are no active games.</h4>`
+    }
 };
 
 const showAllNFL = () => {
