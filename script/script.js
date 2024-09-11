@@ -46,6 +46,9 @@ const updateViews = () => {
     if (currentView === 'cfb') {
         showAllCFB();
     }
+    if (currentView === 'oneGame') {
+
+    }
 };
 
 const showNothing = () => {
@@ -56,7 +59,7 @@ const showLessMLB = () => {
     sportsDiv.innerHTML = `<h1>Todays Sporting Events</h1>`;
     sportsDiv.innerHTML += `<h3 id="show-all-mlb">MLB</h3>`;
     mlbData.innerHTML = ``;
-    console.log(sportsData)
+    console.log(sportsData);
     const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const limitedGames = [...inProgress, ...yetToStart].slice(0, 3).filter(event => 
@@ -78,10 +81,9 @@ const showLessMLB = () => {
         const isSecond = situation ? situation.onSecond : 'N/A';
         const isThird = situation ? situation.onThird : 'N/A';
         const gameId = event.id;
-        console.log(gameId)
         if (event.status.type.name === "STATUS_IN_PROGRESS") {
             mlbData.innerHTML += `
-                <div class="game-row">
+                <div id="${gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
                             ${inning} </br></br>
@@ -102,7 +104,7 @@ const showLessMLB = () => {
         }
         if (event.status.type.name === "STATUS_SCHEDULED") {
             mlbData.innerHTML += `
-                <div class="game-row">
+                <div id="${gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
                         ${inning} ${gameStatus} </br></br>
@@ -123,6 +125,25 @@ const showLessMLB = () => {
     document.getElementById("show-all-mlb").addEventListener("click", showAllMLB);
     currentView = 'showLess';
 };
+
+mlbData.addEventListener("click", (event) => {
+    const gameRow = event.target.closest(".game-row");
+    if (gameRow) {
+        const gameId = gameRow.id;
+        handleGameClick(gameId);
+    }
+});
+
+function handleGameClick(gameId) {
+    sportsDiv.innerHTML = '';
+    mlbData.innerHTML = '';
+    nflData.innerHTML = '';
+    nflName.innerHTML = '';
+    cfbData.innerHTML = '';
+    cfbName.innerHTML = '';
+    currentView = 'oneGame';
+    mlbData.innerHTML = `Handling game with ID: ${gameId}`;
+}
 
 const showAllMLB = () => {
     sportsDiv.innerHTML = `
