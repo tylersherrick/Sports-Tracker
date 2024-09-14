@@ -495,7 +495,8 @@ const showAllCFB = () => {
     const cfbInProgress = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const cfbScheduled = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const cfbFinal = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_FINAL");
-    const cfbSmallList = [...cfbInProgress, ...cfbHalfTime, ...cfbScheduled, ...cfbFinal];
+    const cfbEndofQuarter = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
+    const cfbSmallList = [...cfbInProgress, ...cfbHalfTime, ...cfbEndofQuarter, ...cfbScheduled, ...cfbFinal];
     cfbSmallList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.shortDisplayName;
         const homeTeam = event.competitions[0].competitors[0].team.shortDisplayName;
@@ -545,6 +546,21 @@ const showAllCFB = () => {
                 </div>
             `;
         }
+        if(event.status.type.name === "STATUS_END_PERIOD") {
+            cfbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayRank} ${awayTeam} -  ${awayScore} </br>
+                            ${homeRank} ${homeTeam} -  ${homeScore} </br></br>
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
         if(event.status.type.name === "STATUS_SCHEDULED") {
             cfbData.innerHTML += `
                 <div class="game-row">
@@ -566,8 +582,8 @@ const showAllCFB = () => {
                     <div class="game-info">
                         <p class="game-details">
                             ${time} </br></br>
-                            ${awayRank} ${awayTeam} </br>
-                            ${homeRank} ${homeTeam} </br></br>
+                            ${awayRank} ${awayTeam} -  ${awayScore} </br>
+                            ${homeRank} ${homeTeam} -  ${homeScore} </br></br>
                         </p>
                         <p class="game-details">
                         </p>
