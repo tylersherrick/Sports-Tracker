@@ -318,9 +318,10 @@ const showAllNFL = () => {
     cfbName.innerHTML = '';
     const nflHalfTime = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
     const nflInProgress = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const nflEndQuarter = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
     const nflScheduled = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nflFinal = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_FINAL");
-    const longNFLList = [...nflInProgress, ...nflHalfTime, ...nflScheduled, ...nflFinal];
+    const longNFLList = [...nflInProgress, ...nflHalfTime, ...nflEndQuarter, ...nflScheduled, ...nflFinal];
     longNFLList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
@@ -346,6 +347,21 @@ const showAllNFL = () => {
                         </p>
                         <p class="game-details">
                             ${ballPosition}
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_HALFTIME") {
+            nflData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} -  ${awayScore} </br>
+                            ${homeTeam} -  ${homeScore} </br></br>
+                        </p>
+                        <p class="game-details">
                         </p>
                     </div>
                 </div>
