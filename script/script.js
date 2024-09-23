@@ -4,7 +4,11 @@ const nflName = document.getElementById("nfl-name")
 const nflData = document.getElementById("nfl-data");
 const cfbName = document.getElementById("cfb-name")
 const cfbData = document.getElementById("cfb-data");
-const sportsData = { MLB: [], NFL: [], CFB: [] };
+const nhlData = document.getElementById("nhl-data");
+const nhlName = document.getElementById("nhl-name");
+const nbaData = document.getElementById("nba-data");
+const nbaName = document.getElementById("nba-name");
+const sportsData = { MLB: [], NFL: [], CFB: [], NHL: [], NBA: [] };
 let currentView = 'showLess';
 
 const fetchGamesData = async () => {
@@ -12,17 +16,25 @@ const fetchGamesData = async () => {
         const mlbURL = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
         const nflURL = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
         const cfbURL = 'https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard';
-        const [mlbResponse, nflResponse, cfbResponse] = await Promise.all([
+        const nhlURL = 'http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard';
+        const nbaURL = 'http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
+        const [mlbResponse, nflResponse, cfbResponse, nhlResponse, nbaResponse] = await Promise.all([
             fetch(mlbURL),
             fetch(nflURL),
-            fetch(cfbURL)
+            fetch(cfbURL),
+            fetch(nhlURL),
+            fetch(nbaURL)
         ]);
         const mlbData = await mlbResponse.json();
         const nflData = await nflResponse.json();
         const cfbData = await cfbResponse.json();
+        const nhlData = await nhlResponse.json();
+        const nbaData = await nbaResponse.json();
         sportsData.MLB = mlbData.events;
         sportsData.NFL = nflData.events;
         sportsData.CFB = cfbData.events;
+        sportsData.NHL = nhlData.events;
+        sportsData.NBA = nbaData.events;
 
         updateViews();
     } catch (error) {
@@ -36,6 +48,8 @@ const updateViews = () => {
         showLessMLB();
         showLessNFL();
         showLessCFB();
+        showLessNHL();
+        showLessNBA();
     } 
     if (currentView === 'mlb') {
         showAllMLB();
@@ -46,8 +60,11 @@ const updateViews = () => {
     if (currentView === 'cfb') {
         showAllCFB();
     }
-    if (currentView === 'oneGame') {
-
+    if (currentView === 'nhl') {
+        showAllNHL();
+    }
+    if (currentView === 'nba') {
+        showAllNBA();
     }
 };
 
@@ -59,7 +76,6 @@ const showLessMLB = () => {
     sportsDiv.innerHTML = `<h1>Todays Sporting Events</h1>`;
     sportsDiv.innerHTML += `<h3 id="show-all-mlb">MLB</h3>`;
     mlbData.innerHTML = ``;
-    console.log(sportsData);
     const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const limitedGames = [...inProgress, ...yetToStart].slice(0, 3).filter(event => 
@@ -126,25 +142,6 @@ const showLessMLB = () => {
     currentView = 'showLess';
 };
 
-mlbData.addEventListener("click", (event) => {
-    const gameRow = event.target.closest(".game-row");
-    if (gameRow) {
-        const gameId = gameRow.id;
-        handleGameClick(gameId);
-    }
-});
-
-function handleGameClick(gameId) {
-    sportsDiv.innerHTML = '';
-    mlbData.innerHTML = '';
-    nflData.innerHTML = '';
-    nflName.innerHTML = '';
-    cfbData.innerHTML = '';
-    cfbName.innerHTML = '';
-    currentView = 'oneGame';
-    mlbData.innerHTML = `Handling game with ID: ${gameId}`;
-}
-
 const showAllMLB = () => {
     sportsDiv.innerHTML = `
         <h1>All MLB Games Today</h1>
@@ -155,6 +152,10 @@ const showAllMLB = () => {
     nflName.innerHTML = '';
     cfbData.innerHTML = '';
     cfbName.innerHTML = '';
+    nhlName.innerHTML = '';
+    nhlData.innerHTML = '';
+    nbaName.innerHTML = '';
+    nbaData.innerHTML = '';
     const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const alreadyFinal = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_FINAL");
@@ -308,7 +309,7 @@ const showLessNFL = () => {
 
 const showAllNFL = () => {
     sportsDiv.innerHTML = `
-        <h1>All NFL Games Today</h1>
+        <h1>All NFL Games</h1>
         <button id="back-to-all">Back</button>
     `;
     mlbData.innerHTML = '';
@@ -316,6 +317,10 @@ const showAllNFL = () => {
     nflName.innerHTML = '';
     cfbData.innerHTML = '';
     cfbName.innerHTML = '';
+    nhlName.innerHTML = '';
+    nhlData.innerHTML = '';
+    nbaName.innerHTML = '';
+    nbaData.innerHTML = '';
     const nflHalfTime = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
     const nflInProgress = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nflEndQuarter = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
@@ -507,6 +512,10 @@ const showAllCFB = () => {
     nflName.innerHTML = '';
     cfbData.innerHTML = '';
     cfbName.innerHTML = '';
+    nhlName.innerHTML = '';
+    nhlData.innerHTML = '';
+    nbaName.innerHTML = '';
+    nbaData.innerHTML = '';
     const cfbHalfTime = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
     const cfbInProgress = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const cfbScheduled = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
@@ -610,6 +619,260 @@ const showAllCFB = () => {
     }),
     document.getElementById("back-to").addEventListener("click", showNothing);
     currentView = 'cfb';
+}
+
+const showLessNHL = () => {
+    nhlData.innerHTML = '';
+    nhlName.innerHTML = `<h3 id="show-all-nhl">NHL</h3>`;
+    const nhlYetToStart = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const nhlInProgress = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const nhlSmallList = [...nhlInProgress, ...nhlYetToStart].slice(0, 3);
+    nhlSmallList.forEach(event => {
+        const awayTeam = event.competitions[0].competitors[1].team.displayName;
+        const homeTeam = event.competitions[0].competitors[0].team.displayName;
+        const awayScore = event.competitions[0].competitors[1].score;
+        const homeScore = event.competitions[0].competitors[0].score;
+        const time = event.status.type.detail;
+        if(event.status.type.name === "STATUS_SCHEDULED") {
+            nhlData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} </br>
+                            ${homeTeam}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_IN_PROGRESS") {
+            nhlData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+    })
+    if(nhlSmallList === 0) {
+        nhlData.innerHTML += `<h4>There are no active games.</h4.`;
+    }
+    document.getElementById("show-all-nhl").addEventListener("click", showAllNHL);
+    currentView = 'showLess';
+}
+
+const showAllNHL = () => {
+    sportsDiv.innerHTML = `
+        <h1>All NHL Games Today</h1>
+        <button id="back-to-main">Back</button>
+    `;
+    mlbData.innerHTML = '';
+    nflData.innerHTML = '';
+    nflName.innerHTML = '';
+    cfbData.innerHTML = '';
+    cfbName.innerHTML = '';
+    nhlName.innerHTML = '';
+    nhlData.innerHTML = '';
+    nbaName.innerHTML = '';
+    nbaData.innerHTML = '';
+    const nhlYetToStart = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const nhlInProgress = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const nhlFinal = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_FINAL");
+    const nhlLongList = [...nhlInProgress, ...nhlYetToStart, ...nhlFinal];
+    nhlLongList.forEach(event => {
+        const awayTeam = event.competitions[0].competitors[1].team.displayName;
+        const homeTeam = event.competitions[0].competitors[0].team.displayName;
+        const awayScore = event.competitions[0].competitors[1].score;
+        const homeScore = event.competitions[0].competitors[0].score;
+        const time = event.status.type.detail;
+        if(event.status.type.name === "STATUS_SCHEDULED") {
+            nhlData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} </br>
+                            ${homeTeam}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_IN_PROGRESS") {
+            nhlData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_FINAL") {
+            nhlData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+    });
+    if(nhlLongList === 0) {
+        nhlData.innerHTML += `<h4>There are no active games.</h4.`;
+    }
+    document.getElementById("back-to-main").addEventListener("click", showNothing);
+    currentView = 'nhl';
+}
+
+const showLessNBA = () => {
+    nbaData.innerHTML = '';
+    nbaName.innerHTML = `<h3 id="show-all-nba">NBA</h3>`;
+    const nbaYetToStart = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const nbaInProgress = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const nbaSmallList = [...nbaInProgress, ...nbaYetToStart].slice(0, 3);
+    nbaSmallList.forEach(event => {
+        const awayTeam = event.competitions[0].competitors[1].team.displayName;
+        const homeTeam = event.competitions[0].competitors[0].team.displayName;
+        const awayScore = event.competitions[0].competitors[1].score;
+        const homeScore = event.competitions[0].competitors[0].score;
+        const time = event.status.type.detail;
+        if(event.status.type.name === "STATUS_SCHEDULED") {
+            nbaData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} </br>
+                            ${homeTeam}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_IN_PROGRESS") {
+            nbaData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+    })
+    if(nbaSmallList === 0) {
+        nbaData.innerHTML += `<h4>There are no active games.</h4.`;
+    }
+    document.getElementById("show-all-nba").addEventListener("click", showAllNBA);
+    currentView = 'showLess';
+}
+
+const showAllNBA = () => {
+        sportsDiv.innerHTML = `
+        <h1>All NBA Games Today</h1>
+        <button id="back-to-main">Back</button>
+    `;
+    mlbData.innerHTML = '';
+    nflData.innerHTML = '';
+    nflName.innerHTML = '';
+    cfbData.innerHTML = '';
+    cfbName.innerHTML = '';
+    nhlName.innerHTML = '';
+    nhlData.innerHTML = '';
+    nbaName.innerHTML = '';
+    nbaData.innerHTML = '';
+    const nbaYetToStart = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const nbaInProgress = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const nbaFinal = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_FINAL");
+    const nbaLongList = [...nbaInProgress, ...nbaYetToStart, ...nbaFinal];
+    nbaLongList.forEach(event => {
+        const awayTeam = event.competitions[0].competitors[1].team.displayName;
+        const homeTeam = event.competitions[0].competitors[0].team.displayName;
+        const awayScore = event.competitions[0].competitors[1].score;
+        const homeScore = event.competitions[0].competitors[0].score;
+        const time = event.status.type.detail;
+        if(event.status.type.name === "STATUS_SCHEDULED") {
+            nbaData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} </br>
+                            ${homeTeam}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_IN_PROGRESS") {
+            nbaData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_FINAL") {
+            nbaData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+    });
+    if(nbaLongList === 0) {
+        nbaData.innerHTML += `<h4>There are no active games.</h4.`;
+    }
+    document.getElementById("back-to-main").addEventListener("click", showNothing);
+    currentView = 'nba';
 }
 
 fetchGamesData().then(() => setInterval(fetchGamesData, 1000));
