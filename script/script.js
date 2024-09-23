@@ -16,8 +16,8 @@ const fetchGamesData = async () => {
         const mlbURL = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
         const nflURL = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
         const cfbURL = 'https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard';
-        const nhlURL = 'http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard';
-        const nbaURL = 'http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
+        const nhlURL = 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard';
+        const nbaURL = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
         const [mlbResponse, nflResponse, cfbResponse, nhlResponse, nbaResponse] = await Promise.all([
             fetch(mlbURL),
             fetch(nflURL),
