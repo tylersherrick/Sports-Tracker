@@ -35,7 +35,7 @@ const fetchGamesData = async () => {
         sportsData.CFB = cfbData.events;
         sportsData.NHL = nhlData.events;
         sportsData.NBA = nbaData.events;
-
+        console.log(sportsData);
         updateViews();
     } catch (error) {
         console.error('Error fetching sports data:', error);
@@ -627,6 +627,9 @@ const showLessNHL = () => {
     const nhlYetToStart = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nhlInProgress = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nhlSmallList = [...nhlInProgress, ...nhlYetToStart].slice(0, 3);
+    if (!sportsData.NHL || nhlSmallList == 0) {
+        cfbData.innerHTML = `<h4>No NHL games available.</h4>`;
+    }
     nhlSmallList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
@@ -754,6 +757,9 @@ const showLessNBA = () => {
     const nbaYetToStart = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nbaInProgress = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nbaSmallList = [...nbaInProgress, ...nbaYetToStart].slice(0, 3);
+    if (!sportsData.NBA || nbaSmallList == 0) {
+        cfbData.innerHTML = `<h4>No NBA games available.</h4>`;
+    }
     nbaSmallList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
