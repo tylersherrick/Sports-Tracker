@@ -628,7 +628,7 @@ const showLessNHL = () => {
     const nhlInProgress = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nhlSmallList = [...nhlInProgress, ...nhlYetToStart].slice(0, 3);
     if (!sportsData.NHL || nhlSmallList == 0) {
-        cfbData.innerHTML = `<h4>No NHL games available.</h4>`;
+        nhlData.innerHTML = `<h4>No NHL games available.</h4>`;
     }
     nhlSmallList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
@@ -758,7 +758,7 @@ const showLessNBA = () => {
     const nbaInProgress = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nbaSmallList = [...nbaInProgress, ...nbaYetToStart].slice(0, 3);
     if (!sportsData.NBA || nbaSmallList == 0) {
-        cfbData.innerHTML = `<h4>No NBA games available.</h4>`;
+        nbaData.innerHTML = `<h4>No NBA games available.</h4>`;
     }
     nbaSmallList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
