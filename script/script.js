@@ -626,7 +626,8 @@ const showLessNHL = () => {
     nhlName.innerHTML = `<h3 id="show-all-nhl">NHL</h3>`;
     const nhlYetToStart = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nhlInProgress = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
-    const nhlSmallList = [...nhlInProgress, ...nhlYetToStart].slice(0, 3);
+    const nhlEndofPeriod = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
+    const nhlSmallList = [...nhlInProgress, ...nhlYetToStart, ...nhlEndofPeriod].slice(0, 3);
     if (!sportsData.NHL || nhlSmallList == 0) {
         nhlData.innerHTML = `<h4>No NHL games available.</h4>`;
     }
@@ -666,6 +667,22 @@ const showLessNHL = () => {
                 </div>
             `;
         }
+        if(event.status.type.name === "STATUS_END_PERIOD") {
+            nhlData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                            End of Period
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
     })
     if(nhlSmallList === 0) {
         nhlData.innerHTML += `<h4>There are no active games.</h4.`;
@@ -690,8 +707,9 @@ const showAllNHL = () => {
     nbaData.innerHTML = '';
     const nhlYetToStart = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nhlInProgress = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const nhlEndofPeriod = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
     const nhlFinal = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_FINAL");
-    const nhlLongList = [...nhlInProgress, ...nhlYetToStart, ...nhlFinal];
+    const nhlLongList = [...nhlInProgress, ...nhlYetToStart, ...nhlEndofPeriod,...nhlFinal];
     nhlLongList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
@@ -728,6 +746,22 @@ const showAllNHL = () => {
                 </div>
             `;
         }
+        if(event.status.type.name === "STATUS_END_PERIOD") {
+            nhlData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                            End of Period
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
         if(event.status.type.name === "STATUS_FINAL") {
             nhlData.innerHTML += `
                 <div class="game-row">
@@ -756,7 +790,8 @@ const showLessNBA = () => {
     nbaName.innerHTML = `<h3 id="show-all-nba">NBA</h3>`;
     const nbaYetToStart = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nbaInProgress = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
-    const nbaSmallList = [...nbaInProgress, ...nbaYetToStart].slice(0, 3);
+    const nbaEndofQuarter = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
+    const nbaSmallList = [...nbaInProgress, ...nbaEndofQuarter, ...nbaYetToStart].slice(0, 3);
     if (!sportsData.NBA || nbaSmallList == 0) {
         nbaData.innerHTML = `<h4>No NBA games available.</h4>`;
     }
@@ -776,6 +811,22 @@ const showLessNBA = () => {
                             ${homeTeam}
                         </p>
                         <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_END_PERIOD") {
+            nbaData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                            End of Quarter
                         </p>
                     </div>
                 </div>
@@ -820,8 +871,9 @@ const showAllNBA = () => {
     nbaData.innerHTML = '';
     const nbaYetToStart = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nbaInProgress = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const nbaEndofQuarter = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
     const nbaFinal = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_FINAL");
-    const nbaLongList = [...nbaInProgress, ...nbaYetToStart, ...nbaFinal];
+    const nbaLongList = [...nbaInProgress, ...nbaYetToStart, ...nbaEndofQuarter, ...nbaFinal];
     nbaLongList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
@@ -853,6 +905,22 @@ const showAllNBA = () => {
                             ${homeTeam} - ${homeScore}
                         </p>
                         <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_END_PERIOD") {
+            nbaData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                            End of Quarter
                         </p>
                     </div>
                 </div>
