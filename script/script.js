@@ -45,7 +45,6 @@ const fetchGamesData = async () => {
 
 const updateViews = () => {
     if (currentView === 'showLess') {
-        showLessMLB();
         showLessNFL();
         showLessCFB();
         showLessNHL();
@@ -232,6 +231,7 @@ const showAllMLB = () => {
 };
 
 const showLessNFL = () => {
+    sportsDiv.innerHTML = `<h1>Todays Sporting Events</h1>`;
     nflData.innerHTML = '';
     nflName.innerHTML = '<h3 id="show-all-nfl">NFL</h3>';
     const nflHalfTime = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
