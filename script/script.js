@@ -666,7 +666,7 @@ const showLessNHL = () => {
     const nhlYetToStart = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nhlInProgress = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nhlEndofPeriod = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
-    const nhlSmallList = [...nhlInProgress, ...nhlYetToStart, ...nhlEndofPeriod].slice(0, 3);
+    const nhlSmallList = [...nhlInProgress, ...nhlEndofPeriod, ...nhlYetToStart].slice(0, 3);
     if (!sportsData.NHL || nhlSmallList == 0) {
         nhlData.innerHTML = `<h4>No NHL games available.</h4>`;
     }
@@ -748,7 +748,7 @@ const showAllNHL = () => {
     const nhlInProgress = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nhlEndofPeriod = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
     const nhlFinal = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_FINAL");
-    const nhlLongList = [...nhlInProgress, ...nhlYetToStart, ...nhlEndofPeriod,...nhlFinal];
+    const nhlLongList = [...nhlInProgress,, ...nhlEndofPeriod, ...nhlYetToStart, ...nhlFinal];
     nhlLongList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
@@ -912,7 +912,7 @@ const showAllNBA = () => {
     const nbaInProgress = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nbaEndofQuarter = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
     const nbaFinal = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_FINAL");
-    const nbaLongList = [...nbaInProgress, ...nbaYetToStart, ...nbaEndofQuarter, ...nbaFinal];
+    const nbaLongList = [...nbaInProgress, ...nbaEndofQuarter, ...nbaYetToStart, ...nbaFinal];
     nbaLongList.forEach(event => {
         const awayTeam = event.competitions[0].competitors[1].team.displayName;
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
