@@ -8,7 +8,9 @@ const nhlData = document.getElementById("nhl-data");
 const nhlName = document.getElementById("nhl-name");
 const nbaData = document.getElementById("nba-data");
 const nbaName = document.getElementById("nba-name");
-const sportsData = { MLB: [], NFL: [], CFB: [], NHL: [], NBA: [] };
+const cbbName = document.getElementById("cbb-name");
+const cbbData = document.getElementById("cbb-data");
+const sportsData = { MLB: [], NFL: [], CFB: [], NHL: [], NBA: [], CBB: [] };
 let currentView = 'showLess';
 
 const fetchGamesData = async () => {
@@ -18,23 +20,27 @@ const fetchGamesData = async () => {
         const cfbURL = 'https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard';
         const nhlURL = 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard';
         const nbaURL = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
-        const [mlbResponse, nflResponse, cfbResponse, nhlResponse, nbaResponse] = await Promise.all([
+        const cbbURL = 'http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard';
+        const [mlbResponse, nflResponse, cfbResponse, nhlResponse, nbaResponse, cbbResponse] = await Promise.all([
             fetch(mlbURL),
             fetch(nflURL),
             fetch(cfbURL),
             fetch(nhlURL),
-            fetch(nbaURL)
+            fetch(nbaURL),
+            fetch(cbbURL)
         ]);
         const mlbData = await mlbResponse.json();
         const nflData = await nflResponse.json();
         const cfbData = await cfbResponse.json();
         const nhlData = await nhlResponse.json();
         const nbaData = await nbaResponse.json();
+        const cbbData = await cbbResponse.json();
         sportsData.MLB = mlbData.events;
         sportsData.NFL = nflData.events;
         sportsData.CFB = cfbData.events;
         sportsData.NHL = nhlData.events;
         sportsData.NBA = nbaData.events;
+        sportsData.CBB = cbbData.events;
         console.log(sportsData);
         updateViews();
     } catch (error) {
@@ -49,6 +55,7 @@ const updateViews = () => {
         showLessCFB();
         showLessNHL();
         showLessNBA();
+        showLessCBB();
     } 
     if (currentView === 'mlb') {
         showAllMLB();
@@ -64,6 +71,9 @@ const updateViews = () => {
     }
     if (currentView === 'nba') {
         showAllNBA();
+    }
+    if(currentView === 'cbb') {
+        showAllCBB();
     }
 };
 
@@ -155,6 +165,8 @@ const showAllMLB = () => {
     nhlData.innerHTML = '';
     nbaName.innerHTML = '';
     nbaData.innerHTML = '';
+    cbbData.innerHTML = '';
+    cbbName.innerHTML = '';
     const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const alreadyFinal = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_FINAL");
@@ -338,6 +350,8 @@ const showAllNFL = () => {
     nhlData.innerHTML = '';
     nbaName.innerHTML = '';
     nbaData.innerHTML = '';
+    cbbData.innerHTML = '';
+    cbbName.innerHTML = '';
     const nflHalfTime = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
     const nflInProgress = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nflEndQuarter = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
@@ -553,6 +567,8 @@ const showAllCFB = () => {
     nhlData.innerHTML = '';
     nbaName.innerHTML = '';
     nbaData.innerHTML = '';
+    cbbData.innerHTML = '';
+    cbbName.innerHTML = '';
     const cfbHalfTime = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
     const cfbInProgress = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const cfbScheduled = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
@@ -744,6 +760,8 @@ const showAllNHL = () => {
     nhlData.innerHTML = '';
     nbaName.innerHTML = '';
     nbaData.innerHTML = '';
+    cbbData.innerHTML = '';
+    cbbName.innerHTML = '';
     const nhlYetToStart = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nhlInProgress = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nhlEndofPeriod = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
@@ -895,7 +913,7 @@ const showLessNBA = () => {
 }
 
 const showAllNBA = () => {
-        sportsDiv.innerHTML = `
+    sportsDiv.innerHTML = `
         <h1>All NBA Games Today</h1>
         <button id="back-to-main">Back</button>
     `;
@@ -908,6 +926,8 @@ const showAllNBA = () => {
     nhlData.innerHTML = '';
     nbaName.innerHTML = '';
     nbaData.innerHTML = '';
+    cbbData.innerHTML = '';
+    cbbName.innerHTML = '';
     const nbaYetToStart = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nbaInProgress = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nbaEndofQuarter = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
@@ -986,6 +1006,176 @@ const showAllNBA = () => {
     }
     document.getElementById("back-to-main").addEventListener("click", showNothing);
     currentView = 'nba';
+}
+
+const showLessCBB = () => {
+    cbbData.innerHTML = '';
+    cbbName.innerHTML = `<h3 id="show-all-cbb">CBB</h3>`;
+    const cbbYetToStart = sportsData.CBB.slice(0, sportsData.CBB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const cbbInProgress = sportsData.CBB.slice(0, sportsData.CBB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const cbbEndofQuarter = sportsData.CBB.slice(0, sportsData.CBB.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
+    const cbbSmallList = [...cbbInProgress, ...cbbEndofQuarter, ...cbbYetToStart].slice(0, 3);
+    if (!sportsData.CBB || cbbSmallList == 0) {
+        cbbData.innerHTML = `<h4>No CBB games available.</h4>`;
+    }
+    cbbSmallList.forEach(event => {
+        const awayTeam = event.competitions[0].competitors[1].team.displayName;
+        const homeTeam = event.competitions[0].competitors[0].team.displayName;
+        const awayScore = event.competitions[0].competitors[1].score;
+        const homeScore = event.competitions[0].competitors[0].score;
+        const time = event.status.type.detail;
+        if(event.status.type.name === "STATUS_IN_PROGRESS") {
+            cbbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_END_PERIOD") {
+            cbbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} - ${awayScore} </br>
+                            ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                            End of Quarter
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_SCHEDULED") {
+            cbbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayTeam} </br>
+                            ${homeTeam}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+    })
+    if(cbbSmallList === 0) {
+        cbbData.innerHTML += `<h4>There are no active games.</h4.`;
+    }
+    document.getElementById("show-all-cbb").addEventListener("click", showAllCBB);
+    currentView = 'showLess';
+}
+
+const showAllCBB = () => {
+    sportsDiv.innerHTML = `
+        <h1>All CBB Games Today</h1>
+        <button id="back-to-main">Back</button>
+    `;
+    mlbData.innerHTML = '';
+    nflData.innerHTML = '';
+    nflName.innerHTML = '';
+    cfbData.innerHTML = '';
+    cfbName.innerHTML = '';
+    nhlName.innerHTML = '';
+    nhlData.innerHTML = '';
+    nbaName.innerHTML = '';
+    nbaData.innerHTML = '';
+    cbbData.innerHTML = '';
+    cbbName.innerHTML = '';
+    const cbbYetToStart = sportsData.CBB.slice(0, sportsData.CBB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const cbbInProgress = sportsData.CBB.slice(0, sportsData.CBB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const cbbEndofQuarter = sportsData.CBB.slice(0, sportsData.CBB.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
+    const cbbFinal = sportsData.CBB.slice(0, sportsData.CBB.length).filter(event => event.status.type.name === "STATUS_FINAL");
+    const cbbLongList = [...cbbInProgress, ...cbbEndofQuarter, ...cbbYetToStart, ...cbbFinal];
+    cbbLongList.forEach(event => {
+        const awayTeam = event.competitions[0].competitors[1].team.displayName;
+        const homeTeam = event.competitions[0].competitors[0].team.displayName;
+        const awayScore = event.competitions[0].competitors[1].score;
+        const homeScore = event.competitions[0].competitors[0].score;
+        let awayRank = event.competitions[0].competitors[1].curatedRank.current;
+        let homeRank = event.competitions[0].competitors[0].curatedRank.current;
+        awayRank = awayRank > 25 ? "" : awayRank;
+        homeRank = homeRank > 25 ? "" : homeRank;
+        const time = event.status.type.detail;
+        if(event.status.type.name === "STATUS_IN_PROGRESS") {
+            cbbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayRank}  ${awayTeam} - ${awayScore} </br>
+                            ${homeRank}  ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_END_PERIOD") {
+            cbbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayRank} ${awayTeam} - ${awayScore} </br>
+                            ${homeRank} ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                            End of Quarter
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_SCHEDULED") {
+            cbbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayRank} ${awayTeam} </br>
+                            ${homeRank} ${homeTeam}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        if(event.status.type.name === "STATUS_FINAL") {
+            cbbData.innerHTML += `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${time} </br></br>
+                            ${awayRank} ${awayTeam} - ${awayScore} </br>
+                            ${homeRank} ${homeTeam} - ${homeScore}
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+    });
+    if(cbbLongList === 0) {
+        cbbData.innerHTML += `<h4>There are no active games.</h4.`;
+    }
+    document.getElementById("back-to-main").addEventListener("click", showNothing);
+    currentView = 'cbb';
 }
 
 fetchGamesData().then(() => setInterval(fetchGamesData, 1000));
