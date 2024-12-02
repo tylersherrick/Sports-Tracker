@@ -20,7 +20,7 @@ const fetchGamesData = async () => {
         const cfbURL = 'https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard';
         const nhlURL = 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard';
         const nbaURL = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
-        const cbbURL = 'http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard';
+        const cbbURL = 'https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard';
         const [mlbResponse, nflResponse, cfbResponse, nhlResponse, nbaResponse, cbbResponse] = await Promise.all([
             fetch(mlbURL),
             fetch(nflURL),
