@@ -1023,6 +1023,10 @@ const showLessCBB = () => {
         const homeTeam = event.competitions[0].competitors[0].team.displayName;
         const awayScore = event.competitions[0].competitors[1].score;
         const homeScore = event.competitions[0].competitors[0].score;
+        let awayRank = event.competitions[0].competitors[1].curatedRank.current;
+        let homeRank = event.competitions[0].competitors[0].curatedRank.current;
+        awayRank = awayRank > 25 ? "" : awayRank;
+        homeRank = homeRank > 25 ? "" : homeRank;
         const time = event.status.type.detail;
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
             cbbData.innerHTML += `
@@ -1030,8 +1034,8 @@ const showLessCBB = () => {
                     <div class="game-info">
                         <p class="game-details">
                             ${time} </br></br>
-                            ${awayTeam} - ${awayScore} </br>
-                            ${homeTeam} - ${homeScore}
+                            ${awayRank}  ${awayTeam} - ${awayScore} </br>
+                            ${homeRank}  ${homeTeam} - ${homeScore}
                         </p>
                         <p class="game-details">
                         </p>
@@ -1045,8 +1049,8 @@ const showLessCBB = () => {
                     <div class="game-info">
                         <p class="game-details">
                             ${time} </br></br>
-                            ${awayTeam} - ${awayScore} </br>
-                            ${homeTeam} - ${homeScore}
+                            ${awayRank} ${awayTeam} - ${awayScore} </br>
+                            ${homeRank} ${homeTeam} - ${homeScore}
                         </p>
                         <p class="game-details">
                             End of Quarter
@@ -1061,8 +1065,8 @@ const showLessCBB = () => {
                     <div class="game-info">
                         <p class="game-details">
                             ${time} </br></br>
-                            ${awayTeam} </br>
-                            ${homeTeam}
+                            ${awayRank} ${awayTeam} </br>
+                            ${homeRank} ${homeTeam}
                         </p>
                         <p class="game-details">
                         </p>
