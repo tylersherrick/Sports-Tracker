@@ -52,7 +52,6 @@ const fetchGamesData = async () => {
 const updateViews = () => {
     if (currentView === 'showLess') {
         showLessNFL();
-        showLessCFB();
         showLessNHL();
         showLessNBA();
         showLessCBB();
