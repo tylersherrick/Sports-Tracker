@@ -53,7 +53,7 @@ const updateViews = () => {
     if (currentView === 'showLess') {
         showLessNHL();
         showLessNBA();
-        showLessCBB();
+        showLessMLB();
     } 
     if (currentView === 'mlb') {
         showAllMLB();
