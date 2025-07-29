@@ -52,6 +52,7 @@ const fetchGamesData = async () => {
 const updateViews = () => {
     if (currentView === 'showLess') {
         showLessMLB();
+        showLessNFL();
     } 
     if (currentView === 'mlb') {
         showAllMLB();
@@ -83,7 +84,7 @@ const showLessMLB = () => {
     mlbData.innerHTML = ``;
     const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
-    const limitedGames = [...inProgress, ...yetToStart].slice(0, 6).filter(event => 
+    const limitedGames = [...inProgress, ...yetToStart].slice(0, 3).filter(event => 
         event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED"
     );
     const gameTotal = limitedGames.length;
