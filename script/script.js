@@ -48,7 +48,6 @@ const fetchGamesData = async () => {
     }
 };
 
-
 const updateViews = () => {
     if (currentView === 'showLess') {
         showLessMLB();
@@ -72,11 +71,50 @@ const updateViews = () => {
     if(currentView === 'cbb') {
         showAllCBB();
     }
+    if(currentView === 'individualGame') {
+        individualMLBGame();
+    }
 };
 
 const showNothing = () => {
     currentView = 'showLess';
 }
+
+const individualMLBGame = (gameId) => {
+  // Clear other sections
+  mlbData.innerHTML = '';
+  nflData.innerHTML = '';
+  nflName.innerHTML = '';
+  cfbData.innerHTML = '';
+  cfbName.innerHTML = '';
+  nhlName.innerHTML = '';
+  nhlData.innerHTML = '';
+  nbaName.innerHTML = '';
+  nbaData.innerHTML = '';
+  cbbData.innerHTML = '';
+  cbbName.innerHTML = '';
+
+  // Find the game by ID
+  const game = sportsData.MLB.find(g => g.id === gameId);
+  console.log('game found:', game);
+  // Update the main container with game info and back button
+  sportsDiv.innerHTML = `
+    <h2>${game.competitions[0].competitors[0].team.displayName} vs ${game.competitions[0].competitors[1].team.displayName}</h2>
+    <p>Status: ${game.status.type.shortDetail}</p>
+    <p>Score: ${game.competitions[0].competitors[0].score} - ${game.competitions[0].competitors[1].score}</p>
+    <button id="back-button">Back to MLB Games</button>
+  `;
+
+  // Set current view
+  currentView = "individualGame";
+
+  // Add event listener to back button to return to list view
+  document.getElementById('back-button').addEventListener('click', () => {
+    currentView = 'showLess';
+    updateViews();
+  });
+};
+
 
 const showLessMLB = () => {
     sportsDiv.innerHTML = `<h1>Todays Sporting Events</h1>`;
@@ -144,6 +182,15 @@ const showLessMLB = () => {
     if (limitedGames.length === 0) {
         mlbData.innerHTML += `<h4>There are no active games.</h4>`;
     }
+    // Attach click listeners to all game rows
+    const gameRows = document.querySelectorAll('.game-row');
+    gameRows.forEach(row => {
+    row.addEventListener('click', (event) => {
+        const gameId = event.currentTarget.id; // get the id from the div clicked
+        individualMLBGame(gameId);
+        });
+    });
+
     document.getElementById("show-all-mlb").addEventListener("click", showAllMLB);
     currentView = 'showLess';
 };
@@ -1179,5 +1226,12 @@ const showAllCBB = () => {
     currentView = 'cbb';
 }
 
-fetchGamesData().then(() => setInterval(fetchGamesData, 1000));
+fetchGamesData().then(() => {
+  setInterval(() => {
+    if (currentView !== "individualGame") {
+      fetchGamesData();
+    }
+  }, 5000);
+});
+
 
