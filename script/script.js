@@ -97,17 +97,25 @@ const individualMLBGame = (gameId) => {
 
   selectedGameId = gameId;
   currentView = "individualGame";
+  
 
 
   // Find the game by ID
   const game = sportsData.MLB.find(g => g.id === gameId);
   if(!game) return;
   console.log('game found:', game);
+  let gameStatus = game.status.type.shortDetail;
+  if(gameStatus === "Final") {
+    gameStatus = `Final Score: </br></br>
+    ${game.competitions[0].competitors[1].team.displayName}: ${game.competitions[0].competitors[1].score} </br>
+    ${game.competitions[0].competitors[0].team.displayName}: ${game.competitions[0].competitors[0].score} </br></br>
+    ${game.competitions[0].headlines[0].description} </br></br>
+    Attendance: ${game.competitions[0].attendance}`;
+  }
   // Update the main container with game info and back button
   sportsDiv.innerHTML = `
-    <h1>${game.competitions[0].competitors[0].team.displayName} vs ${game.competitions[0].competitors[1].team.displayName}</h1>
-    <p>Status: ${game.status.type.shortDetail}</p>
-    <p>Score: ${game.competitions[0].competitors[0].score} - ${game.competitions[0].competitors[1].score}</p>
+    <h1>${game.competitions[0].competitors[1].team.displayName} at ${game.competitions[0].competitors[0].team.displayName}</h1>
+    <p>${gameStatus}</p>
     <button id="mlb-scores">MLB Games</button>
     </br></br>
     <button id="back-button">All Games</button>
