@@ -104,13 +104,19 @@ const individualMLBGame = (gameId) => {
   const game = sportsData.MLB.find(g => g.id === gameId);
   if(!game) return;
   console.log('game found:', game);
-  let gameStatus = game.status.type.shortDetail;
+  let gameStatus = game.status.type.description;
   if(gameStatus === "Final") {
     gameStatus = `Final Score: </br></br>
     ${game.competitions[0].competitors[1].team.displayName}: ${game.competitions[0].competitors[1].score} </br>
     ${game.competitions[0].competitors[0].team.displayName}: ${game.competitions[0].competitors[0].score} </br></br>
-    ${game.competitions[0].headlines[0].description} </br></br>
+    ${game.competitions[0].headlines?.[0]?.description ? game.competitions[0].headlines[0].description + "</br></br>" : ""}
     Attendance: ${game.competitions[0].attendance}`;
+  }
+  if(gameStatus === "Scheduled") {
+    gameStatus = `Game status: ${game.status.type.description}</br></br>
+    ${game.status.type.shortDetail}</br></br>
+    Expected Weather: ${game.weather.displayValue} and ${game.weather.temperature}°</br></br>
+    Hosted at: ${game.competitions[0].venue.fullName}`
   }
   // Update the main container with game info and back button
   sportsDiv.innerHTML = `
