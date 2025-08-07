@@ -121,8 +121,9 @@ const individualMLBGame = (gameId) => {
   let homeScore = game.competitions[0].competitors[0].score;
   let awayScore = game.competitions[0].competitors[1].score;
  
-  let futureWeather = game.weather.displayValue;
-    let currentWeather = game.weather.conditionId;
+  let futureWeather = game.weather?.displayValue || "";
+let currentWeather = game.weather?.conditionId || "";
+
     let temperature = game.weather.temperature;
     let venue = game.competitions[0].venue.fullName;
 
@@ -1304,6 +1305,7 @@ const showAllCBB = () => {
     document.getElementById("back-to-main").addEventListener("click", showNothing);
     currentView = 'cbb';
 }
+
 
 
 
