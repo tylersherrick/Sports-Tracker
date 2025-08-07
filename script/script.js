@@ -58,7 +58,7 @@ const updateViews = () => {
         showAllMLB();
     }
     if (currentView === 'nfl') {
-        showAllNFL;
+        showAllNFL();
     }
     if (currentView === 'cfb') {
         showAllCFB();
@@ -72,7 +72,7 @@ const updateViews = () => {
     if(currentView === 'cbb') {
         showAllCBB();
     }
-    if(currentView === 'individualGame') {
+    if(currentView === 'individualMLBGame') {
         individualMLBGame();
     }
 };
@@ -80,6 +80,18 @@ const updateViews = () => {
 const showNothing = () => {
     currentView = 'showLess';
 }
+
+fetchGamesData().then(() => {
+    setInterval(() => {
+        fetchGamesData().then(() => {
+            if(currentView === 'individualMLBGame' && selectedGameId) {
+                individualMLBGame(selectedGameId);
+            } else {
+                updateViews();
+            }
+        });
+    }, 1000);
+});
 
 const individualMLBGame = (gameId) => {
   // Clear other sections
@@ -96,36 +108,66 @@ const individualMLBGame = (gameId) => {
   cbbName.innerHTML = '';
 
   selectedGameId = gameId;
-  currentView = "individualGame";
+  currentView = "individualMLBGame";
+
   
-
-
+  
   // Find the game by ID
   const game = sportsData.MLB.find(g => g.id === gameId);
   if(!game) return;
-  console.log('game found:', game);
-  let gameStatus = game.status.type.description;
-  if(gameStatus === "Final") {
-    gameStatus = `Final Score: </br></br>
-    ${game.competitions[0].competitors[1].team.displayName}: ${game.competitions[0].competitors[1].score} </br>
-    ${game.competitions[0].competitors[0].team.displayName}: ${game.competitions[0].competitors[0].score} </br></br>
-    ${game.competitions[0].headlines?.[0]?.description ? game.competitions[0].headlines[0].description + "</br></br>" : ""}
-    Attendance: ${game.competitions[0].attendance}`;
-  }
-  if(gameStatus === "Scheduled") {
-    gameStatus = `Game status: ${game.status.type.description}</br></br>
-    ${game.status.type.shortDetail}</br></br>
-    Expected Weather: ${game.weather.displayValue} and ${game.weather.temperature}°</br></br>
-    Hosted at: ${game.competitions[0].venue.fullName}`
-  }
-  // Update the main container with game info and back button
-  sportsDiv.innerHTML = `
-    <h1>${game.competitions[0].competitors[1].team.displayName} at ${game.competitions[0].competitors[0].team.displayName}</h1>
-    <p>${gameStatus}</p>
+  
+  let homeTeam = game.competitions[0].competitors[0].team.displayName;
+  let awayTeam = game.competitions[0].competitors[1].team.displayName;
+  let homeScore = game.competitions[0].competitors[0].score;
+  let awayScore = game.competitions[0].competitors[1].score;
+ 
+  let futureWeather = game.weather.displayValue;
+    let currentWeather = game.weather.conditionId;
+    let temperature = game.weather.temperature;
+    let venue = game.competitions[0].venue.fullName;
+
+    let gameSummary = game.competitions[0].headlines?.[0]?.description ? game.competitions[0].headlines[0].description + "</br></br>" : "";
+    let lastPlay = game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "";
+
+    sportsDiv.innerHTML = `
+    <h1>${awayTeam} at ${homeTeam}</h1>
+    <p id="game-status"></p>
     <button id="mlb-scores">MLB Games</button>
     </br></br>
     <button id="back-button">All Games</button>
-  `;
+    `;
+
+    let individualId = document.getElementById("game-status");
+
+    console.log('game found:', game);
+    let gameStatus = game.status.type.description;
+
+    if (gameStatus === "Final") {
+    individualId.innerHTML = `Final Score: </br></br>
+    ${awayTeam}: ${awayScore} </br>
+    ${homeTeam}: ${homeScore} </br></br>
+    ${gameSummary}
+    Attendance: ${game.competitions[0].attendance}`;
+    }
+
+    if (gameStatus === "Scheduled") {
+    individualId.innerHTML = `Game status: ${game.status.type.description}</br></br>
+    ${game.status.type.shortDetail}</br></br>
+    Expected Weather: ${futureWeather} and ${temperature}°</br></br>
+    Hosted at: ${venue}`;
+    }
+
+    if (gameStatus === "In Progress") {
+    individualId.innerHTML = `
+        ${awayTeam} : ${awayScore}</br>
+        ${homeTeam} : ${homeScore}</br></br>
+        ${lastPlay}</br></br>
+        ${currentWeather} and ${temperature}° at ${venue}
+    `;
+    }
+
+  // Update the main container with game info and back button
+  
 
   // Add event listener to back button to return to list view
   document.getElementById('back-button').addEventListener('click', () => {
@@ -1263,15 +1305,5 @@ const showAllCBB = () => {
     currentView = 'cbb';
 }
 
-fetchGamesData().then(() => {
-    setInterval(() => {
-        fetchGamesData().then(() => {
-            if(currentView === 'individualMLBGame' && selectedGameId) {
-                individualMLBGame(selectedGameId);
-            } else {
-                updateViews();
-            }
-        });
-    }, 1000);
-});
+
 
