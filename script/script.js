@@ -124,7 +124,7 @@ const individualMLBGame = (gameId) => {
   let futureWeather = game.weather?.displayValue || "";
 let currentWeather = game.weather?.conditionId || "";
 
-    let temperature = game.weather.temperature;
+    let temperature = game.weather.temperature || "";
     let venue = game.competitions[0].venue.fullName;
 
     let gameSummary = game.competitions[0].headlines?.[0]?.description ? game.competitions[0].headlines[0].description + "</br></br>" : "";
@@ -1305,6 +1305,7 @@ const showAllCBB = () => {
     document.getElementById("back-to-main").addEventListener("click", showNothing);
     currentView = 'cbb';
 }
+
 
 
 
