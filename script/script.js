@@ -94,42 +94,43 @@ fetchGamesData().then(() => {
 });
 
 const individualMLBGame = (gameId) => {
-  // Clear other sections
-  mlbData.innerHTML = '';
-  nflData.innerHTML = '';
-  nflName.innerHTML = '';
-  cfbData.innerHTML = '';
-  cfbName.innerHTML = '';
-  nhlName.innerHTML = '';
-  nhlData.innerHTML = '';
-  nbaName.innerHTML = '';
-  nbaData.innerHTML = '';
-  cbbData.innerHTML = '';
-  cbbName.innerHTML = '';
+    if (!gameId) gameId = selectedGameId;
+    // Clear other sections
+    mlbData.innerHTML = '';
+    nflData.innerHTML = '';
+    nflName.innerHTML = '';
+    cfbData.innerHTML = '';
+    cfbName.innerHTML = '';
+    nhlName.innerHTML = '';
+    nhlData.innerHTML = '';
+    nbaName.innerHTML = '';
+    nbaData.innerHTML = '';
+    cbbData.innerHTML = '';
+    cbbName.innerHTML = '';
 
-  selectedGameId = gameId;
-  currentView = "individualMLBGame";
+    selectedGameId = gameId;
+    currentView = "individualMLBGame";
 
-  
-  
-  // Find the game by ID
-  const game = sportsData.MLB.find(g => g.id === gameId);
-  if(!game) return;
-  
-  let homeTeam = game.competitions[0].competitors[0].team.displayName;
-  let awayTeam = game.competitions[0].competitors[1].team.displayName;
-  let homeScore = game.competitions[0].competitors[0].score;
-  let awayScore = game.competitions[0].competitors[1].score;
- 
-  let futureWeather = game.weather?.displayValue || "";
-let currentWeather = game.weather?.conditionId || "";
-
+    
+    
+    // Find the game by ID
+    const game = sportsData.MLB.find(g => g.id === gameId);
+    if(!game) return;
+    
+    let homeTeam = game.competitions[0].competitors[0].team.displayName;
+    let awayTeam = game.competitions[0].competitors[1].team.displayName;
+    let homeScore = game.competitions[0].competitors[0].score;
+    let awayScore = game.competitions[0].competitors[1].score;
+    let futureWeather = game.weather?.displayValue || "";
+    let currentWeather = game.weather?.conditionId || "";
     let temperature = game.weather?.temperature || "";
     let venue = game.competitions[0].venue.fullName;
-
     let gameSummary = game.competitions[0].headlines?.[0]?.description ? game.competitions[0].headlines[0].description + "</br></br>" : "";
     let lastPlay = game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "";
-
+    const balls = game.competitions[0].situation?.balls ? game.competitions[0].situation.balls : "";
+    const strikes = game.competitions[0].situation?.strikes ? game.competitions[0].situation.strikes : "";
+    const outs = game.competitions[0].outsText;
+    const batter = game.competitions[0].situation?.athelete?.fullName ? game.competitions[0].situation.athelete.fullName : "";
     sportsDiv.innerHTML = `
     <h1>${awayTeam} at ${homeTeam}</h1>
     <p id="game-status"></p>
@@ -139,8 +140,6 @@ let currentWeather = game.weather?.conditionId || "";
     `;
 
     let individualId = document.getElementById("game-status");
-
-    console.log('game found:', game);
     let gameStatus = game.status.type.description;
 
     if (gameStatus === "Final") {
@@ -160,10 +159,14 @@ let currentWeather = game.weather?.conditionId || "";
 
     if (gameStatus === "In Progress") {
     individualId.innerHTML = `
+    <p id="mlb-data" class="game-details">    
         ${awayTeam} : ${awayScore}</br>
         ${homeTeam} : ${homeScore}</br></br>
+        ${batter}
+        ${balls}-${strikes} - ${outs}</br></br>
         ${lastPlay}</br></br>
         ${currentWeather} and ${temperature}° at ${venue}
+    </p>
     `;
     }
 
