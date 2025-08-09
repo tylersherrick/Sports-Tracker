@@ -116,7 +116,8 @@ const individualMLBGame = (gameId) => {
     // Find the game by ID
     const game = sportsData.MLB.find(g => g.id === gameId);
     if(!game) return;
-    
+    let balls = 0;
+    let strikes = 0;
     let homeTeam = game.competitions[0].competitors[0].team.displayName;
     let awayTeam = game.competitions[0].competitors[1].team.displayName;
     let homeScore = game.competitions[0].competitors[0].score;
@@ -127,10 +128,26 @@ const individualMLBGame = (gameId) => {
     let venue = game.competitions[0].venue.fullName;
     let gameSummary = game.competitions[0].headlines?.[0]?.description ? game.competitions[0].headlines[0].description + "</br></br>" : "";
     let lastPlay = game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "";
-    const balls = game.competitions[0].situation?.balls ? game.competitions[0].situation.balls : "";
-    const strikes = game.competitions[0].situation?.strikes ? game.competitions[0].situation.strikes : "";
-    const outs = game.competitions[0].outsText;
-    const batter = game.competitions[0].situation?.athelete?.fullName ? game.competitions[0].situation.athelete.fullName : "";
+    balls = game.competitions[0].situation?.balls ?? 0;
+    strikes = game.competitions[0].situation?.strikes ?? 0;
+    let inning = game.status.type.detail;
+    let outs = game.competitions[0].outsText;
+    let inningStatus = game.competitions[0].situation?.lastPlay?.type.text || "";
+    let ballsStrikesOuts = `${inning}</br></br>${balls}-${strikes} - ${outs}</br></br>`;
+    let currentBatter = game.competitions[0].situation?.batter?.athlete?.displayName || "";
+    let currentPitcher = game.competitions[0].situation?.pitcher?.athlete?.displayName || "";
+    let currentMatchup = `${currentPitcher} pitching to - ${currentBatter}</br></br>`;
+
+
+    if(inningStatus === "End Inning") {
+        ballsStrikesOuts = "";
+        currentMatchup = "";
+    }
+    if(inningStatus === "Start Batter/Pitcher") {
+        currentMatchup = "";
+    }
+
+    console.log(inningStatus);
     sportsDiv.innerHTML = `
     <h1>${awayTeam} at ${homeTeam}</h1>
     <p id="game-status"></p>
@@ -162,8 +179,8 @@ const individualMLBGame = (gameId) => {
     <p id="mlb-data" class="game-details">    
         ${awayTeam} : ${awayScore}</br>
         ${homeTeam} : ${homeScore}</br></br>
-        ${batter}
-        ${balls}-${strikes} - ${outs}</br></br>
+        ${ballsStrikesOuts}
+        ${currentMatchup}
         ${lastPlay}</br></br>
         ${currentWeather} and ${temperature}° at ${venue}
     </p>
@@ -430,8 +447,8 @@ const showLessNFL = () => {
                     <div class="game-info">
                         <p class="game-details">
                             ${time} </br></br>
-                            ${awayRank} ${awayTeam} -  ${awayScore} </br>
-                            ${homeRank} ${homeTeam} -  ${homeScore} </br></br>
+                            ${awayTeam} -  ${awayScore} </br>
+                            ${homeTeam} -  ${homeScore} </br></br>
                         </p>
                         <p class="game-details">
                         </p>
