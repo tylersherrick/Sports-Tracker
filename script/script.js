@@ -13,6 +13,7 @@ const cbbData = document.getElementById("cbb-data");
 const sportsData = { MLB: [], NFL: [], CFB: [], NHL: [], NBA: [], CBB: [] };
 let currentView = 'showLess';
 let selectedGameId = null;
+let nextLine = `</br></br>`;
 
 const fetchGamesData = async () => {
     try {
@@ -118,7 +119,8 @@ function mlbVariables(game) {
         currentWeather: game.weather?.conditionId || "",
         temperature: game.weather?.temperature || "",
         venue: game.competitions[0].venue.fullName,
-        gameSummary: game.competitions[0].headlines?.[0]?.description ? game.competitions[0].headlines[0].description + "</br></br>" : "",
+        gameSummary: game.competitions[0].headlines?.[0]?.description,
+        preGameMessage: game.competitions[0].headlines?.[0]?.shortLinkText,
         lastPlay: game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "",
         attendance: game.competitions[0].attendance,
         gameStatus: game.status.type.description,
@@ -129,11 +131,27 @@ function mlbVariables(game) {
         inning: game.status.type.detail,
         inningStatus: game.competitions[0].situation?.lastPlay?.type.text || "",
         currentBatter: game.competitions[0].situation?.batter?.athlete?.displayName || "",
+        currentBatterId: game.competitions[0].situation?.batter?.athlete?.team?.id || "",
         currentPitcher: game.competitions[0].situation?.pitcher?.athlete?.displayName || "",
         gameShortDetail: game.status.type.shortDetail,
         onFirst: game.competitions[0].situation?.onFirst ?? false,
         onSecond: game.competitions[0].situation?.onSecond ?? false,
-        onThird: game.competitions[0].situation?.onThird ?? false
+        onThird: game.competitions[0].situation?.onThird ?? false,
+        homeLogo: game.competitions[0].competitors[0].team.logo,
+        awayLogo: game.competitions[0].competitors[1].team.logo,
+        homeOverallRecord: game.competitions[0].competitors[0].records[0]?.summary,
+        homeHomeRecord: game.competitions[0].competitors[0].records[1]?.summary,
+        homeAwayRecord: game.competitions[0].competitors[0].records[2]?.summary,
+        awayOverallRecord: game.competitions[0].competitors[1].records[0]?.summary,
+        awayHomeRecord: game.competitions[0].competitors[1].records[1]?.summary,
+        awayAwayRecord: game.competitions[0].competitors[1].records[2]?.summary,
+        probableHomeStarter: game.competitions[0].competitors[0].probables?.[0]?.athlete?.displayName,
+        probableAwayStarter: game.competitions[0].competitors[1].probables?.[0]?.athlete?.displayName,
+        probableHomeStarterStats: game.competitions[0].competitors[0].probables?.[0]?.record || "",
+        probableAwayStarterStats: game.competitions[0].competitors[1].probables?.[0]?.record || "",
+        battingTeamId: game.competitions[0].situation?.batter?.athlete?.team?.id,
+        homeTeamId: game.competitions[0].competitors[0].team.id,
+        awayTeamId: game.competitions[0].competitors[1].team.id,
     };
 }
 
@@ -149,10 +167,10 @@ const individualMLBGame = (gameId) => {
     const game = sportsData.MLB.find(g => g.id === gameId);
     if(!game) return;
     const mlb = mlbVariables(game);
-    let scheduledWeather = `Expected Weather: ${mlb.futureWeather} and ${mlb.temperature}°</br></br>`;
+    let scheduledWeather = `Expected Weather: ${mlb.futureWeather} and ${mlb.temperature}°${nextLine}`;
     let activeWeather = `${mlb.currentWeather} and ${mlb.temperature}° at ${mlb.venue}`;
-    let ballsStrikesOuts = `${mlb.inning}</br></br>${mlb.balls}-${mlb.strikes} - ${mlb.outs}</br></br>`;
-    let currentMatchup = `${mlb.currentPitcher} pitching to - ${mlb.currentBatter}</br></br>`;
+    let ballsStrikesOuts = `${mlb.inning}${nextLine}${mlb.balls}-${mlb.strikes} - ${mlb.outs}${nextLine}`;
+    let currentMatchup = `${mlb.currentPitcher} pitching to - ${mlb.currentBatter}${nextLine}`;
 
     if(mlb.inningStatus === "End Inning") {
         ballsStrikesOuts = "";
@@ -162,12 +180,11 @@ const individualMLBGame = (gameId) => {
         currentMatchup = "";
     }
     if(!isNaN(Number(mlb.futureWeather))) {
-        scheduledWeather = `Expected Weather: ${mlb.currentWeather} and ${mlb.temperature}°</br></br>`;
+        scheduledWeather = `Expected Weather: ${mlb.currentWeather} and ${mlb.temperature}°${nextLine}`;
     }
     if(mlb.futureWeather === "") {
         scheduledWeather = "";
     }
-    
     sportsDiv.innerHTML = `
         <h1>${mlb.awayTeam} at ${mlb.homeTeam}</h1>
         <p id="game-status"></p>
@@ -181,9 +198,9 @@ const individualMLBGame = (gameId) => {
     if (gameStatus === "Final") {
         individualId.innerHTML = `
             <p id="mlb-data" class="game-details"> 
-                Final Score: </br></br>
-                ${mlb.awayTeam}: ${mlb.awayScore} </br>
-                ${mlb.homeTeam}: ${mlb.homeScore} </br></br>
+                Final Score: ${nextLine}
+                ${mlb.awayTeam}: ${mlb.awayScore} ${nextLine}
+                ${mlb.homeTeam}: ${mlb.homeScore} ${nextLine}
                 ${mlb.gameSummary}
                 Attendance: ${mlb.attendance}
             </p>
@@ -193,24 +210,30 @@ const individualMLBGame = (gameId) => {
     if (gameStatus === "Scheduled") {
         individualId.innerHTML = `
             <p id="mlb-data" class="game-details"> 
-                Game status: ${gameStatus}</br></br>
-                ${mlb.teamsPlaying}</br></br>
+                Game status: ${gameStatus} ${nextLine}
+                ${mlb.teamsPlaying} ${nextLine}
+                ${mlb.preGameMessage} ${nextLine}
                 ${scheduledWeather}
-                Hosted at: ${mlb.venue}
+                Hosted at: ${mlb.venue} ${nextLine}${nextLine}
+                ${mlb.homeTeam}: ${mlb.homeOverallRecord} ${nextLine}
+                Pitching Today: ${mlb.probableHomeStarter} - ${mlb.probableHomeStarterStats.slice(1, -1)} ERA
+                ${nextLine}${nextLine}
+                ${mlb.awayTeam}: ${mlb.awayOverallRecord} ${nextLine}
+                Pitching Today: ${mlb.probableAwayStarter} - ${mlb.probableAwayStarterStats.slice(1, -1)} ERA
             </p>
         `;
     }
 
     if (gameStatus === "In Progress") {
-    individualId.innerHTML = `
-        <p id="mlb-data" class="game-details">    
-            ${mlb.awayTeam} : ${mlb.awayScore}</br>
-            ${mlb.homeTeam} : ${mlb.homeScore}</br></br>
-            ${ballsStrikesOuts}
-            ${currentMatchup}
-            ${mlb.lastPlay}</br></br>
-            ${activeWeather}
-        </p>
+        individualId.innerHTML = `
+            <p id="mlb-data" class="game-details">    
+                ${mlb.awayTeam} : ${mlb.awayScore} ${nextLine}
+                ${mlb.homeTeam} : ${mlb.homeScore} ${nextLine}
+                ${ballsStrikesOuts}
+                ${currentMatchup}
+                ${mlb.lastPlay} ${nextLine}
+                ${activeWeather} ${nextLine}
+            </p>
     `;
     }
 
