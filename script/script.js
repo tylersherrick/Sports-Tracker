@@ -93,104 +93,127 @@ fetchGamesData().then(() => {
     }, 1000);
 });
 
+const clearAllSections = () => {
+  mlbData.innerHTML = '';
+  nflData.innerHTML = '';
+  nflName.innerHTML = '';
+  cfbData.innerHTML = '';
+  cfbName.innerHTML = '';
+  nhlName.innerHTML = '';
+  nhlData.innerHTML = '';
+  nbaName.innerHTML = '';
+  nbaData.innerHTML = '';
+  cbbData.innerHTML = '';
+  cbbName.innerHTML = '';
+};
+
+function mlbVariables(game) {
+    return {
+        gameId: game.id,
+        homeTeam: game.competitions[0].competitors[0].team.displayName,
+        awayTeam: game.competitions[0].competitors[1].team.displayName,
+        homeScore: game.competitions[0].competitors[0].score,
+        awayScore: game.competitions[0].competitors[1].score,
+        futureWeather: game.weather?.displayValue || "",
+        currentWeather: game.weather?.conditionId || "",
+        temperature: game.weather?.temperature || "",
+        venue: game.competitions[0].venue.fullName,
+        gameSummary: game.competitions[0].headlines?.[0]?.description ? game.competitions[0].headlines[0].description + "</br></br>" : "",
+        lastPlay: game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "",
+        attendance: game.competitions[0].attendance,
+        gameStatus: game.status.type.description,
+        teamsPlaying: game.status.type.shortDetail,
+        balls: game.competitions[0].situation?.balls ?? 0,
+        strikes: game.competitions[0].situation?.strikes ?? 0,
+        outs: game.competitions[0].outsText,
+        inning: game.status.type.detail,
+        inningStatus: game.competitions[0].situation?.lastPlay?.type.text || "",
+        currentBatter: game.competitions[0].situation?.batter?.athlete?.displayName || "",
+        currentPitcher: game.competitions[0].situation?.pitcher?.athlete?.displayName || "",
+        gameShortDetail: game.status.type.shortDetail,
+        onFirst: game.competitions[0].situation?.onFirst ?? false,
+        onSecond: game.competitions[0].situation?.onSecond ?? false,
+        onThird: game.competitions[0].situation?.onThird ?? false
+    };
+}
+
 const individualMLBGame = (gameId) => {
     if (!gameId) gameId = selectedGameId;
     // Clear other sections
-    mlbData.innerHTML = '';
-    nflData.innerHTML = '';
-    nflName.innerHTML = '';
-    cfbData.innerHTML = '';
-    cfbName.innerHTML = '';
-    nhlName.innerHTML = '';
-    nhlData.innerHTML = '';
-    nbaName.innerHTML = '';
-    nbaData.innerHTML = '';
-    cbbData.innerHTML = '';
-    cbbName.innerHTML = '';
+    clearAllSections();
 
     selectedGameId = gameId;
     currentView = "individualMLBGame";
-
-    
     
     // Find the game by ID
     const game = sportsData.MLB.find(g => g.id === gameId);
     if(!game) return;
-    let balls = 0;
-    let strikes = 0;
-    let homeTeam = game.competitions[0].competitors[0].team.displayName;
-    let awayTeam = game.competitions[0].competitors[1].team.displayName;
-    let homeScore = game.competitions[0].competitors[0].score;
-    let awayScore = game.competitions[0].competitors[1].score;
-    let futureWeather = game.weather?.displayValue || "";
-    let currentWeather = game.weather?.conditionId || "";
-    let temperature = game.weather?.temperature || "";
-    let venue = game.competitions[0].venue.fullName;
-    let gameSummary = game.competitions[0].headlines?.[0]?.description ? game.competitions[0].headlines[0].description + "</br></br>" : "";
-    let lastPlay = game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "";
-    balls = game.competitions[0].situation?.balls ?? 0;
-    strikes = game.competitions[0].situation?.strikes ?? 0;
-    let inning = game.status.type.detail;
-    let outs = game.competitions[0].outsText;
-    let inningStatus = game.competitions[0].situation?.lastPlay?.type.text || "";
-    let ballsStrikesOuts = `${inning}</br></br>${balls}-${strikes} - ${outs}</br></br>`;
-    let currentBatter = game.competitions[0].situation?.batter?.athlete?.displayName || "";
-    let currentPitcher = game.competitions[0].situation?.pitcher?.athlete?.displayName || "";
-    let currentMatchup = `${currentPitcher} pitching to - ${currentBatter}</br></br>`;
+    const mlb = mlbVariables(game);
+    let scheduledWeather = `Expected Weather: ${mlb.futureWeather} and ${mlb.temperature}°</br></br>`;
+    let activeWeather = `${mlb.currentWeather} and ${mlb.temperature}° at ${mlb.venue}`;
+    let ballsStrikesOuts = `${mlb.inning}</br></br>${mlb.balls}-${mlb.strikes} - ${mlb.outs}</br></br>`;
+    let currentMatchup = `${mlb.currentPitcher} pitching to - ${mlb.currentBatter}</br></br>`;
 
-
-    if(inningStatus === "End Inning") {
+    if(mlb.inningStatus === "End Inning") {
         ballsStrikesOuts = "";
         currentMatchup = "";
     }
-    if(inningStatus === "Start Batter/Pitcher") {
+    if(mlb.inningStatus === "Start Batter/Pitcher") {
         currentMatchup = "";
     }
-
-    console.log(inningStatus);
+    if(!isNaN(Number(mlb.futureWeather))) {
+        scheduledWeather = `Expected Weather: ${mlb.currentWeather} and ${mlb.temperature}°</br></br>`;
+    }
+    if(mlb.futureWeather === "") {
+        scheduledWeather = "";
+    }
+    
     sportsDiv.innerHTML = `
-    <h1>${awayTeam} at ${homeTeam}</h1>
-    <p id="game-status"></p>
-    <button id="mlb-scores">MLB Games</button>
-    </br></br>
-    <button id="back-button">All Games</button>
+        <h1>${mlb.awayTeam} at ${mlb.homeTeam}</h1>
+        <p id="game-status"></p>
+        <button id="mlb-scores">MLB Games</button>
+        </br></br>
+        <button id="back-button">All Games</button>
     `;
-
     let individualId = document.getElementById("game-status");
-    let gameStatus = game.status.type.description;
+    let gameStatus = mlb.gameStatus;
 
     if (gameStatus === "Final") {
-    individualId.innerHTML = `Final Score: </br></br>
-    ${awayTeam}: ${awayScore} </br>
-    ${homeTeam}: ${homeScore} </br></br>
-    ${gameSummary}
-    Attendance: ${game.competitions[0].attendance}`;
+        individualId.innerHTML = `
+            <p id="mlb-data" class="game-details"> 
+                Final Score: </br></br>
+                ${mlb.awayTeam}: ${mlb.awayScore} </br>
+                ${mlb.homeTeam}: ${mlb.homeScore} </br></br>
+                ${mlb.gameSummary}
+                Attendance: ${mlb.attendance}
+            </p>
+        `;
     }
 
     if (gameStatus === "Scheduled") {
-    individualId.innerHTML = `Game status: ${game.status.type.description}</br></br>
-    ${game.status.type.shortDetail}</br></br>
-    Expected Weather: ${futureWeather} and ${temperature}°</br></br>
-    Hosted at: ${venue}`;
+        individualId.innerHTML = `
+            <p id="mlb-data" class="game-details"> 
+                Game status: ${gameStatus}</br></br>
+                ${mlb.teamsPlaying}</br></br>
+                ${scheduledWeather}
+                Hosted at: ${mlb.venue}
+            </p>
+        `;
     }
 
     if (gameStatus === "In Progress") {
     individualId.innerHTML = `
-    <p id="mlb-data" class="game-details">    
-        ${awayTeam} : ${awayScore}</br>
-        ${homeTeam} : ${homeScore}</br></br>
-        ${ballsStrikesOuts}
-        ${currentMatchup}
-        ${lastPlay}</br></br>
-        ${currentWeather} and ${temperature}° at ${venue}
-    </p>
+        <p id="mlb-data" class="game-details">    
+            ${mlb.awayTeam} : ${mlb.awayScore}</br>
+            ${mlb.homeTeam} : ${mlb.homeScore}</br></br>
+            ${ballsStrikesOuts}
+            ${currentMatchup}
+            ${mlb.lastPlay}</br></br>
+            ${activeWeather}
+        </p>
     `;
     }
 
-  // Update the main container with game info and back button
-  
-
-  // Add event listener to back button to return to list view
   document.getElementById('back-button').addEventListener('click', () => {
     currentView = 'showLess';
     updateViews();
@@ -206,56 +229,41 @@ const showLessMLB = () => {
     sportsDiv.innerHTML = `<h1>Todays Sporting Events</h1>`;
     sportsDiv.innerHTML += `<h3 id="show-all-mlb">MLB</h3>`;
     mlbData.innerHTML = ``;
-    const inProgress = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
-    const yetToStart = sportsData.MLB.slice(0, sportsData.MLB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
-    const limitedGames = [...inProgress, ...yetToStart].slice(0, 3).filter(event => 
-        event.status.type.name === "STATUS_IN_PROGRESS" || event.status.type.name === "STATUS_SCHEDULED"
-    );
+    const inProgress = sportsData.MLB.filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
+    const yetToStart = sportsData.MLB.filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const limitedGames = [...inProgress, ...yetToStart].slice(0, 3);
     const gameTotal = limitedGames.length;
     limitedGames.forEach(event => {
-        const awayTeam = event.competitions[0].competitors[1].team.displayName;
-        const homeTeam = event.competitions[0].competitors[0].team.displayName;
-        const awayScore = event.competitions[0].competitors[1].score;
-        const homeScore = event.competitions[0].competitors[0].score;
-        const inning = event.status.type.detail;
-        const gameStatus = event.status.type.shortDetail;
-        const outs = event.competitions[0].outsText;
-        const situation = event.competitions[0].situation;
-        const balls = situation ? situation.balls : 'N/A';
-        const strikes = situation ? situation.strikes : 'N/A';
-        const isFirst = situation ? situation.onFirst : 'N/A';
-        const isSecond = situation ? situation.onSecond : 'N/A';
-        const isThird = situation ? situation.onThird : 'N/A';
-        const gameId = event.id;
+        const mlb = mlbVariables(event);
         if (event.status.type.name === "STATUS_IN_PROGRESS") {
             mlbData.innerHTML += `
-                <div id="${gameId}" class="game-row">
+                <div id="${mlb.gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${inning} </br></br>
-                            ${awayTeam} -  ${awayScore} </br>
-                            ${homeTeam} -  ${homeScore}
+                            ${mlb.inning} </br></br>
+                            ${mlb.awayTeam} -  ${mlb.awayScore} </br>
+                            ${mlb.homeTeam} -  ${mlb.homeScore}
                         </p>
                         <p class="game-details">
-                            ${balls}-${strikes} - ${outs}
+                            ${mlb.balls}-${mlb.strikes} - ${mlb.outs}
                         </p>
                     </div>
                     <div class="base-map">
-                        <div class="base first-base ${isFirst ? 'occupied' : ''}"></div>
-                        <div class="base second-base ${isSecond ? 'occupied' : ''}"></div>
-                        <div class="base third-base ${isThird ? 'occupied' : ''}"></div>
+                        <div class="base first-base ${mlb.onFirst ? 'occupied' : ''}"></div>
+                        <div class="base second-base ${mlb.onSecond ? 'occupied' : ''}"></div>
+                        <div class="base third-base ${mlb.onThird ? 'occupied' : ''}"></div>
                     </div>
                 </div>
             `;
         }
         if (event.status.type.name === "STATUS_SCHEDULED") {
             mlbData.innerHTML += `
-                <div id="${gameId}" class="game-row">
+                <div id="${mlb.gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                        ${inning} ${gameStatus} </br></br>
-                        ${awayTeam} </br>
-                        ${homeTeam}
+                        ${mlb.inning} ${mlb.gameShortDetail} </br></br>
+                        ${mlb.awayTeam} </br>
+                        ${mlb.homeTeam}
                         </p>
                         <p class="game-details">
                             
@@ -266,14 +274,12 @@ const showLessMLB = () => {
         }
     });
     if (limitedGames.length === 0) {
-        mlbData.innerHTML += `<h4>There are no active games.</h4>`;
+        mlbData.innerHTML = `<h4>There are no active games.</h4>`;
     }
     // Attach click listeners to all game rows
-    const gameRows = document.querySelectorAll('.game-row');
-    gameRows.forEach(row => {
-    row.addEventListener('click', (event) => {
-        const gameId = event.currentTarget.id; // get the id from the div clicked
-        individualMLBGame(gameId);
+    document.querySelectorAll('.game-row').forEach(row => {
+        row.addEventListener('click', (event) => {
+            individualMLBGame(event.currentTarget.id);
         });
     });
 
@@ -286,84 +292,56 @@ const showAllMLB = () => {
         <h1>All MLB Games Today</h1>
         <button id="back-to-main">Back</button>
     `;
-    mlbData.innerHTML = '';
-    nflData.innerHTML = '';
-    nflName.innerHTML = '';
-    cfbData.innerHTML = '';
-    cfbName.innerHTML = '';
-    nhlName.innerHTML = '';
-    nhlData.innerHTML = '';
-    nbaName.innerHTML = '';
-    nbaData.innerHTML = '';
-    cbbData.innerHTML = '';
-    cbbName.innerHTML = '';
-
+    clearAllSections();
     const inProgress = sportsData.MLB.filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const yetToStart = sportsData.MLB.filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const alreadyFinal = sportsData.MLB.filter(event => event.status.type.name === "STATUS_FINAL");
     const longGamesList = [...inProgress, ...yetToStart, ...alreadyFinal];
-
     longGamesList.forEach(event => {
-        const awayTeam = event.competitions[0].competitors[1].team.displayName;
-        const homeTeam = event.competitions[0].competitors[0].team.displayName;
-        const awayScore = event.competitions[0].competitors[1].score;
-        const homeScore = event.competitions[0].competitors[0].score;
-        const inning = event.status.type.detail;
-        const gameStatus = event.status.type.shortDetail;
-        const outs = event.competitions[0].outsText;
-        const situation = event.competitions[0].situation;
-        const balls = situation ? situation.balls : 'N/A';
-        const strikes = situation ? situation.strikes : 'N/A';
-        const isFirst = situation ? situation.onFirst : 'N/A';
-        const isSecond = situation ? situation.onSecond : 'N/A';
-        const isThird = situation ? situation.onThird : 'N/A';
-        const gameId = event.id;
-
+        const mlb = mlbVariables(event);
         if (event.status.type.name === "STATUS_IN_PROGRESS") {
             mlbData.innerHTML += `
-                <div id="${gameId}" class="game-row">
+                <div id="${mlb.gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${inning} </br></br>
-                            ${awayTeam} - ${awayScore} </br>
-                            ${homeTeam} - ${homeScore}
+                            ${mlb.inning} </br></br>
+                            ${mlb.awayTeam} - ${mlb.awayScore} </br>
+                            ${mlb.homeTeam} - ${mlb.homeScore}
                         </p>
                         <p class="game-details">
-                            ${balls}-${strikes} - ${outs}
+                            ${mlb.balls}-${mlb.strikes} - ${mlb.outs}
                         </p>
                     </div>
                     <div class="base-map">
-                        <div class="base first-base ${isFirst ? 'occupied' : ''}"></div>
-                        <div class="base second-base ${isSecond ? 'occupied' : ''}"></div>
-                        <div class="base third-base ${isThird ? 'occupied' : ''}"></div>
+                        <div class="base first-base ${mlb.onFirst ? 'occupied' : ''}"></div>
+                        <div class="base second-base ${mlb.onSecond ? 'occupied' : ''}"></div>
+                        <div class="base third-base ${mlb.onThird ? 'occupied' : ''}"></div>
                     </div>
                 </div>
             `;
         }
-
         if (event.status.type.name === "STATUS_SCHEDULED") {
             mlbData.innerHTML += `
-                <div id="${gameId}" class="game-row">
+                <div id="${mlb.gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${inning} ${gameStatus} </br></br>
-                            ${awayTeam} </br>
-                            ${homeTeam}
+                            ${mlb.inning} ${mlb.gameShortDetail} </br></br>
+                            ${mlb.awayTeam} </br>
+                            ${mlb.homeTeam}
                         </p>
                         <p class="game-details"></p>
                     </div>
                 </div>
             `;
         }
-
         if (event.status.type.name === "STATUS_FINAL") {
             mlbData.innerHTML += `
-                <div id="${gameId}" class="game-row">
+                <div id="${mlb.gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${inning} </br></br>
-                            ${awayTeam} - ${awayScore} </br>
-                            ${homeTeam} - ${homeScore}
+                            ${mlb.inning} </br></br>
+                            ${mlb.awayTeam} - ${mlb.awayScore} </br>
+                            ${mlb.homeTeam} - ${mlb.homeScore}
                         </p>
                         <p class="game-details"></p>
                     </div>
@@ -371,17 +349,12 @@ const showAllMLB = () => {
             `;
         }
     });
-
     document.getElementById("back-to-main").addEventListener("click", showNothing);
-
-    const gameRows = document.querySelectorAll('.game-row');
-    gameRows.forEach(row => {
+    document.querySelectorAll('.game-row').forEach(row => {
         row.addEventListener('click', (event) => {
-            const gameId = event.currentTarget.id;
-            individualMLBGame(gameId);
+            individualMLBGame(event.currentTarget.id);
         });
     });
-
     currentView = 'mlb';
 };
 
