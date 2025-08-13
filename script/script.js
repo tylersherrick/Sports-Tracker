@@ -119,7 +119,7 @@ function mlbVariables(game) {
         currentWeather: game.weather?.conditionId || "",
         temperature: game.weather?.temperature || "",
         venue: game.competitions[0].venue.fullName,
-        gameSummary: game.competitions[0].headlines?.[0]?.description,
+        gameSummary: game.competitions[0].headlines?.[0]?.description || "",
         preGameMessage: game.competitions[0].headlines?.[0]?.shortLinkText,
         lastPlay: game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "",
         attendance: game.competitions[0].attendance,
@@ -171,6 +171,7 @@ const individualMLBGame = (gameId) => {
     let activeWeather = `${mlb.currentWeather} and ${mlb.temperature}° at ${mlb.venue}`;
     let ballsStrikesOuts = `${mlb.inning}${nextLine}${mlb.balls}-${mlb.strikes} - ${mlb.outs}${nextLine}`;
     let currentMatchup = `${mlb.currentPitcher} pitching to - ${mlb.currentBatter}${nextLine}`;
+    let summaryLine = `${mlb.gameSummary} ${nextLine}`;
 
     if(mlb.inningStatus === "End Inning") {
         ballsStrikesOuts = "";
@@ -184,6 +185,9 @@ const individualMLBGame = (gameId) => {
     }
     if(mlb.futureWeather === "") {
         scheduledWeather = "";
+    }
+    if(mlb.gameSummary === "") {
+        summaryLine = "";
     }
     sportsDiv.innerHTML = `
         <h1>${mlb.awayTeam} at ${mlb.homeTeam}</h1>
@@ -201,7 +205,7 @@ const individualMLBGame = (gameId) => {
                 Final Score: ${nextLine}
                 ${mlb.awayTeam}: ${mlb.awayScore} ${nextLine}
                 ${mlb.homeTeam}: ${mlb.homeScore} ${nextLine}
-                ${mlb.gameSummary}
+                ${summaryLine}
                 Attendance: ${mlb.attendance}
             </p>
         `;
