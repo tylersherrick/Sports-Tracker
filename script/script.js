@@ -14,6 +14,7 @@ const sportsData = { MLB: [], NFL: [], CFB: [], NHL: [], NBA: [], CBB: [] };
 let currentView = 'showLess';
 let selectedGameId = null;
 let nextLine = `</br></br>`;
+let mlbState = "none";
 
 const fetchGamesData = async () => {
     try {
@@ -83,16 +84,20 @@ const showNothing = () => {
 }
 
 fetchGamesData().then(() => {
-    setInterval(() => {
-        fetchGamesData().then(() => {
-            if(currentView === 'individualMLBGame' && selectedGameId) {
-                individualMLBGame(selectedGameId);
-            } else {
-                updateViews();
-            }
-        });
-    }, 1000);
+  setInterval(() => {
+    fetchGamesData().then(() => {
+      if(currentView === 'individualMLBGame' && selectedGameId) {
+        individualMLBGame(selectedGameId);
+      } else {
+        updateViews();
+      }
+
+      // re-render stats if any team is selected
+      if(mlbState !== "none") showStats(mlbState);
+    });
+  }, 1000);
 });
+
 
 const clearAllSections = () => {
   mlbData.innerHTML = '';
@@ -152,7 +157,48 @@ function mlbVariables(game) {
         battingTeamId: game.competitions[0].situation?.batter?.athlete?.team?.id,
         homeTeamId: game.competitions[0].competitors[0].team.id,
         awayTeamId: game.competitions[0].competitors[1].team.id,
+        homeAvg: { stat: game.competitions[0].competitors[0].leaders[0].abbreviation, athlete: game.competitions[0].competitors[0].leaders[0].leaders[0].athlete.fullName },
+        homeHR: { stat: game.competitions[0].competitors[0].leaders[1].abbreviation, athlete: game.competitions[0].competitors[0].leaders[1].leaders[0].athlete.fullName },
+        homeRBI: { stat: game.competitions[0].competitors[0].leaders[2].abbreviation, athlete: game.competitions[0].competitors[0].leaders[2].leaders[0].athlete.fullName },
+        homeMLBRating: { stat: game.competitions[0].competitors[0].leaders[3].abbreviation, athlete: game.competitions[0].competitors[0].leaders[3].leaders[0].athlete.fullName },
+        awayAvg: { stat: game.competitions[0].competitors[1].leaders[0].abbreviation, athlete: game.competitions[0].competitors[1].leaders[0].leaders[0].athlete.fullName },
+        awayHR: { stat: game.competitions[0].competitors[1].leaders[1].abbreviation, athlete: game.competitions[0].competitors[1].leaders[1].leaders[0].athlete.fullName },
+        awayRBI: { stat: game.competitions[0].competitors[1].leaders[2].abbreviation, athlete: game.competitions[0].competitors[1].leaders[2].leaders[0].athlete.fullName },
+        awayMLBRating: { stat: game.competitions[0].competitors[1].leaders[3].abbreviation, athlete: game.competitions[0].competitors[1].leaders[3].leaders[0].athlete.fullName },
+        dueUp1: game.competitions[0].situation?.dueUp?.[0]?.athlete?.fullName,
+        dueUp2: game.competitions[0].situation?.dueUp?.[1]?.athlete?.fullName,
+        dueUp3: game.competitions[0].situation?.dueUp?.[2]?.athlete?.fullName
+
     };
+}
+
+function hideStats() {
+    let statsText = document.getElementById('team-stats');
+    statsText.innerHTML = "";
+}
+
+function toggleStats(state) {
+    if(state === mlbState) {
+        mlbState = "none";
+        hideStats();
+    } else {
+        mlbState = state;
+        showStats(state);
+    }
+}
+
+function showStats(state) {
+    let statsText = document.getElementById('team-stats');
+    if(state === "home") {
+        statsText.innerHTML = `
+            Home
+        `;
+    }
+    if(state === "away") {
+        statsText.innerHTML = `
+            Away
+        `;
+    }
 }
 
 const individualMLBGame = (gameId) => {
@@ -175,16 +221,25 @@ const individualMLBGame = (gameId) => {
 
     if(mlb.inningStatus === "End Inning") {
         ballsStrikesOuts = "";
-        currentMatchup = "";
+        currentMatchup = `
+            Due Up: ${nextLine}
+            &nbsp;&nbsp;${mlb.dueUp1} ${nextLine}
+            &nbsp;&nbsp;${mlb.dueUp2} ${nextLine}
+            &nbsp;&nbsp;${mlb.dueUp3} ${nextLine}
+        `;
     }
     if(mlb.inningStatus === "Start Batter/Pitcher") {
         currentMatchup = "";
+
     }
     if(!isNaN(Number(mlb.futureWeather))) {
         scheduledWeather = `Expected Weather: ${mlb.currentWeather} and ${mlb.temperature}°${nextLine}`;
     }
     if(mlb.futureWeather === "") {
         scheduledWeather = "";
+    }
+    if(mlb.currentWeather === "") {
+        activeWeather = "";
     }
     if(mlb.gameSummary === "") {
         summaryLine = "";
@@ -237,21 +292,28 @@ const individualMLBGame = (gameId) => {
                 ${ballsStrikesOuts}
                 ${currentMatchup}
                 ${mlb.lastPlay} ${nextLine}
-                ${activeWeather} ${nextLine}
+                ${activeWeather} 
+            </p>
+            <img id="away-logo" class="away-logo" src="${mlb.awayLogo}"> <img id="home-logo" class="home-logo" src="${mlb.homeLogo}">
+            <p id="team-stats">
+                
             </p>
     `;
     }
 
-  document.getElementById('back-button').addEventListener('click', () => {
-    currentView = 'showLess';
-    updateViews();
-  });
-  document.getElementById('mlb-scores').addEventListener('click', () => {
-    currentView = 'mlb';
-    updateViews();
-  })
-};
+    
+    document.getElementById('back-button').addEventListener('click', () => {
+        currentView = 'showLess';
+        updateViews();
+    });
+    document.getElementById('mlb-scores').addEventListener('click', () => {
+        currentView = 'mlb';
+        updateViews();
+    })
+    document.getElementById("away-logo")?.addEventListener("click", () => toggleStats("away"));
+    document.getElementById("home-logo")?.addEventListener("click", () => toggleStats("home"));
 
+};
 
 const showLessMLB = () => {
     sportsDiv.innerHTML = `<h1>Todays Sporting Events</h1>`;
@@ -313,6 +375,7 @@ const showLessMLB = () => {
 
     document.getElementById("show-all-mlb").addEventListener("click", showAllMLB);
     currentView = 'showLess';
+    
 };
 
 const showAllMLB = () => {
@@ -383,6 +446,7 @@ const showAllMLB = () => {
             individualMLBGame(event.currentTarget.id);
         });
     });
+    
     currentView = 'mlb';
 };
 
