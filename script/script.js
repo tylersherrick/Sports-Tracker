@@ -219,11 +219,12 @@ const individualMLBGame = (gameId) => {
                 ${mlb.preGameMessage} ${nextLine}
                 ${scheduledWeather}
                 Hosted at: ${mlb.venue} ${nextLine}${nextLine}
-                ${mlb.homeTeam}: ${mlb.homeOverallRecord} ${nextLine}
-                Pitching Today: ${mlb.probableHomeStarter} - ${mlb.probableHomeStarterStats.slice(1, -1)} ERA
-                ${nextLine}${nextLine}
-                ${mlb.awayTeam}: ${mlb.awayOverallRecord} ${nextLine}
+                ${mlb.awayTeam}: ${mlb.awayOverallRecord} (Away: ${mlb.awayAwayRecord}) ${nextLine}
                 Pitching Today: ${mlb.probableAwayStarter} - ${mlb.probableAwayStarterStats.slice(1, -1)} ERA
+                ${nextLine}${nextLine}
+                ${mlb.homeTeam}: ${mlb.homeOverallRecord} (Home: ${mlb.homeHomeRecord}) ${nextLine}
+                Pitching Today: ${mlb.probableHomeStarter} - ${mlb.probableHomeStarterStats.slice(1, -1)} ERA
+                
             </p>
         `;
     }
