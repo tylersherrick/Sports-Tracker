@@ -44,12 +44,13 @@ const fetchGamesData = async () => {
         sportsData.NHL = nhlData.events;
         sportsData.NBA = nbaData.events;
         sportsData.CBB = cbbData.events;
-        console.log(sportsData);
         updateViews();
     } catch (error) {
         console.error('Error fetching sports data:', error);
     }
 };
+
+console.log(sportsData);
 
 const updateViews = () => {
     if (currentView === 'showLess') {
@@ -112,65 +113,6 @@ const clearAllSections = () => {
   cbbData.innerHTML = '';
   cbbName.innerHTML = '';
 };
-
-function mlbVariables(game) {
-    return {
-        gameId: game.id,
-        homeTeam: game.competitions[0].competitors[0].team.displayName,
-        awayTeam: game.competitions[0].competitors[1].team.displayName,
-        homeScore: game.competitions[0].competitors[0].score,
-        awayScore: game.competitions[0].competitors[1].score,
-        futureWeather: game.weather?.displayValue || "",
-        currentWeather: game.weather?.conditionId || "",
-        temperature: game.weather?.temperature || "",
-        venue: game.competitions[0].venue.fullName,
-        gameSummary: game.competitions[0].headlines?.[0]?.description || "",
-        preGameMessage: game.competitions[0].headlines?.[0]?.shortLinkText,
-        lastPlay: game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "",
-        attendance: game.competitions[0].attendance,
-        gameStatus: game.status.type.description,
-        teamsPlaying: game.status.type.shortDetail,
-        balls: game.competitions[0].situation?.balls ?? 0,
-        strikes: game.competitions[0].situation?.strikes ?? 0,
-        outs: game.competitions[0].outsText,
-        inning: game.status.type.detail,
-        inningStatus: game.competitions[0].situation?.lastPlay?.type.text || "",
-        currentBatter: game.competitions[0].situation?.batter?.athlete?.displayName || "",
-        currentBatterId: game.competitions[0].situation?.batter?.athlete?.team?.id || "",
-        currentPitcher: game.competitions[0].situation?.pitcher?.athlete?.displayName || "",
-        gameShortDetail: game.status.type.shortDetail,
-        onFirst: game.competitions[0].situation?.onFirst ?? false,
-        onSecond: game.competitions[0].situation?.onSecond ?? false,
-        onThird: game.competitions[0].situation?.onThird ?? false,
-        homeLogo: game.competitions[0].competitors[0].team.logo,
-        awayLogo: game.competitions[0].competitors[1].team.logo,
-        homeOverallRecord: game.competitions[0].competitors[0].records[0]?.summary,
-        homeHomeRecord: game.competitions[0].competitors[0].records[1]?.summary,
-        homeAwayRecord: game.competitions[0].competitors[0].records[2]?.summary,
-        awayOverallRecord: game.competitions[0].competitors[1].records[0]?.summary,
-        awayHomeRecord: game.competitions[0].competitors[1].records[1]?.summary,
-        awayAwayRecord: game.competitions[0].competitors[1].records[2]?.summary,
-        probableHomeStarter: game.competitions[0].competitors[0].probables?.[0]?.athlete?.displayName,
-        probableAwayStarter: game.competitions[0].competitors[1].probables?.[0]?.athlete?.displayName,
-        probableHomeStarterStats: game.competitions[0].competitors[0].probables?.[0]?.record || "",
-        probableAwayStarterStats: game.competitions[0].competitors[1].probables?.[0]?.record || "",
-        battingTeamId: game.competitions[0].situation?.batter?.athlete?.team?.id,
-        homeTeamId: game.competitions[0].competitors[0].team.id,
-        awayTeamId: game.competitions[0].competitors[1].team.id,
-        homeAvg: { stat: game.competitions[0].competitors[0].leaders[0].abbreviation, athlete: game.competitions[0].competitors[0].leaders[0].leaders[0].athlete.fullName },
-        homeHR: { stat: game.competitions[0].competitors[0].leaders[1].abbreviation, athlete: game.competitions[0].competitors[0].leaders[1].leaders[0].athlete.fullName },
-        homeRBI: { stat: game.competitions[0].competitors[0].leaders[2].abbreviation, athlete: game.competitions[0].competitors[0].leaders[2].leaders[0].athlete.fullName },
-        homeMLBRating: { stat: game.competitions[0].competitors[0].leaders[3].abbreviation, athlete: game.competitions[0].competitors[0].leaders[3].leaders[0].athlete.fullName },
-        awayAvg: { stat: game.competitions[0].competitors[1].leaders[0].abbreviation, athlete: game.competitions[0].competitors[1].leaders[0].leaders[0].athlete.fullName },
-        awayHR: { stat: game.competitions[0].competitors[1].leaders[1].abbreviation, athlete: game.competitions[0].competitors[1].leaders[1].leaders[0].athlete.fullName },
-        awayRBI: { stat: game.competitions[0].competitors[1].leaders[2].abbreviation, athlete: game.competitions[0].competitors[1].leaders[2].leaders[0].athlete.fullName },
-        awayMLBRating: { stat: game.competitions[0].competitors[1].leaders[3].abbreviation, athlete: game.competitions[0].competitors[1].leaders[3].leaders[0].athlete.fullName },
-        dueUp1: game.competitions[0].situation?.dueUp?.[0]?.athlete?.fullName,
-        dueUp2: game.competitions[0].situation?.dueUp?.[1]?.athlete?.fullName,
-        dueUp3: game.competitions[0].situation?.dueUp?.[2]?.athlete?.fullName
-
-    };
-}
 
 function hideStats() {
     let statsText = document.getElementById('team-stats');
@@ -452,7 +394,6 @@ const showAllMLB = () => {
 
 
 const showLessNFL = () => {
-    
     nflData.innerHTML = '';
     nflName.innerHTML = '<h3 id="show-all-nfl">NFL</h3>';
     const nflHalfTime = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
@@ -461,30 +402,20 @@ const showLessNFL = () => {
     const nflEndQuarter = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
     const smallNFLList = [...nflInProgress, ...nflHalfTime, ...nflEndQuarter, ...nflScheduled].slice(0, 3);
     smallNFLList.forEach(event => {
-        const awayTeam = event.competitions[0].competitors[1].team.displayName;
-        const homeTeam = event.competitions[0].competitors[0].team.displayName;
-        const gameStatus = event.status.type.shortDetail;
-        const awayScore = event.competitions[0].competitors[1].score;
-        const homeScore = event.competitions[0].competitors[0].score;
-        const time = event.status.type.detail;
-        const situation = event.competitions[0].situation || null;
-        const ballPosition = situation && situation.downDistanceText ? situation.downDistanceText : 'Switching Possession';
-        const possession = situation && situation.possession ? situation.possession : '';
-        let awayID = event.competitions[0].competitors[1].id;
-        let homeID = event.competitions[0].competitors[0].id;
-        awayID = possession === awayID ? "🏈" : "";
-        homeID = possession === homeID ? "🏈" : "";
+        const nfl = nflVariables(event);
+        nfl.awayID = nfl.possession === nfl.awayID ? "🏈" : "";
+        nfl.homeID = nfl.possession === nfl.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
             nflData.innerHTML += `
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} -  ${awayScore} ${awayID}</br>
-                            ${homeTeam} -  ${homeScore} ${homeID}</br></br>
+                            ${nfl.time} </br></br>
+                            ${nfl.awayTeam} -  ${nfl.awayScore} ${nfl.awayID}</br>
+                            ${nfl.homeTeam} -  ${nfl.homeScore} ${nfl.homeID}</br></br>
                         </p>
                         <p class="game-details">
-                            ${ballPosition}
+                            ${nfl.ballPosition}
                         </p>
                     </div>
                 </div>
@@ -495,9 +426,9 @@ const showLessNFL = () => {
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} -  ${awayScore} </br>
-                            ${homeTeam} -  ${homeScore} </br></br>
+                            ${nfl.time} </br></br>
+                            ${nfl.awayTeam} -  ${nfl.awayScore} </br>
+                            ${nfl.homeTeam} -  ${nfl.homeScore} </br></br>
                         </p>
                         <p class="game-details">
                             End of Quarter
@@ -507,13 +438,13 @@ const showLessNFL = () => {
             `;
         }
         if(event.status.type.name === "STATUS_HALFTIME") {
-            cfbData.innerHTML += `
+            nflData.innerHTML += `
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} -  ${awayScore} </br>
-                            ${homeTeam} -  ${homeScore} </br></br>
+                            ${nfl.time} </br></br>
+                            ${nfl.awayTeam} -  ${nfl.awayScore} </br>
+                            ${nfl.homeTeam} -  ${nfl.homeScore} </br></br>
                         </p>
                         <p class="game-details">
                         </p>
@@ -522,19 +453,7 @@ const showLessNFL = () => {
             `;
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            nflData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} </br>
-                            ${homeTeam}
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            nflData.innerHTML += `${nfl.scheduledGame()}`;
         }
         
     },
@@ -550,17 +469,7 @@ const showAllNFL = () => {
         <h1>All NFL Games</h1>
         <button id="back-to-all">Back</button>
     `;
-    mlbData.innerHTML = '';
-    nflData.innerHTML = '';
-    nflName.innerHTML = '';
-    cfbData.innerHTML = '';
-    cfbName.innerHTML = '';
-    nhlName.innerHTML = '';
-    nhlData.innerHTML = '';
-    nbaName.innerHTML = '';
-    nbaData.innerHTML = '';
-    cbbData.innerHTML = '';
-    cbbName.innerHTML = '';
+    clearAllSections();
     const nflHalfTime = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
     const nflInProgress = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nflEndQuarter = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
@@ -568,30 +477,20 @@ const showAllNFL = () => {
     const nflFinal = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_FINAL");
     const longNFLList = [...nflInProgress, ...nflHalfTime, ...nflEndQuarter, ...nflScheduled, ...nflFinal];
     longNFLList.forEach(event => {
-        const awayTeam = event.competitions[0].competitors[1].team.displayName;
-        const homeTeam = event.competitions[0].competitors[0].team.displayName;
-        const gameStatus = event.status.type.shortDetail;
-        const awayScore = event.competitions[0].competitors[1].score;
-        const homeScore = event.competitions[0].competitors[0].score;
-        const time = event.status.type.detail;
-        const situation = event.competitions[0].situation || null;
-        const ballPosition = situation && situation.downDistanceText ? situation.downDistanceText : 'Switching Possession';
-        const possession = situation && situation.possession ? situation.possession : '';
-        let awayID = event.competitions[0].competitors[1].id;
-        let homeID = event.competitions[0].competitors[0].id;
-        awayID = possession === awayID ? "🏈" : "";
-        homeID = possession === homeID ? "🏈" : "";
+        const nfl = nflVariables(event);
+        nfl.awayID = nfl.possession === nfl.awayID ? "🏈" : "";
+        nfl.homeID = nfl.possession === nfl.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
             nflData.innerHTML += `
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} -  ${awayScore} ${awayID}</br>
-                            ${homeTeam} -  ${homeScore} ${homeID}</br></br>
+                            ${nfl.time} </br></br>
+                            ${nfl.awayTeam} -  ${nfl.awayScore} ${nfl.awayID}</br>
+                            ${nfl.homeTeam} -  ${nfl.homeScore} ${nfl.homeID}</br></br>
                         </p>
                         <p class="game-details">
-                            ${ballPosition}
+                            ${nfl.ballPosition}
                         </p>
                     </div>
                 </div>
@@ -602,9 +501,9 @@ const showAllNFL = () => {
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} -  ${awayScore} </br>
-                            ${homeTeam} -  ${homeScore} </br></br>
+                            ${nfl.time} </br></br>
+                            ${nfl.awayTeam} -  ${nfl.awayScore} </br>
+                            ${nfl.homeTeam} -  ${nfl.homeScore} </br></br>
                         </p>
                         <p class="game-details">
                             End of Quarter
@@ -618,9 +517,9 @@ const showAllNFL = () => {
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} -  ${awayScore} </br>
-                            ${homeTeam} -  ${homeScore} </br></br>
+                            ${nfl.time} </br></br>
+                            ${nfl.awayTeam} -  ${nfl.awayScore} </br>
+                            ${nfl.homeTeam} -  ${nfl.homeScore} </br></br>
                         </p>
                         <p class="game-details">
                         </p>
@@ -628,30 +527,17 @@ const showAllNFL = () => {
                 </div>
             `;
         }
-        
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            nflData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} </br>
-                            ${homeTeam}
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            nflData.innerHTML += `${nfl.scheduledGame()}`;
         }
         if(event.status.type.name === "STATUS_FINAL") {
             nflData.innerHTML += `
                 <div class="game-row">
                     <div class="game-info">
                         <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} -  ${awayScore} </br>
-                            ${homeTeam} -  ${homeScore} </br></br>
+                            ${nfl.time} </br></br>
+                            ${nfl.awayTeam} -  ${nfl.awayScore} </br>
+                            ${nfl.homeTeam} -  ${nfl.homeScore} </br></br>
                         </p>
                         <p class="game-details">
                         </p>
@@ -767,17 +653,7 @@ const showAllCFB = () => {
         <h1>All Ranked CFB Games</h1>
         <button id="back-to">Back</button>
     `;
-    mlbData.innerHTML = '';
-    nflData.innerHTML = '';
-    nflName.innerHTML = '';
-    cfbData.innerHTML = '';
-    cfbName.innerHTML = '';
-    nhlName.innerHTML = '';
-    nhlData.innerHTML = '';
-    nbaName.innerHTML = '';
-    nbaData.innerHTML = '';
-    cbbData.innerHTML = '';
-    cbbName.innerHTML = '';
+    clearAllSections();
     const cfbHalfTime = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
     const cfbInProgress = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const cfbScheduled = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
@@ -960,17 +836,7 @@ const showAllNHL = () => {
         <h1>All NHL Games Today</h1>
         <button id="back-to-main">Back</button>
     `;
-    mlbData.innerHTML = '';
-    nflData.innerHTML = '';
-    nflName.innerHTML = '';
-    cfbData.innerHTML = '';
-    cfbName.innerHTML = '';
-    nhlName.innerHTML = '';
-    nhlData.innerHTML = '';
-    nbaName.innerHTML = '';
-    nbaData.innerHTML = '';
-    cbbData.innerHTML = '';
-    cbbName.innerHTML = '';
+    clearAllSections();
     const nhlYetToStart = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nhlInProgress = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nhlEndofPeriod = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
@@ -1126,17 +992,7 @@ const showAllNBA = () => {
         <h1>All NBA Games Today</h1>
         <button id="back-to-main">Back</button>
     `;
-    mlbData.innerHTML = '';
-    nflData.innerHTML = '';
-    nflName.innerHTML = '';
-    cfbData.innerHTML = '';
-    cfbName.innerHTML = '';
-    nhlName.innerHTML = '';
-    nhlData.innerHTML = '';
-    nbaName.innerHTML = '';
-    nbaData.innerHTML = '';
-    cbbData.innerHTML = '';
-    cbbName.innerHTML = '';
+    clearAllSections();
     const nbaYetToStart = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nbaInProgress = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nbaEndofQuarter = sportsData.NBA.slice(0, sportsData.NBA.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
@@ -1296,17 +1152,7 @@ const showAllCBB = () => {
         <h1>All CBB Games Today</h1>
         <button id="back-to-main">Back</button>
     `;
-    mlbData.innerHTML = '';
-    nflData.innerHTML = '';
-    nflName.innerHTML = '';
-    cfbData.innerHTML = '';
-    cfbName.innerHTML = '';
-    nhlName.innerHTML = '';
-    nhlData.innerHTML = '';
-    nbaName.innerHTML = '';
-    nbaData.innerHTML = '';
-    cbbData.innerHTML = '';
-    cbbName.innerHTML = '';
+    clearAllSections();
     const cbbYetToStart = sportsData.CBB.slice(0, sportsData.CBB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const cbbInProgress = sportsData.CBB.slice(0, sportsData.CBB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const cbbEndofQuarter = sportsData.CBB.slice(0, sportsData.CBB.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
