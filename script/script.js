@@ -99,7 +99,6 @@ fetchGamesData().then(() => {
   }, 1000);
 });
 
-
 const clearAllSections = () => {
   mlbData.innerHTML = '';
   nflData.innerHTML = '';
@@ -267,42 +266,11 @@ const showLessMLB = () => {
     const gameTotal = limitedGames.length;
     limitedGames.forEach(event => {
         const mlb = mlbVariables(event);
-        if (event.status.type.name === "STATUS_IN_PROGRESS") {
-            mlbData.innerHTML += `
-                <div id="${mlb.gameId}" class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${mlb.inning} </br></br>
-                            ${mlb.awayTeam} -  ${mlb.awayScore} </br>
-                            ${mlb.homeTeam} -  ${mlb.homeScore}
-                        </p>
-                        <p class="game-details">
-                            ${mlb.balls}-${mlb.strikes} - ${mlb.outs}
-                        </p>
-                    </div>
-                    <div class="base-map">
-                        <div class="base first-base ${mlb.onFirst ? 'occupied' : ''}"></div>
-                        <div class="base second-base ${mlb.onSecond ? 'occupied' : ''}"></div>
-                        <div class="base third-base ${mlb.onThird ? 'occupied' : ''}"></div>
-                    </div>
-                </div>
-            `;
-        }
         if (event.status.type.name === "STATUS_SCHEDULED") {
-            mlbData.innerHTML += `
-                <div id="${mlb.gameId}" class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                        ${mlb.inning} ${mlb.gameShortDetail} </br></br>
-                        ${mlb.awayTeam} </br>
-                        ${mlb.homeTeam}
-                        </p>
-                        <p class="game-details">
-                            
-                        </p>
-                    </div>
-                </div>
-            `;
+            mlbData.innerHTML += `${mlb.scheduledGame()}`;
+        }
+        if (event.status.type.name === "STATUS_IN_PROGRESS") {
+            mlbData.innerHTML += `${mlb.inProgressGame()}`;
         }
     });
     if (limitedGames.length === 0) {
@@ -332,54 +300,14 @@ const showAllMLB = () => {
     const longGamesList = [...inProgress, ...yetToStart, ...alreadyFinal];
     longGamesList.forEach(event => {
         const mlb = mlbVariables(event);
-        if (event.status.type.name === "STATUS_IN_PROGRESS") {
-            mlbData.innerHTML += `
-                <div id="${mlb.gameId}" class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${mlb.inning} </br></br>
-                            ${mlb.awayTeam} - ${mlb.awayScore} </br>
-                            ${mlb.homeTeam} - ${mlb.homeScore}
-                        </p>
-                        <p class="game-details">
-                            ${mlb.balls}-${mlb.strikes} - ${mlb.outs}
-                        </p>
-                    </div>
-                    <div class="base-map">
-                        <div class="base first-base ${mlb.onFirst ? 'occupied' : ''}"></div>
-                        <div class="base second-base ${mlb.onSecond ? 'occupied' : ''}"></div>
-                        <div class="base third-base ${mlb.onThird ? 'occupied' : ''}"></div>
-                    </div>
-                </div>
-            `;
-        }
         if (event.status.type.name === "STATUS_SCHEDULED") {
-            mlbData.innerHTML += `
-                <div id="${mlb.gameId}" class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${mlb.inning} ${mlb.gameShortDetail} </br></br>
-                            ${mlb.awayTeam} </br>
-                            ${mlb.homeTeam}
-                        </p>
-                        <p class="game-details"></p>
-                    </div>
-                </div>
-            `;
+            mlbData.innerHTML += `${mlb.scheduledGame()}`;
+        }
+        if (event.status.type.name === "STATUS_IN_PROGRESS") {
+            mlbData.innerHTML += `${mlb.inProgressGame()}`;
         }
         if (event.status.type.name === "STATUS_FINAL") {
-            mlbData.innerHTML += `
-                <div id="${mlb.gameId}" class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${mlb.inning} </br></br>
-                            ${mlb.awayTeam} - ${mlb.awayScore} </br>
-                            ${mlb.homeTeam} - ${mlb.homeScore}
-                        </p>
-                        <p class="game-details"></p>
-                    </div>
-                </div>
-            `;
+            mlbData.innerHTML += `${mlb.gameOver()}`;
         }
     });
     document.getElementById("back-to-main").addEventListener("click", showNothing);
@@ -391,7 +319,6 @@ const showAllMLB = () => {
     
     currentView = 'mlb';
 };
-
 
 const showLessNFL = () => {
     nflData.innerHTML = '';
@@ -406,56 +333,17 @@ const showLessNFL = () => {
         nfl.awayID = nfl.possession === nfl.awayID ? "🏈" : "";
         nfl.homeID = nfl.possession === nfl.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            nflData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${nfl.time} </br></br>
-                            ${nfl.awayTeam} -  ${nfl.awayScore} ${nfl.awayID}</br>
-                            ${nfl.homeTeam} -  ${nfl.homeScore} ${nfl.homeID}</br></br>
-                        </p>
-                        <p class="game-details">
-                            ${nfl.ballPosition}
-                        </p>
-                    </div>
-                </div>
-            `;
+            nflData.innerHTML += `${nfl.inProgressGame()}`;
         }
         if(event.status.type.name === "STATUS_END_PERIOD") {
-            nflData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${nfl.time} </br></br>
-                            ${nfl.awayTeam} -  ${nfl.awayScore} </br>
-                            ${nfl.homeTeam} -  ${nfl.homeScore} </br></br>
-                        </p>
-                        <p class="game-details">
-                            End of Quarter
-                        </p>
-                    </div>
-                </div>
-            `;
+            nflData.innerHTML += `${nfl.endOfPeriod()}`;
         }
         if(event.status.type.name === "STATUS_HALFTIME") {
-            nflData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${nfl.time} </br></br>
-                            ${nfl.awayTeam} -  ${nfl.awayScore} </br>
-                            ${nfl.homeTeam} -  ${nfl.homeScore} </br></br>
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            nflData.innerHTML += `${nfl.halfTime()}`
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
             nflData.innerHTML += `${nfl.scheduledGame()}`;
         }
-        
     },
     document.getElementById("show-all-nfl").addEventListener("click", showAllNFL));
     currentView = 'showLess';
@@ -481,69 +369,19 @@ const showAllNFL = () => {
         nfl.awayID = nfl.possession === nfl.awayID ? "🏈" : "";
         nfl.homeID = nfl.possession === nfl.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            nflData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${nfl.time} </br></br>
-                            ${nfl.awayTeam} -  ${nfl.awayScore} ${nfl.awayID}</br>
-                            ${nfl.homeTeam} -  ${nfl.homeScore} ${nfl.homeID}</br></br>
-                        </p>
-                        <p class="game-details">
-                            ${nfl.ballPosition}
-                        </p>
-                    </div>
-                </div>
-            `;
+            nflData.innerHTML += `${nfl.inProgressGame()}`;
         }
         if(event.status.type.name === "STATUS_END_PERIOD") {
-            nflData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${nfl.time} </br></br>
-                            ${nfl.awayTeam} -  ${nfl.awayScore} </br>
-                            ${nfl.homeTeam} -  ${nfl.homeScore} </br></br>
-                        </p>
-                        <p class="game-details">
-                            End of Quarter
-                        </p>
-                    </div>
-                </div>
-            `;
+            nflData.innerHTML += `${nfl.endOfPeriod()}`;
         }
         if(event.status.type.name === "STATUS_HALFTIME") {
-            nflData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${nfl.time} </br></br>
-                            ${nfl.awayTeam} -  ${nfl.awayScore} </br>
-                            ${nfl.homeTeam} -  ${nfl.homeScore} </br></br>
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            nflData.innerHTML += `${nfl.halfTime()}`
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
             nflData.innerHTML += `${nfl.scheduledGame()}`;
         }
         if(event.status.type.name === "STATUS_FINAL") {
-            nflData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${nfl.time} </br></br>
-                            ${nfl.awayTeam} -  ${nfl.awayScore} </br>
-                            ${nfl.homeTeam} -  ${nfl.homeScore} </br></br>
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            nflData.innerHTML += `${nfl.gameOver()}`;
         }
     },
     document.getElementById("back-to-all").addEventListener("click", showNothing));

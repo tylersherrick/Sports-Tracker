@@ -52,7 +52,55 @@ function mlbVariables(game) {
         awayMLBRating: { stat: game.competitions[0].competitors[1].leaders[3].abbreviation, athlete: game.competitions[0].competitors[1].leaders[3].leaders[0].athlete.fullName },
         dueUp1: game.competitions[0].situation?.dueUp?.[0]?.athlete?.fullName,
         dueUp2: game.competitions[0].situation?.dueUp?.[1]?.athlete?.fullName,
-        dueUp3: game.competitions[0].situation?.dueUp?.[2]?.athlete?.fullName
-
+        dueUp3: game.competitions[0].situation?.dueUp?.[2]?.athlete?.fullName,
+        scheduledGame() {
+            return `
+                <div id="${this.gameId}" class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${this.inning} ${this.gameShortDetail} </br></br>
+                            ${this.awayTeam} </br>
+                            ${this.homeTeam}
+                        </p>
+                        <p class="game-details"></p>
+                    </div>
+                </div>
+            `;
+        },
+        inProgressGame() {
+            return `
+                <div id="${this.gameId}" class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${this.inning} </br></br>
+                            ${this.awayTeam} - ${this.awayScore} </br>
+                            ${this.homeTeam} - ${this.homeScore}
+                        </p>
+                        <p class="game-details">
+                            ${this.balls}-${this.strikes} - ${this.outs}
+                        </p>
+                    </div>
+                    <div class="base-map">
+                        <div class="base first-base ${this.onFirst ? 'occupied' : ''}"></div>
+                        <div class="base second-base ${this.onSecond ? 'occupied' : ''}"></div>
+                        <div class="base third-base ${this.onThird ? 'occupied' : ''}"></div>
+                    </div>
+                </div>
+            `;
+        },
+        gameOver() {
+            return `
+                <div id="${this.gameId}" class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${this.inning} </br></br>
+                            ${this.awayTeam} - ${this.awayScore} </br>
+                            ${this.homeTeam} - ${this.homeScore}
+                        </p>
+                        <p class="game-details"></p>
+                    </div>
+                </div>
+            `;
+        }
     };
 }

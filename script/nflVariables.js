@@ -26,6 +26,67 @@ function nflVariables(event) {
                 </div>
             `;
         },
-        
+        inProgressGame() {
+            return `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${this.time} </br></br>
+                            ${this.awayTeam} -  ${this.awayScore} ${this.awayID}</br>
+                            ${this.homeTeam} -  ${this.homeScore} ${this.homeID}</br></br>
+                        </p>
+                        <p class="game-details">
+                            ${this.ballPosition}
+                        </p>
+                    </div>
+                </div>
+            `;
+        },
+        endOfPeriod() {
+            return `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${this.time} </br></br>
+                            ${this.awayTeam} -  ${this.awayScore} </br>
+                            ${this.homeTeam} -  ${this.homeScore} </br></br>
+                        </p>
+                        <p class="game-details">
+                            End of Quarter
+                        </p>
+                    </div>
+                </div>
+            `;
+        },
+        halfTime() {
+            return `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${this.time} </br></br>
+                            ${this.awayTeam} -  ${this.awayScore} </br>
+                            ${this.homeTeam} -  ${this.homeScore} </br></br>
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        },
+        gameOver() {
+            return `
+                <div class="game-row">
+                    <div class="game-info">
+                        <p class="game-details">
+                            ${this.time} </br></br>
+                            ${this.awayTeam} -  ${this.awayScore} </br>
+                            ${this.homeTeam} -  ${this.homeScore} </br></br>
+                        </p>
+                        <p class="game-details">
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
     }
 }
