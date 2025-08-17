@@ -56,6 +56,7 @@ const updateViews = () => {
     if (currentView === 'showLess') {
         showLessMLB();
         showLessNFL();
+        showLessCFB();
     } 
     if (currentView === 'mlb') {
         showAllMLB();
@@ -401,85 +402,22 @@ const showLessCFB = () => {
     }
     const cfbSmallList = [...cfbInProgress, ...cfbHalfTime,...cfbEndofQuarter , ...cfbScheduled].slice(0, 3);
     cfbSmallList.forEach(event => {
-        const awayTeam = event.competitions[0].competitors[1].team.shortDisplayName;
-        const homeTeam = event.competitions[0].competitors[0].team.shortDisplayName;
-        let awayID = event.competitions[0].competitors[1].id;
-        let homeID = event.competitions[0].competitors[0].id;
-        const gameStatus = event.status.type.shortDetail;
-        const awayScore = event.competitions[0].competitors[1].score;
-        const homeScore = event.competitions[0].competitors[0].score;
-        const time = event.status.type.detail;
-        let awayRank = event.competitions[0].competitors[1].curatedRank.current;
-        let homeRank = event.competitions[0].competitors[0].curatedRank.current;
-        awayRank = awayRank > 25 ? "" : awayRank;
-        homeRank = homeRank > 25 ? "" : homeRank;
-        const situation = event.competitions[0].situation || null;
-        const ballPosition = situation && situation.downDistanceText ? situation.downDistanceText : 'Switching Possession';
-        const possession = situation && situation.possession ? situation.possession : '';
-        awayID = possession === awayID ? "🏈" : "";
-        homeID = possession === homeID ? "🏈" : "";
+        const cfb = cfbVariables(event);
+        cfb.awayRank = cfb.awayRank > 25 ? "" : cfb.awayRank;
+        cfb.homeRank = cfb.homeRank > 25 ? "" : cfb.homeRank;
+        cfb.awayID = cfb.possession === cfb.awayID ? "🏈" : "";
+        cfb.homeID = cfb.possession === cfb.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            cfbData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayRank} ${awayTeam} -  ${awayScore} ${awayID}</br>
-                            ${homeRank} ${homeTeam} -  ${homeScore} ${homeID}</br></br>
-                        </p>
-                        <p class="game-details">
-                            ${ballPosition}
-                        </p>
-                    </div>
-                </div>
-            `;
+            cfbData.innerHTML += cfb.inProgress();
         }
         if(event.status.type.name === "STATUS_END_PERIOD") {
-            cfbData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayRank} ${awayTeam} -  ${awayScore} </br>
-                            ${homeRank} ${homeTeam} -  ${homeScore} </br></br>
-                        </p>
-                        <p class="game-details">
-                            End of Quarter
-                        </p>
-                    </div>
-                </div>
-            `;
+            cfbData.innerHTML += cfb.endOfPeriod();
         }
         if(event.status.type.name === "STATUS_HALFTIME") {
-            cfbData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayRank} ${awayTeam} -  ${awayScore} </br>
-                            ${homeRank} ${homeTeam} -  ${homeScore} </br></br>
-                        </p>
-                        <p class="game-details">
-                            Halftime
-                        </p>
-                    </div>
-                </div>
-            `;
+            cfbData.innerHTML += cfb.halfTime();
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            cfbData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayRank} ${awayTeam} </br>
-                            ${homeRank} ${homeTeam}
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            cfbData.innerHTML += cfb.gameOver();
         }
     }),
     document.getElementById("show-all-cfb").addEventListener("click", showAllCFB);
@@ -499,100 +437,25 @@ const showAllCFB = () => {
     const cfbEndofQuarter = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
     const cfbSmallList = [...cfbInProgress, ...cfbHalfTime, ...cfbEndofQuarter, ...cfbScheduled, ...cfbFinal];
     cfbSmallList.forEach(event => {
-        const awayTeam = event.competitions[0].competitors[1].team.shortDisplayName;
-        const homeTeam = event.competitions[0].competitors[0].team.shortDisplayName;
-        let awayID = event.competitions[0].competitors[1].id;
-        let homeID = event.competitions[0].competitors[0].id;
-        const gameStatus = event.status.type.shortDetail;
-        const awayScore = event.competitions[0].competitors[1].score;
-        const homeScore = event.competitions[0].competitors[0].score;
-        const time = event.status.type.detail;
-        let awayRank = event.competitions[0].competitors[1].curatedRank.current;
-        let homeRank = event.competitions[0].competitors[0].curatedRank.current;
-        awayRank = awayRank > 25 ? "" : awayRank;
-        homeRank = homeRank > 25 ? "" : homeRank;
-        const situation = event.competitions[0].situation || null;
-        const ballPosition = situation && situation.downDistanceText ? situation.downDistanceText : 'Switching Possession';
-        const possession = situation && situation.possession ? situation.possession : '';
-        awayID = possession === awayID ? "🏈" : "";
-        homeID = possession === homeID ? "🏈" : "";
+        const cfb = cfbVariables(event);
+        cfb.awayRank = cfb.awayRank > 25 ? "" : cfb.awayRank;
+        cfb.homeRank = cfb.homeRank > 25 ? "" : cfb.homeRank;
+        cfb.awayID = cfb.possession === cfb.awayID ? "🏈" : "";
+        cfb.homeID = cfb.possession === cfb.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            cfbData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayRank} ${awayTeam} -  ${awayScore} ${awayID}</br>
-                            ${homeRank} ${homeTeam} -  ${homeScore} ${homeID}</br></br>
-                        </p>
-                        <p class="game-details">
-                            ${ballPosition}
-                        </p>
-                    </div>
-                </div>
-            `;
+            cfbData.innerHTML += cfb.inProgress();
         }
         if(event.status.type.name === "STATUS_HALFTIME") {
-            cfbData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayRank} ${awayTeam} -  ${awayScore} </br>
-                            ${homeRank} ${homeTeam} -  ${homeScore} </br></br>
-                        </p>
-                        <p class="game-details">
-                            Halftime
-                        </p>
-                    </div>
-                </div>
-            `;
+            cfbData.innerHTML += cfb.halfTime();
         }
         if(event.status.type.name === "STATUS_END_PERIOD") {
-            cfbData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayRank} ${awayTeam} -  ${awayScore} </br>
-                            ${homeRank} ${homeTeam} -  ${homeScore} </br></br>
-                        </p>
-                        <p class="game-details">
-                            End of Quarter
-                        </p>
-                    </div>
-                </div>
-            `;
+            cfbData.innerHTML += cfb.endOfPeriod();
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            cfbData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayRank} ${awayTeam} </br>
-                            ${homeRank} ${homeTeam} </br></br>
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            cfbData.innerHTML += cfb.scheduledGame();
         }
         if(event.status.type.name === "STATUS_FINAL") {
-            cfbData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayRank} ${awayTeam} -  ${awayScore} </br>
-                            ${homeRank} ${homeTeam} -  ${homeScore} </br></br>
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            cfbData.innerHTML += cfb.gameOver();
         }
     }),
     document.getElementById("back-to").addEventListener("click", showNothing);
