@@ -9,7 +9,7 @@ function mlbVariables(game) {
         currentWeather: game.weather?.conditionId || "",
         temperature: game.weather?.temperature || "",
         venue: game.competitions[0].venue.fullName,
-        gameSummary: game.competitions[0].headlines?.[0]?.description || "",
+        gameSummary: game.competitions[0].headlines?.[0]?.shortLinkText || "",
         preGameMessage: game.competitions[0].headlines?.[0]?.shortLinkText,
         lastPlay: game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "",
         attendance: game.competitions[0].attendance,
