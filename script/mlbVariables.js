@@ -10,7 +10,7 @@ function mlbVariables(game) {
         temperature: game.weather?.temperature || "",
         venue: game.competitions[0].venue.fullName,
         gameSummary: game.competitions[0].headlines?.[0]?.shortLinkText || "",
-        preGameMessage: game.competitions[0].headlines?.[0]?.shortLinkText,
+        preGameMessage: game.competitions[0].headlines?.[0]?.shortLinkText || "",
         lastPlay: game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "",
         attendance: game.competitions[0].attendance,
         gameStatus: game.status.type.description,
@@ -35,8 +35,8 @@ function mlbVariables(game) {
         awayOverallRecord: game.competitions[0].competitors[1].records[0]?.summary,
         awayHomeRecord: game.competitions[0].competitors[1].records[1]?.summary,
         awayAwayRecord: game.competitions[0].competitors[1].records[2]?.summary,
-        probableHomeStarter: game.competitions[0].competitors[0].probables?.[0]?.athlete?.displayName,
-        probableAwayStarter: game.competitions[0].competitors[1].probables?.[0]?.athlete?.displayName,
+        probableHomeStarter: game.competitions[0].competitors[0].probables?.[0]?.athlete?.displayName || "",
+        probableAwayStarter: game.competitions[0].competitors[1].probables?.[0]?.athlete?.displayName || "",
         probableHomeStarterStats: game.competitions[0].competitors[0].probables?.[0]?.record || "",
         probableAwayStarterStats: game.competitions[0].competitors[1].probables?.[0]?.record || "",
         battingTeamId: game.competitions[0].situation?.batter?.athlete?.team?.id,
@@ -101,6 +101,42 @@ function mlbVariables(game) {
                     </div>
                 </div>
             `;
+        },
+        renderIndividualView() {
+            if (this.gameStatus === "Final") {
+                return `
+                    Final Score: <br>
+                    ${this.awayTeam}: ${this.awayScore} <br>
+                    ${this.homeTeam}: ${this.homeScore} <br>
+                    ${this.gameSummary ? this.gameSummary + '<br>' : ''}
+                    Attendance: ${this.attendance}
+                `;
+            }
+            if (this.gameStatus === "Scheduled") {
+                return `
+                    Game status: ${this.gameStatus} <br>
+                    ${this.teamsPlaying} <br>
+                    ${this.preGameMessage || ''} <br>
+                    ${this.futureWeather ? `Expected Weather: ${this.futureWeather} ${this.temperature}°<br>` : ''}
+                    Hosted at: ${this.venue} <br><br>
+                    ${this.awayTeam}: ${this.awayOverallRecord} (Away: ${this.awayAwayRecord}) <br>
+                    Pitching Today: ${this.probableAwayStarter} - ${this.probableAwayStarterStats} ERA <br><br>
+                    ${this.homeTeam}: ${this.homeOverallRecord} (Home: ${this.homeHomeRecord}) <br>
+                    Pitching Today: ${this.probableHomeStarter} - ${this.probableHomeStarterStats} ERA
+                `;
+            }
+            if (this.gameStatus === "In Progress") {
+                return `
+                    ${this.awayTeam}: ${this.awayScore} <br>
+                    ${this.homeTeam}: ${this.homeScore} <br>
+                    ${this.balls}-${this.strikes} - ${this.outs} <br>
+                    ${this.currentPitcher} pitching to ${this.currentBatter} <br>
+                    ${this.lastPlay} <br>
+                    ${this.currentWeather ? this.currentWeather + ` ${this.temperature}° at ${this.venue}` : ''}
+                `;
+            }
+
+            return "Game info unavailable.";
         }
     };
 }

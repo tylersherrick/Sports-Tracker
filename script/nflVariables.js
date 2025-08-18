@@ -1,5 +1,6 @@
 function nflVariables(event) {
     return {
+        gameId: event.id,
         awayTeam: event.competitions[0].competitors[1].team.displayName,
         homeTeam: event.competitions[0].competitors[0].team.displayName,
         gameStatus: event.status.type.shortDetail,
@@ -11,9 +12,10 @@ function nflVariables(event) {
         possession: event.competitions[0].situation?.possession || "",
         awayID: event.competitions[0].competitors[1].id,
         homeID: event.competitions[0].competitors[0].id,
+        gameStatus: event.status.type.description,
         scheduledGame() {
             return `
-                <div class="game-row">
+                <div id="${this.gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
                             ${this.time} </br></br>
@@ -28,7 +30,7 @@ function nflVariables(event) {
         },
         inProgressGame() {
             return `
-                <div class="game-row">
+                <div id="${this.gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
                             ${this.time} </br></br>
@@ -44,7 +46,7 @@ function nflVariables(event) {
         },
         endOfPeriod() {
             return `
-                <div class="game-row">
+                <div id="${this.gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
                             ${this.time} </br></br>
@@ -60,7 +62,7 @@ function nflVariables(event) {
         },
         halfTime() {
             return `
-                <div class="game-row">
+                <div id="${this.gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
                             ${this.time} </br></br>
@@ -75,7 +77,7 @@ function nflVariables(event) {
         },
         gameOver() {
             return `
-                <div class="game-row">
+                <div id="${this.gameId}" class="game-row">
                     <div class="game-info">
                         <p class="game-details">
                             ${this.time} </br></br>
@@ -87,6 +89,48 @@ function nflVariables(event) {
                     </div>
                 </div>
             `;
+        },
+        renderIndividualView() {
+            if (this.gameStatus === "Final") {
+                return `
+                    Final Score: <br>
+                    ${this.awayTeam}: ${this.awayScore} <br>
+                    ${this.homeTeam}: ${this.homeScore} <br>
+                    ${this.situation?.summary || ''}
+                `;
+            }
+            if (this.gameStatus === "Scheduled") {
+                return `
+                    Game status: ${this.gameStatus} <br>
+                    ${this.awayTeam} at ${this.homeTeam} <br>
+                    ${this.time} <br>
+                    ${this.situation?.note || ''}
+                `;
+            }
+            if (this.gameStatus === "In Progress") {
+                return `
+                    ${this.awayTeam}: ${this.awayScore} <br>
+                    ${this.homeTeam}: ${this.homeScore} <br>
+                    ${this.ballPosition} <br>
+                    Possession: ${this.possession}
+                `;
+            }
+            if (this.gameStatus === "End of Period") {
+                return `
+                    ${this.awayTeam}: ${this.awayScore} <br>
+                    ${this.homeTeam}: ${this.homeScore} <br>
+                    End of Quarter
+                `;
+            }
+            if (this.gameStatus === "Half Time") {
+                return `
+                    ${this.awayTeam}: ${this.awayScore} <br>
+                    ${this.homeTeam}: ${this.homeScore} <br>
+                    Halftime
+                `;
+            }
+
+            return "Game info unavailable.";
         }
     }
 }

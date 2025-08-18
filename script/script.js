@@ -77,7 +77,10 @@ const updateViews = () => {
         showAllCBB();
     }
     if(currentView === 'individualMLBGame') {
-        individualMLBGame();
+        individualMLBGame(selectedGameId);
+    }
+    if(currentView === 'individualNFLGame') {
+        individualNFLGame(selectedGameId);
     }
 };
 
@@ -90,7 +93,11 @@ fetchGamesData().then(() => {
     fetchGamesData().then(() => {
       if(currentView === 'individualMLBGame' && selectedGameId) {
         individualMLBGame(selectedGameId);
-      } else {
+      }
+      if(currentView === 'individualNFLGame' && selectedGameId) {
+        individualNFLGame(selectedGameId);
+      } 
+      else {
         updateViews();
       }
 
@@ -145,105 +152,22 @@ function showStats(state) {
 
 const individualMLBGame = (gameId) => {
     if (!gameId) gameId = selectedGameId;
-    // Clear other sections
     clearAllSections();
-
     selectedGameId = gameId;
     currentView = "individualMLBGame";
     
-    // Find the game by ID
     const game = sportsData.MLB.find(g => g.id === gameId);
-    if(!game) return;
+    if (!game) return;
+    
     const mlb = mlbVariables(game);
-    let scheduledWeather = `Expected Weather: ${mlb.futureWeather} and ${mlb.temperature}°${nextLine}`;
-    let activeWeather = `${mlb.currentWeather} and ${mlb.temperature}° at ${mlb.venue}`;
-    let ballsStrikesOuts = `${mlb.inning}${nextLine}${mlb.balls}-${mlb.strikes} - ${mlb.outs}${nextLine}`;
-    let currentMatchup = `${mlb.currentPitcher} pitching to - ${mlb.currentBatter}${nextLine}`;
-    let summaryLine = `${mlb.gameSummary} ${nextLine}`;
 
-    if(mlb.inningStatus === "End Inning") {
-        ballsStrikesOuts = "";
-        currentMatchup = `
-            Due Up: ${nextLine}
-            &nbsp;&nbsp;${mlb.dueUp1} ${nextLine}
-            &nbsp;&nbsp;${mlb.dueUp2} ${nextLine}
-            &nbsp;&nbsp;${mlb.dueUp3} ${nextLine}
-        `;
-    }
-    if(mlb.inningStatus === "Start Batter/Pitcher") {
-        currentMatchup = "";
-
-    }
-    if(!isNaN(Number(mlb.futureWeather))) {
-        scheduledWeather = `Expected Weather: ${mlb.currentWeather} and ${mlb.temperature}°${nextLine}`;
-    }
-    if(mlb.futureWeather === "") {
-        scheduledWeather = "";
-    }
-    if(mlb.currentWeather === "") {
-        activeWeather = "";
-    }
-    if(mlb.gameSummary === "") {
-        summaryLine = "";
-    }
     sportsDiv.innerHTML = `
         <h1>${mlb.awayTeam} at ${mlb.homeTeam}</h1>
-        <p id="game-status"></p>
+        <p id="game-status">${mlb.renderIndividualView()}</p>
         <button id="mlb-scores">MLB Games</button>
         </br></br>
         <button id="back-button">All Games</button>
     `;
-    let individualId = document.getElementById("game-status");
-    let gameStatus = mlb.gameStatus;
-
-    if (gameStatus === "Final") {
-        individualId.innerHTML = `
-            <p id="mlb-data" class="game-details"> 
-                Final Score: ${nextLine}
-                ${mlb.awayTeam}: ${mlb.awayScore} ${nextLine}
-                ${mlb.homeTeam}: ${mlb.homeScore} ${nextLine}
-                ${summaryLine}
-                Attendance: ${mlb.attendance}
-            </p>
-        `;
-    }
-
-    if (gameStatus === "Scheduled") {
-        individualId.innerHTML = `
-            <p id="mlb-data" class="game-details"> 
-                Game status: ${gameStatus} ${nextLine}
-                ${mlb.teamsPlaying} ${nextLine}
-                ${mlb.preGameMessage} ${nextLine}
-                ${scheduledWeather}
-                Hosted at: ${mlb.venue} ${nextLine}${nextLine}
-                ${mlb.awayTeam}: ${mlb.awayOverallRecord} (Away: ${mlb.awayAwayRecord}) ${nextLine}
-                Pitching Today: ${mlb.probableAwayStarter} - ${mlb.probableAwayStarterStats.slice(1, -1)} ERA
-                ${nextLine}${nextLine}
-                ${mlb.homeTeam}: ${mlb.homeOverallRecord} (Home: ${mlb.homeHomeRecord}) ${nextLine}
-                Pitching Today: ${mlb.probableHomeStarter} - ${mlb.probableHomeStarterStats.slice(1, -1)} ERA
-                
-            </p>
-        `;
-    }
-
-    if (gameStatus === "In Progress") {
-        individualId.innerHTML = `
-            <p id="mlb-data" class="game-details">    
-                ${mlb.awayTeam} : ${mlb.awayScore} ${nextLine}
-                ${mlb.homeTeam} : ${mlb.homeScore} ${nextLine}
-                ${ballsStrikesOuts}
-                ${currentMatchup}
-                ${mlb.lastPlay} ${nextLine}
-                ${activeWeather} 
-            </p>
-            <img id="away-logo" class="away-logo" src="${mlb.awayLogo}"> <img id="home-logo" class="home-logo" src="${mlb.homeLogo}">
-            <p id="team-stats">
-                
-            </p>
-    `;
-    }
-
-    
     document.getElementById('back-button').addEventListener('click', () => {
         currentView = 'showLess';
         updateViews();
@@ -251,10 +175,34 @@ const individualMLBGame = (gameId) => {
     document.getElementById('mlb-scores').addEventListener('click', () => {
         currentView = 'mlb';
         updateViews();
-    })
-    document.getElementById("away-logo")?.addEventListener("click", () => toggleStats("away"));
-    document.getElementById("home-logo")?.addEventListener("click", () => toggleStats("home"));
+    });
+};
 
+const individualNFLGame = (gameId) => {
+    if(!gameId) gameId = selectedGameId;
+    clearAllSections();
+    selectedGameId = gameId;
+    currentView = "individualNFLGame";
+
+    const game = sportsData.NFL.find(g => g.id === gameId);
+    if(!game) return;
+    
+    const nfl = nflVariables(game);
+    sportsDiv.innerHTML = `
+        <h1>${nfl.awayTeam} at ${nfl.homeTeam}</h1>
+        <p id="game-status">${nfl.renderIndividualView()}</p>
+        <button id="nfl-scores">NFL Games</button>
+        </br></br>
+        <button id="back-button">All Games</button>
+    `;
+    document.getElementById('back-button').addEventListener('click', () => {
+        currentView = 'showLess';
+        updateViews();
+    });
+    document.getElementById('nfl-scores').addEventListener('click', () => {
+        currentView = 'nfl';
+        updateViews();
+    });
 };
 
 const showLessMLB = () => {
@@ -286,7 +234,6 @@ const showLessMLB = () => {
 
     document.getElementById("show-all-mlb").addEventListener("click", showAllMLB);
     currentView = 'showLess';
-    
 };
 
 const showAllMLB = () => {
@@ -345,12 +292,17 @@ const showLessNFL = () => {
         if(event.status.type.name === "STATUS_SCHEDULED") {
             nflData.innerHTML += `${nfl.scheduledGame()}`;
         }
-    },
-    document.getElementById("show-all-nfl").addEventListener("click", showAllNFL));
-    currentView = 'showLess';
+    });
     if (smallNFLList.length === 0) {
         nflData.innerHTML += `<h4>There are no active games.</h4>`
     }
+    document.querySelectorAll('.game-row').forEach(row => {
+        row.addEventListener('click', (event) => {
+            individualNFLGame(event.currentTarget.id);
+        })
+    });
+    document.getElementById("show-all-nfl").addEventListener("click", showAllNFL);
+    currentView = 'showLess';
 };
 
 const showAllNFL = () => {
@@ -384,10 +336,18 @@ const showAllNFL = () => {
         if(event.status.type.name === "STATUS_FINAL") {
             nflData.innerHTML += `${nfl.gameOver()}`;
         }
-    },
-    document.getElementById("back-to-all").addEventListener("click", showNothing));
+    });
+    if (longNFLList.length === 0) {
+        nflData.innerHTML += `<h4>There are no active games.</h4>`
+    }
+    document.querySelectorAll('.game-row').forEach(row => {
+        row.addEventListener('click', (event) => {
+            individualNFLGame(event.currentTarget.id);
+        })
+    });
+    document.getElementById("back-to-all").addEventListener("click", showNothing);
     currentView = 'nfl';
-}
+};
 
 const showLessCFB = () => {
     cfbData.innerHTML = '';
