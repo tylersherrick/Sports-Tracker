@@ -105,26 +105,36 @@ function mlbVariables(game) {
         renderIndividualView() {
             if (this.gameStatus === "Final") {
                 return `
-                    Final Score: <br>
-                    ${this.awayTeam}: ${this.awayScore} <br>
-                    ${this.homeTeam}: ${this.homeScore} <br>
-                    ${this.gameSummary ? this.gameSummary + '<br>' : ''}
-                    Attendance: ${this.attendance}
+                    <div class="mlb-teams">
+                        <h3>${this.awayTeam}: ${this.awayScore}</h3>
+                        <h3>${this.homeTeam}: ${this.homeScore}</h3>
+                    </div>
+                    <div class="position-play">
+                        ${this.gameSummary ? `<p>${this.gameSummary}</p>` : ''}
+                        <p>Attendance: ${this.attendance}</p>
+                    </div>
                 `;
             }
+
             if (this.gameStatus === "Scheduled") {
                 return `
-                    Game status: ${this.gameStatus} <br>
-                    ${this.teamsPlaying} <br>
-                    ${this.preGameMessage || ''} <br>
-                    ${this.futureWeather ? `Expected Weather: ${this.futureWeather} ${this.temperature}°<br>` : ''}
-                    Hosted at: ${this.venue} <br><br>
-                    ${this.awayTeam}: ${this.awayOverallRecord} (Away: ${this.awayAwayRecord}) <br>
-                    Pitching Today: ${this.probableAwayStarter} - ${this.probableAwayStarterStats} ERA <br><br>
-                    ${this.homeTeam}: ${this.homeOverallRecord} (Home: ${this.homeHomeRecord}) <br>
-                    Pitching Today: ${this.probableHomeStarter} - ${this.probableHomeStarterStats} ERA
+                    <div class="mlb-teams">
+                        <h2>${this.awayTeam} ${this.awayOverallRecord} (Away: ${this.awayAwayRecord}) at ${this.homeTeam}: ${this.homeOverallRecord} (Home: ${this.homeHomeRecord})</h2>
+                    </div>
+                    <div class="position-play">
+                        <p>Game status: ${this.gameStatus}</p>
+                        ${this.teamsPlaying ? `<p>${this.teamsPlaying}</p>` : ''}
+                        ${this.preGameMessage ? `<p>${this.preGameMessage}</p>` : ''}
+                        <p>Pitching Today:</p>
+                        <p>${this.probableAwayStarter} - ${this.probableAwayStarterStats} ERA</p>
+                        <p>${this.probableHomeStarter} - ${this.probableHomeStarterStats} ERA</p>
+                    </div>
+                    <div class="weather">
+                        ${this.futureWeather ? `${this.futureWeather} ${this.temperature}°` : ''} at ${this.venue}
+                    </div>
                 `;
             }
+
             if (this.gameStatus === "In Progress") {
                 return `
                     <div class="mlb-teams">

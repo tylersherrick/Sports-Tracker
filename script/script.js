@@ -162,7 +162,6 @@ const individualMLBGame = (gameId) => {
     const mlb = mlbVariables(game);
 
     sportsDiv.innerHTML = `
-        <h1>${mlb.awayTeam} at ${mlb.homeTeam}</h1>
         <p id="game-status">${mlb.renderIndividualView()}</p>
         <button id="mlb-scores">MLB Games</button>
         </br></br>
@@ -275,7 +274,8 @@ const showLessNFL = () => {
     const nflInProgress = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nflScheduled = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nflEndQuarter = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
-    const smallNFLList = [...nflInProgress, ...nflHalfTime, ...nflEndQuarter, ...nflScheduled].slice(0, 3);
+    const nflGameOver = sportsData.NFL.slice(0, sportsData.NFL.length).filter(event => event.status.type.name === "STATUS_FINAL");
+    const smallNFLList = [...nflInProgress, ...nflHalfTime, ...nflEndQuarter, ...nflScheduled, ...nflGameOver].slice(0, 3);
     smallNFLList.forEach(event => {
         const nfl = nflVariables(event);
         nfl.awayID = nfl.possession === nfl.awayID ? "🏈" : "";
@@ -291,6 +291,9 @@ const showLessNFL = () => {
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
             nflData.innerHTML += `${nfl.scheduledGame()}`;
+        }
+        if(event.status.type.name === "STATUS_FINAL") {
+            nflData.innerHTML += `${nfl.gameOver()}`;
         }
     });
     if (smallNFLList.length === 0) {

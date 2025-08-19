@@ -18,6 +18,8 @@ function nflVariables(event) {
         weather: event.weather?.conditionId || "",
         temperature: event.weather?.temperature || "",
         venue: event.competitions[0].venue.fullName,
+        gameType: event.season.slug || "",
+        attendance: event.competitions[0].attendance,
         scheduledGame() {
             return `
                 <div id="${this.gameId}" class="game-row">
@@ -106,6 +108,8 @@ function nflVariables(event) {
                     <div class="position-play">
                         <p>${this.gameSummary}</p>
                     </div>
+                    <div class="game-facts">
+                        <p>${this.attendance} fans at ${this.venue}</p>
                 `;
             }
             if (this.gameStatus === "Scheduled") {
@@ -118,16 +122,18 @@ function nflVariables(event) {
             }
             if (this.gameStatus === "In Progress") {
                 return `
-                    <div class="nfl-teams">
-                        <h3>${this.awayTeam}: ${this.awayScore}</h3> 
-                        <h3>${this.homeTeam}: ${this.homeScore}</h3>
-                    </div>
-                    <div class="position-play">
-                        <p>${this.ballPosition}</p>
-                        <p>${this.lastPlay}</p>
-                    </div>
-                    <div class="weather">
-                        ${this.weather} and ${this.temperature}° at ${this.venue}
+                    <div class="individua-game"
+                        <div class="nfl-teams">
+                            <h3>${this.awayTeam}: ${this.awayScore}</h3> 
+                            <h3>${this.homeTeam}: ${this.homeScore}</h3>
+                        </div>
+                        <div class="position-play">
+                            <p>${this.ballPosition}</p>
+                            <p>${this.lastPlay}</p>
+                        </div>
+                        <div class="weather">
+                            ${this.weather} and ${this.temperature}° at ${this.venue}
+                        </div>
                     </div>
                 `;
             }
