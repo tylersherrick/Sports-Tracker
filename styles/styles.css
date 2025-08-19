@@ -82,6 +82,18 @@
     margin-top: 1%;
 }
 
+.nfl-teams, .mlb-teams {
+    margin-left: 1%;
+}
+
+.position-play, .weather {
+    margin-left: 4%;
+}
+
+#back-button, #nfl-scores, #mlb-scores {
+    margin-left: 1%;
+}
+
 @media (max-width: 600px) {
     .game-row {
         width: calc(100% - 10px); 
