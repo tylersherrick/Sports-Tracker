@@ -127,12 +127,18 @@ function mlbVariables(game) {
             }
             if (this.gameStatus === "In Progress") {
                 return `
-                    ${this.awayTeam}: ${this.awayScore} <br>
-                    ${this.homeTeam}: ${this.homeScore} <br>
-                    ${this.balls}-${this.strikes} - ${this.outs} <br>
-                    ${this.currentPitcher} pitching to ${this.currentBatter} <br>
-                    ${this.lastPlay} <br>
-                    ${this.currentWeather ? this.currentWeather + ` ${this.temperature}° at ${this.venue}` : ''}
+                    <div class="mlb-teams">
+                        <h3>${this.awayTeam}: ${this.awayScore}</h3> 
+                        <h3>${this.homeTeam}: ${this.homeScore}</h3>
+                    </div>
+                    <div class="position-play">
+                        <p>${this.balls}-${this.strikes} - ${this.outs}</p>
+                        <p>${this.currentPitcher} pitching to ${this.currentBatter}</p>
+                        <p>${this.lastPlay}</p>
+                    </div>
+                    <div class="weather">
+                        ${this.currentWeather} and ${this.temperature}° at ${this.venue}
+                    </div>
                 `;
             }
 

@@ -13,6 +13,11 @@ function nflVariables(event) {
         awayID: event.competitions[0].competitors[1].id,
         homeID: event.competitions[0].competitors[0].id,
         gameStatus: event.status.type.description,
+        gameSummary: event.competitions[0].headlines?.[0]?.shortLinkText || "",
+        lastPlay: event.competitions[0].situation?.lastPlay?.text ? event.competitions[0].situation.lastPlay.text : "",
+        weather: event.weather?.conditionId || "",
+        temperature: event.weather?.temperature || "",
+        venue: event.competitions[0].venue.fullName,
         scheduledGame() {
             return `
                 <div id="${this.gameId}" class="game-row">
@@ -35,7 +40,7 @@ function nflVariables(event) {
                         <p class="game-details">
                             ${this.time} </br></br>
                             ${this.awayTeam} -  ${this.awayScore} ${this.awayID}</br>
-                            ${this.homeTeam} -  ${this.homeScore} ${this.homeID}</br></br>
+                            ${this.homeTeam} -  ${this.homeScore} ${this.homeID}</br>
                         </p>
                         <p class="game-details">
                             ${this.ballPosition}
@@ -51,7 +56,7 @@ function nflVariables(event) {
                         <p class="game-details">
                             ${this.time} </br></br>
                             ${this.awayTeam} -  ${this.awayScore} </br>
-                            ${this.homeTeam} -  ${this.homeScore} </br></br>
+                            ${this.homeTeam} -  ${this.homeScore} </br>
                         </p>
                         <p class="game-details">
                             End of Quarter
@@ -67,7 +72,7 @@ function nflVariables(event) {
                         <p class="game-details">
                             ${this.time} </br></br>
                             ${this.awayTeam} -  ${this.awayScore} </br>
-                            ${this.homeTeam} -  ${this.homeScore} </br></br>
+                            ${this.homeTeam} -  ${this.homeScore} </br>
                         </p>
                         <p class="game-details">
                         </p>
@@ -93,10 +98,14 @@ function nflVariables(event) {
         renderIndividualView() {
             if (this.gameStatus === "Final") {
                 return `
-                    Final Score: <br>
-                    ${this.awayTeam}: ${this.awayScore} <br>
-                    ${this.homeTeam}: ${this.homeScore} <br>
-                    ${this.situation?.summary || ''}
+                    <div class="nfl-teams">
+                        <h3>Final Score:</h3>
+                        <h4>${this.awayTeam}: ${this.awayScore}</h4> 
+                        <h4>${this.homeTeam}: ${this.homeScore}</h4>
+                    </div>
+                    <div class="position-play">
+                        <p>${this.gameSummary}</p>
+                    </div>
                 `;
             }
             if (this.gameStatus === "Scheduled") {
@@ -109,10 +118,17 @@ function nflVariables(event) {
             }
             if (this.gameStatus === "In Progress") {
                 return `
-                    ${this.awayTeam}: ${this.awayScore} <br>
-                    ${this.homeTeam}: ${this.homeScore} <br>
-                    ${this.ballPosition} <br>
-                    Possession: ${this.possession}
+                    <div class="nfl-teams">
+                        <h3>${this.awayTeam}: ${this.awayScore}</h3> 
+                        <h3>${this.homeTeam}: ${this.homeScore}</h3>
+                    </div>
+                    <div class="position-play">
+                        <p>${this.ballPosition}</p>
+                        <p>${this.lastPlay}</p>
+                    </div>
+                    <div class="weather">
+                        ${this.weather} and ${this.temperature}° at ${this.venue}
+                    </div>
                 `;
             }
             if (this.gameStatus === "End of Period") {
