@@ -210,7 +210,8 @@ const showLessMLB = () => {
     mlbData.innerHTML = ``;
     const inProgress = sportsData.MLB.filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const yetToStart = sportsData.MLB.filter(event => event.status.type.name === "STATUS_SCHEDULED");
-    const limitedGames = [...inProgress, ...yetToStart].slice(0, 3);
+    const alreadyFinal = sportsData.MLB.filter(event => event.status.type.name === "STATUS_FINAL");
+    const limitedGames = [...inProgress, ...yetToStart, ...alreadyFinal].slice(0, 3);
     const gameTotal = limitedGames.length;
     limitedGames.forEach(event => {
         const mlb = mlbVariables(event);
@@ -220,10 +221,10 @@ const showLessMLB = () => {
         if (event.status.type.name === "STATUS_IN_PROGRESS") {
             mlbData.innerHTML += `${mlb.inProgressGame()}`;
         }
+        if (event.status.type.name === "STATUS_FINAL") {
+            mlbData.innerHTML += `${mlb.gameOver()}`;
+        }
     });
-    if (limitedGames.length === 0) {
-        mlbData.innerHTML = `<h4>There are no active games.</h4>`;
-    }
     // Attach click listeners to all game rows
     document.querySelectorAll('.game-row').forEach(row => {
         row.addEventListener('click', (event) => {
@@ -296,9 +297,6 @@ const showLessNFL = () => {
             nflData.innerHTML += `${nfl.gameOver()}`;
         }
     });
-    if (smallNFLList.length === 0) {
-        nflData.innerHTML += `<h4>There are no active games.</h4>`
-    }
     document.querySelectorAll('.game-row').forEach(row => {
         row.addEventListener('click', (event) => {
             individualNFLGame(event.currentTarget.id);
