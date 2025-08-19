@@ -1,3 +1,6 @@
+/* =========================
+   Base & Reset
+========================= */
 .base-map {
     display: grid;
     grid-template-columns: repeat(3, 10px);
@@ -35,6 +38,9 @@
     background-color: lightblue;
 }
 
+/* =========================
+   Containers
+========================= */
 #mlb-data, #nfl-data, #cfb-data, #nhl-data, #nba-data, #cbb-data {
     display: flex;
     flex-wrap: wrap; 
@@ -42,17 +48,31 @@
     margin-left: 2%;
 }
 
+/* =========================
+   Game Row
+========================= */
 .game-row {
     display: flex;
     align-items: center;
-    border: 1px solid black;
+    border: 1px solid #ccc;
     padding: 1%;
     margin: 0; 
     width: calc(30% - 10px); 
     box-sizing: border-box;
+    background-color: #f9f9f9; 
+    border-radius: 8px;
+    transform: translateY(0);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.game-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.12);
+}
 
+/* =========================
+   Game Info & Details
+========================= */
 .game-info {
     display: flex;
     flex-direction: column;
@@ -60,43 +80,75 @@
 }
 
 .game-details {
-    margin: 0;
-    margin-bottom: 2%; 
+    margin: 0;       /* remove default margins */
+    padding: 0;      /* remove extra padding */
+    line-height: 1.2; 
+    color: #333;
 }
 
+.game-info p {
+    margin: 0;
+    padding: 0;
+}
+
+/* =========================
+   Buttons
+========================= */
 #back-to-main, #back-to-all, #back-to {
     margin-bottom: 2%;
+    background-color: #eee;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-#mlb-data {
-    margin-left: 2%;
+#back-to-main:hover, #back-to-all:hover, #back-to:hover {
+    background-color: #ddd;
 }
 
+/* =========================
+   Logos
+========================= */
 .away-logo, .home-logo {
     width: 5%;
     height: 5%;
+    max-width: 40px;
+    max-height: 40px;
 }
 
+.game-info img {
+    margin-right: 0.5rem;
+}
+
+/* =========================
+   Base map adjustments
+========================= */
 .base-map {
     margin-left: auto; 
     margin-top: 1%;
 }
 
-.nfl-teams, .mlb-teams {
-    margin-left: 1%;
+/* =========================
+   Individual Game
+========================= */
+.individual-game {
+    margin-left: 10%;
 }
 
-.position-play, .weather {
-    margin-left: 4%;
-}
-
-#back-button, #nfl-scores, #mlb-scores {
-    margin-left: 1%;
+/* =========================
+   Responsive Design
+========================= */
+@media (max-width: 900px) {
+    .game-row {
+        width: calc(48% - 10px);
+    }
 }
 
 @media (max-width: 600px) {
     .game-row {
-        width: calc(100% - 10px); 
+        width: calc(100% - 10px);
     }
     .base-map {
         margin-right: 1%;
@@ -106,3 +158,7 @@
         height: 20%;
     }
 }
+
+/* =========================
+   Individual MLB Game Page
+========================= */
