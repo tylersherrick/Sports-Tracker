@@ -2,7 +2,9 @@ function mlbVariables(game) {
     return {
         gameId: game.id,
         homeTeam: game.competitions[0].competitors[0].team.displayName,
+        shortHomeTeam: game.competitions[0].competitors[0].team.abbreviation,
         awayTeam: game.competitions[0].competitors[1].team.displayName,
+        shortAwayTeam: game.competitions[0].competitors[1].team.abbreviation,
         homeScore: game.competitions[0].competitors[0].score,
         awayScore: game.competitions[0].competitors[1].score,
         futureWeather: game.weather?.displayValue || "",
@@ -19,6 +21,7 @@ function mlbVariables(game) {
         strikes: game.competitions[0].situation?.strikes ?? 0,
         outs: game.competitions[0].outsText,
         inning: game.status.type.detail,
+        shortInning: game.status.type.shortDetail,
         inningStatus: game.competitions[0].situation?.lastPlay?.type.text || "",
         currentBatter: game.competitions[0].situation?.batter?.athlete?.displayName || "",
         currentBatterId: game.competitions[0].situation?.batter?.athlete?.team?.id || "",
@@ -55,49 +58,89 @@ function mlbVariables(game) {
         dueUp3: game.competitions[0].situation?.dueUp?.[2]?.athlete?.fullName,
         scheduledGame() {
             return `
-                <div id="${this.gameId}" class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${this.inning} ${this.gameShortDetail} </br></br>
-                            ${this.awayTeam} </br>
-                            ${this.homeTeam}
-                        </p>
-                        <p class="game-details"></p>
+                <div id="${this.gameId}" class="game-row scheduled">
+                    <!-- Away team: logo, score, abbrev -->
+                    <div class="team away">
+                        <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
+                        <div class="team-info">
+                            <div class="score"></div>
+                            <div class="abbr">${this.shortAwayTeam}</div>
+                        </div>
+                    </div>
+
+                    <!-- Center: inning/short detail -->
+                    <div class="game-center">
+                        <div class="inning-outs">${this.shortInning}</div>
+                    </div>
+
+                    <!-- Home team: score, abbrev, logo -->
+                    <div class="team home">
+                        <div class="team-info">
+                            <div class="score"></div>
+                            <div class="abbr">${this.shortHomeTeam}</div>
+                        </div>
+                        <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
                 </div>
             `;
         },
         inProgressGame() {
             return `
-                <div id="${this.gameId}" class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${this.inning} </br></br>
-                            ${this.awayTeam} - ${this.awayScore} </br>
-                            ${this.homeTeam} - ${this.homeScore}
-                        </p>
-                        <p class="game-details">
-                            ${this.balls}-${this.strikes} - ${this.outs}
-                        </p>
+                <div id="${this.gameId}" class="game-row in-progress">
+                    <!-- Away team: logo, score, abbrev -->
+                    <div class="team away">
+                        <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
+                        <div class="team-info">
+                            <div class="score">${this.awayScore}</div>
+                            <div class="abbr">${this.shortAwayTeam}</div>
+                        </div>
                     </div>
-                    <div class="base-map">
-                        <div class="base first-base ${this.onFirst ? 'occupied' : ''}"></div>
-                        <div class="base second-base ${this.onSecond ? 'occupied' : ''}"></div>
-                        <div class="base third-base ${this.onThird ? 'occupied' : ''}"></div>
+
+                    <!-- Center: inning/outs + base map -->
+                    <div class="game-center">
+                        <div class="inning-outs">${this.shortInning} - ${this.outs}</div>
+                        <div class="base-map">
+                            <div class="base first-base ${this.onFirst ? 'occupied' : ''}"></div>
+                            <div class="base second-base ${this.onSecond ? 'occupied' : ''}"></div>
+                            <div class="base third-base ${this.onThird ? 'occupied' : ''}"></div>
+                        </div>
+                    </div>
+
+                    <!-- Home team: score, abbrev, logo -->
+                    <div class="team home">
+                        <div class="team-info">
+                            <div class="score">${this.homeScore}</div>
+                            <div class="abbr">${this.shortHomeTeam}</div>
+                        </div>
+                        <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
                 </div>
             `;
         },
         gameOver() {
             return `
-                <div id="${this.gameId}" class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${this.inning} </br></br>
-                            ${this.awayTeam} - ${this.awayScore} </br>
-                            ${this.homeTeam} - ${this.homeScore}
-                        </p>
-                        <p class="game-details"></p>
+                <div id="${this.gameId}" class="game-row over">
+                    <!-- Away team: logo, score, abbrev -->
+                    <div class="team away">
+                        <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
+                        <div class="team-info">
+                            <div class="score">${this.awayScore}</div>
+                            <div class="abbr">${this.shortAwayTeam}</div>
+                        </div>
+                    </div>
+
+                    <!-- Center: inning/short detail -->
+                    <div class="game-center">
+                        <div class="inning-outs">${this.shortInning}</div>
+                    </div>
+
+                    <!-- Home team: score, abbrev, logo -->
+                    <div class="team home">
+                        <div class="team-info">
+                            <div class="score">${this.homeScore}</div>
+                            <div class="abbr">${this.shortHomeTeam}</div>
+                        </div>
+                        <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
                 </div>
             `;
