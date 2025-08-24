@@ -160,5 +160,96 @@
 }
 
 /* =========================
-   Individual MLB Game Page
+   In-Progress Game Layout
 ========================= */
+.game-row.in-progress,
+.game-row.scheduled,
+.game-row.over {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-row.in-progress .team,
+.game-row.scheduled .team,
+.game-row.over .team {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.game-row.in-progress .team.away,
+.game-row.scheduled .team.away,
+.game-row.over .team.away {
+    flex-direction: row;
+}
+
+.game-row.in-progress .team.home,
+.game-row.scheduled .team.home,
+.game-row.over .team.home {
+    flex-direction: row-reverse;
+}
+
+.game-row.in-progress .team-logo,
+.game-row.scheduled .team-logo,
+.game-row.over .team-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.game-row.in-progress .team-info,
+.game-row.scheduled .team-info,
+.game-row.over .team-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.game-row.in-progress .score,
+.game-row.scheduled .score,
+.game-row.over .score {
+    font-weight: bold;
+}
+
+.game-row.in-progress .abbr,
+.game-row.scheduled .abbr,
+.game-row.over .abbr {
+    color: #555;
+}
+
+.game-row.in-progress .game-center,
+.game-row.scheduled .game-center,
+.game-row.over .game-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.game-row.in-progress .inning-outs,
+.game-row.scheduled .inning-outs,
+.game-row.over .inning-outs {
+    font-weight: 550;
+}
+
+.inning-outs {
+    margin-bottom: 5px;
+}
+
+/* fix the base map centering specifically */
+.game-row.in-progress .base-map,
+.game-row.scheduled .base-map,
+.game-row.over .base-map {
+    display: grid;
+    grid-template-columns: repeat(3, 10px);
+    grid-template-rows: repeat(3, 10px);
+    justify-items: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+}
