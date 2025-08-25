@@ -3,10 +3,15 @@ function nflVariables(event) {
         gameId: event.id,
         awayTeam: event.competitions[0].competitors[1].team.displayName,
         homeTeam: event.competitions[0].competitors[0].team.displayName,
+        shortAwayTeam: event.competitions[0].competitors[1].team.abbreviation,
+        shortHomeTeam: event.competitions[0].competitors[0].team.abbreviation,
+        homeLogo: event.competitions[0].competitors[0].team.logo,
+        awayLogo: event.competitions[0].competitors[1].team.logo,
         gameStatus: event.status.type.shortDetail,
         awayScore: event.competitions[0].competitors[1].score,
         homeScore: event.competitions[0].competitors[0].score,
         time: event.status.type.detail,
+        scheduleTime: event.status.type.shortDetail,
         situation: event.competitions[0].situation || "",
         ballPosition: event.competitions[0].situation?.downDistanceText || 'Switching Possession',
         possession: event.competitions[0].situation?.possession || "",
@@ -22,15 +27,28 @@ function nflVariables(event) {
         attendance: event.competitions[0].attendance,
         scheduledGame() {
             return `
-                <div id="${this.gameId}" class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${this.time} </br></br>
-                            ${this.awayTeam} </br>
-                            ${this.homeTeam}
-                        </p>
-                        <p class="game-details">
-                        </p>
+                <div id="${this.gameId}" class="game-row scheduled">
+                    <!-- Away team: logo, score, abbrev -->
+                    <div class="team away">
+                        <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
+                        <div class="team-info">
+                            <div class="score"></div>
+                            <div class="abbr">${this.shortAwayTeam}</div>
+                        </div>
+                    </div>
+
+                    <!-- Center: inning/short detail -->
+                    <div class="game-center">
+                        <div class="inning-outs">${this.scheduleTime}</div>
+                    </div>
+
+                    <!-- Home team: score, abbrev, logo -->
+                    <div class="team home">
+                        <div class="team-info">
+                            <div class="score"></div>
+                            <div class="abbr">${this.shortHomeTeam}</div>
+                        </div>
+                        <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
                 </div>
             `;

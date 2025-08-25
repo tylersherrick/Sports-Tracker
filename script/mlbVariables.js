@@ -95,8 +95,6 @@ function mlbVariables(game) {
                             <div class="abbr">${this.shortAwayTeam}</div>
                         </div>
                     </div>
-
-                    <!-- Center: inning/outs + base map -->
                     <div class="game-center">
                         <div class="inning-outs">${this.shortInning} - ${this.outs}</div>
                         <div class="base-map">
@@ -105,8 +103,6 @@ function mlbVariables(game) {
                             <div class="base third-base ${this.onThird ? 'occupied' : ''}"></div>
                         </div>
                     </div>
-
-                    <!-- Home team: score, abbrev, logo -->
                     <div class="team home">
                         <div class="team-info">
                             <div class="score">${this.homeScore}</div>
@@ -120,7 +116,6 @@ function mlbVariables(game) {
         gameOver() {
             return `
                 <div id="${this.gameId}" class="game-row over">
-                    <!-- Away team: logo, score, abbrev -->
                     <div class="team away">
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
@@ -128,13 +123,9 @@ function mlbVariables(game) {
                             <div class="abbr">${this.shortAwayTeam}</div>
                         </div>
                     </div>
-
-                    <!-- Center: inning/short detail -->
                     <div class="game-center">
                         <div class="inning-outs">${this.shortInning}</div>
                     </div>
-
-                    <!-- Home team: score, abbrev, logo -->
                     <div class="team home">
                         <div class="team-info">
                             <div class="score">${this.homeScore}</div>

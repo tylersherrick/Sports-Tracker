@@ -356,28 +356,32 @@ const showLessCFB = () => {
     const cfbHalfTime = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_HALFTIME");
     const cfbInProgress = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const cfbScheduled = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
+    const cfbFinal = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_FINAL");
     const cfbEndofQuarter = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
     const cfgGames = cfbHalfTime.length + cfbInProgress.length + cfbScheduled.length;
     if (!sportsData.CFB || cfgGames == 0) {
         cfbData.innerHTML = `<h4>No CFB games available.</h4>`;
     }
-    const cfbSmallList = [...cfbInProgress, ...cfbHalfTime,...cfbEndofQuarter , ...cfbScheduled].slice(0, 3);
+    const cfbSmallList = [...cfbScheduled, ...cfbInProgress, ...cfbHalfTime, ...cfbEndofQuarter].slice(0, 3);
     cfbSmallList.forEach(event => {
         const cfb = cfbVariables(event);
         cfb.awayRank = cfb.awayRank > 25 ? "" : cfb.awayRank;
         cfb.homeRank = cfb.homeRank > 25 ? "" : cfb.homeRank;
         cfb.awayID = cfb.possession === cfb.awayID ? "🏈" : "";
         cfb.homeID = cfb.possession === cfb.homeID ? "🏈" : "";
+        if(event.status.type.name === "STATUS_SCHEDULED") {
+            cfbData.innerHTML += cfb.scheduledGame();
+        }
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
             cfbData.innerHTML += cfb.inProgress();
-        }
-        if(event.status.type.name === "STATUS_END_PERIOD") {
-            cfbData.innerHTML += cfb.endOfPeriod();
         }
         if(event.status.type.name === "STATUS_HALFTIME") {
             cfbData.innerHTML += cfb.halfTime();
         }
-        if(event.status.type.name === "STATUS_SCHEDULED") {
+        if(event.status.type.name === "STATUS_END_PERIOD") {
+            cfbData.innerHTML += cfb.endOfPeriod();
+        }
+        if(event.status.type.name === "STATUS_FINAL") {
             cfbData.innerHTML += cfb.gameOver();
         }
     }),
@@ -403,6 +407,9 @@ const showAllCFB = () => {
         cfb.homeRank = cfb.homeRank > 25 ? "" : cfb.homeRank;
         cfb.awayID = cfb.possession === cfb.awayID ? "🏈" : "";
         cfb.homeID = cfb.possession === cfb.homeID ? "🏈" : "";
+        if(event.status.type.name === "STATUS_SCHEDULED") {
+            cfbData.innerHTML += cfb.scheduledGame();
+        }
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
             cfbData.innerHTML += cfb.inProgress();
         }
@@ -411,9 +418,6 @@ const showAllCFB = () => {
         }
         if(event.status.type.name === "STATUS_END_PERIOD") {
             cfbData.innerHTML += cfb.endOfPeriod();
-        }
-        if(event.status.type.name === "STATUS_SCHEDULED") {
-            cfbData.innerHTML += cfb.scheduledGame();
         }
         if(event.status.type.name === "STATUS_FINAL") {
             cfbData.innerHTML += cfb.gameOver();
