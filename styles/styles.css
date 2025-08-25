@@ -42,27 +42,30 @@
    Containers
 ========================= */
 #mlb-data, #nfl-data, #cfb-data, #nhl-data, #nba-data, #cbb-data {
-    display: flex;
-    flex-wrap: wrap; 
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 across on large screens */
+    gap: 12px;
     margin-left: 2%;
 }
 
 /* =========================
-   Game Row
+   Game Row (Card)
 ========================= */
 .game-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     border: 1px solid #ccc;
-    padding: 1%;
-    margin: 0; 
-    width: calc(30% - 10px); 
+    padding: 1rem;
+    margin: 0;
     box-sizing: border-box;
-    background-color: #f9f9f9; 
+    background-color: #f9f9f9;
     border-radius: 8px;
     transform: translateY(0);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    /* Taller cards */
+    min-height: 110px;
 }
 
 .game-row:hover {
@@ -76,13 +79,13 @@
 .game-info {
     display: flex;
     flex-direction: column;
-    flex: 1; 
+    flex: 1;
 }
 
 .game-details {
-    margin: 0;       /* remove default margins */
-    padding: 0;      /* remove extra padding */
-    line-height: 1.2; 
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
     color: #333;
 }
 
@@ -112,10 +115,9 @@
    Logos
 ========================= */
 .away-logo, .home-logo {
-    width: 5%;
-    height: 5%;
-    max-width: 40px;
-    max-height: 40px;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
 }
 
 .game-info img {
@@ -126,7 +128,7 @@
    Base map adjustments
 ========================= */
 .base-map {
-    margin-left: auto; 
+    margin-left: auto;
     margin-top: 1%;
 }
 
@@ -140,27 +142,24 @@
 /* =========================
    Responsive Design
 ========================= */
-@media (max-width: 900px) {
-    .game-row {
-        width: calc(48% - 10px);
-    }
-}
-
-@media (max-width: 600px) {
-    .game-row {
-        width: calc(100% - 10px);
-    }
-    .base-map {
-        margin-right: 1%;
+@media (max-width: 850px) {
+    #mlb-data, #nfl-data, #cfb-data, #nhl-data, #nba-data, #cbb-data {
+        grid-template-columns: 1fr; /* single column on smaller screens */
     }
     .away-logo, .home-logo {
         width: 20%;
         height: 20%;
     }
+    .base-map {
+        margin-right: 1%;
+    }
+    .game-row {
+        min-height: 70px;
+    }
 }
 
 /* =========================
-   In-Progress Game Layout
+   In-Progress / Scheduled / Over Game Layout
 ========================= */
 .game-row.in-progress,
 .game-row.scheduled,
@@ -180,13 +179,13 @@
 .game-row.in-progress .team.away,
 .game-row.scheduled .team.away,
 .game-row.over .team.away {
-    flex-direction: row;
+    flex-direction: row; /* left side */
 }
 
 .game-row.in-progress .team.home,
 .game-row.scheduled .team.home,
 .game-row.over .team.home {
-    flex-direction: row-reverse;
+    flex-direction: row-reverse; /* right side */
 }
 
 .game-row.in-progress .team-logo,
@@ -240,7 +239,7 @@
     margin-bottom: 5px;
 }
 
-/* fix the base map centering specifically */
+/* Fix the base map centering specifically */
 .game-row.in-progress .base-map,
 .game-row.scheduled .base-map,
 .game-row.over .base-map {
