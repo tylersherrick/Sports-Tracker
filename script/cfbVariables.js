@@ -130,7 +130,7 @@ function cfbVariables(event) {
                     <div class="team away">
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
-                            <div class="score">${this.homeRank}</div>
+                            <div class="score">${this.awayRank}</div>
                             <div class="abbr">${this.shortAwayTeam}</div>
                         </div>
                     </div>
@@ -140,7 +140,7 @@ function cfbVariables(event) {
                     </div>
                     <div class="team home">
                         <div class="team-info">
-                            <div class="score">${this.awayRank}</div>
+                            <div class="score">${this.homeRank}</div>
                             <div class="abbr">${this.shortHomeTeam}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
