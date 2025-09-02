@@ -97,6 +97,9 @@ fetchGamesData().then(() => {
       if(currentView === 'individualNFLGame' && selectedGameId) {
         individualNFLGame(selectedGameId);
       } 
+      if(currentView === 'individualCFBGame' && selectedGameId) {
+        individualCFBGame(selectedGameId);
+      }
       else {
         updateViews();
       }
@@ -195,6 +198,33 @@ const individualNFLGame = (gameId) => {
     });
     document.getElementById('nfl-scores').addEventListener('click', () => {
         currentView = 'nfl';
+        updateViews();
+    });
+};
+
+const individualCFBGame = (gameId) => {
+    if(!gameId) gameId = selectedGameId;
+    clearAllSections();
+    selectedGameId = gameId;
+    currentView = "individualCFBGame";
+    const game = sportsData.CFB.find(g => g.id === gameId);
+    if(!game) return;
+    const cfb = cfbVariables(game);
+    cfb.awayRank = cfb.awayRank > 25 ? "" : cfb.awayRank;
+    cfb.homeRank = cfb.homeRank > 25 ? "" : cfb.homeRank;
+    sportsDiv.innerHTML = `
+        <h1>${cfb.awayTeam} ${cfb.awayRank} at ${cfb.homeTeam} ${cfb.homeRank}</h1>
+        <p id="game-status">${cfb.renderIndividualView()}</p>
+        <button id="cfb-scores">CFB Games</button>
+        </br></br>
+        <button id="back-button">All Games</button>
+    `;
+    document.getElementById('back-button').addEventListener('click', () => {
+        currentView = 'showLess';
+        updateViews();
+    });
+    document.getElementById('cfb-scores').addEventListener('click', () => {
+        currentView = 'cfb';
         updateViews();
     });
 };
@@ -370,7 +400,12 @@ const showLessCFB = () => {
         if(event.status.type.name === "STATUS_FINAL") {
             cfbData.innerHTML += `<div class="hoverer">${cfb.gameOver()}</div>`;
         }
-    }),
+    });
+    document.querySelectorAll('.game-row').forEach(row => {
+        row.addEventListener('click', (event) => {
+            individualCFBGame(event.currentTarget.id);
+        })
+    });
     document.getElementById("show-all-cfb").addEventListener("click", showAllCFB);
     currentView = 'showLess';
 }
@@ -408,7 +443,12 @@ const showAllCFB = () => {
         if(event.status.type.name === "STATUS_FINAL") {
             cfbData.innerHTML += `<div class="hoverer">${cfb.gameOver()}</div>`;
         }
-    }),
+    });
+    document.querySelectorAll('.game-row').forEach(row => {
+        row.addEventListener('click', (event) => {
+            individualCFBGame(event.currentTarget.id);
+        })
+    });
     document.getElementById("back-to").addEventListener("click", showNothing);
     currentView = 'cfb';
 }

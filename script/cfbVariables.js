@@ -9,16 +9,17 @@ function cfbVariables(event) {
         awayLogo: event.competitions[0].competitors[1].team.logo,
         awayId: event.competitions[0].competitors[1].id,
         homeId: event.competitions[0].competitors[0].id,
-        gameStatus: event.status.type.shortDetail,
+        gameStatus: event.status.type.description,
         awayScore: event.competitions[0].competitors[1].score,
         homeScore: event.competitions[0].competitors[0].score,
         time: event.status.type.detail,
-        scheduleTime: event.status.type.shortDetail,
+        scheduleTime: event.status.type.shortDetail, 
         awayRank: event.competitions[0].competitors[1].curatedRank.current,
         homeRank: event.competitions[0].competitors[0].curatedRank.current,
         situation: event.competitions[0].situation || "",
         ballPosition: event.competitions[0].situation?.downDistanceText || 'Switching Possession',
         posession: event.competitions[0].situation?.possession || "",
+        gameStatus: event.status.type.description,
         
         scheduledGame() {
             return `
@@ -147,6 +148,16 @@ function cfbVariables(event) {
                     </div>
                 </div>
             `
+        },
+        renderIndividualView() {
+            if (this.gameStatus === "Scheduled") {
+                return `
+                    Game status: ${this.gameStatus} <br>
+                    ${this.awayTeam} at ${this.homeTeam} <br>
+                    ${this.time} <br>
+                    ${this.situation?.note || ''}
+                `
+            }
         }
     }
 }
