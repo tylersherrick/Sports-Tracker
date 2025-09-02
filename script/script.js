@@ -155,12 +155,9 @@ const individualMLBGame = (gameId) => {
     clearAllSections();
     selectedGameId = gameId;
     currentView = "individualMLBGame";
-    
     const game = sportsData.MLB.find(g => g.id === gameId);
     if (!game) return;
-    
     const mlb = mlbVariables(game);
-
     sportsDiv.innerHTML = `
         <p id="game-status">${mlb.renderIndividualView()}</p>
         <button id="mlb-scores">MLB Games</button>
@@ -182,10 +179,8 @@ const individualNFLGame = (gameId) => {
     clearAllSections();
     selectedGameId = gameId;
     currentView = "individualNFLGame";
-
     const game = sportsData.NFL.find(g => g.id === gameId);
     if(!game) return;
-    
     const nfl = nflVariables(game);
     sportsDiv.innerHTML = `
         <h1>${nfl.awayTeam} at ${nfl.homeTeam}</h1>
@@ -216,16 +211,15 @@ const showLessMLB = () => {
     limitedGames.forEach(event => {
         const mlb = mlbVariables(event);
         if (event.status.type.name === "STATUS_SCHEDULED") {
-            mlbData.innerHTML += `${mlb.scheduledGame()}`;
+            mlbData.innerHTML += `<div class="hoverer">${mlb.scheduledGame()}</div>`;
         }
         if (event.status.type.name === "STATUS_IN_PROGRESS") {
-            mlbData.innerHTML += `${mlb.inProgressGame()}`;
+            mlbData.innerHTML += `<div class="hoverer">${mlb.inProgressGame()}</div>`;
         }
         if (event.status.type.name === "STATUS_FINAL") {
-            mlbData.innerHTML += `${mlb.gameOver()}`;
+            mlbData.innerHTML += `<div class="hoverer">${mlb.gameOver()}</div>`;
         }
     });
-    // Attach click listeners to all game rows
     document.querySelectorAll('.game-row').forEach(row => {
         row.addEventListener('click', (event) => {
             individualMLBGame(event.currentTarget.id);
@@ -249,13 +243,13 @@ const showAllMLB = () => {
     longGamesList.forEach(event => {
         const mlb = mlbVariables(event);
         if (event.status.type.name === "STATUS_SCHEDULED") {
-            mlbData.innerHTML += `${mlb.scheduledGame()}`;
+            mlbData.innerHTML += `<div class="hoverer">${mlb.scheduledGame()}</div>`;
         }
         if (event.status.type.name === "STATUS_IN_PROGRESS") {
-            mlbData.innerHTML += `${mlb.inProgressGame()}`;
+            mlbData.innerHTML += `<div class="hoverer">${mlb.inProgressGame()}</div>`;
         }
         if (event.status.type.name === "STATUS_FINAL") {
-            mlbData.innerHTML += `${mlb.gameOver()}`;
+            mlbData.innerHTML += `<div class="hoverer">${mlb.gameOver()}</div>`;
         }
     });
     document.getElementById("back-to-main").addEventListener("click", showNothing);
@@ -264,7 +258,6 @@ const showAllMLB = () => {
             individualMLBGame(event.currentTarget.id);
         });
     });
-    
     currentView = 'mlb';
 };
 
@@ -282,19 +275,19 @@ const showLessNFL = () => {
         nfl.awayID = nfl.possession === nfl.awayID ? "🏈" : "";
         nfl.homeID = nfl.possession === nfl.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            nflData.innerHTML += `${nfl.inProgressGame()}`;
+            nflData.innerHTML += `<div class="hoverer">${nfl.inProgressGame()}</div>`;
         }
         if(event.status.type.name === "STATUS_END_PERIOD") {
-            nflData.innerHTML += `${nfl.endOfPeriod()}`;
+            nflData.innerHTML += `<div class="hoverer">${nfl.endOfPeriod()}</div>`;
         }
         if(event.status.type.name === "STATUS_HALFTIME") {
-            nflData.innerHTML += `${nfl.halfTime()}`
+            nflData.innerHTML += `<div class="hoverer">${nfl.halfTime()}</div>`
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            nflData.innerHTML += `${nfl.scheduledGame()}`;
+            nflData.innerHTML += `<div class="hoverer">${nfl.scheduledGame()}</div>`;
         }
         if(event.status.type.name === "STATUS_FINAL") {
-            nflData.innerHTML += `${nfl.gameOver()}`;
+            nflData.innerHTML += `<div class="hoverer">${nfl.gameOver()}</div>`;
         }
     });
     document.querySelectorAll('.game-row').forEach(row => {
@@ -323,24 +316,21 @@ const showAllNFL = () => {
         nfl.awayID = nfl.possession === nfl.awayID ? "🏈" : "";
         nfl.homeID = nfl.possession === nfl.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            nflData.innerHTML += `${nfl.inProgressGame()}`;
+            nflData.innerHTML += `<div class="hoverer">${nfl.inProgressGame()}</div>`;
         }
         if(event.status.type.name === "STATUS_END_PERIOD") {
-            nflData.innerHTML += `${nfl.endOfPeriod()}`;
+            nflData.innerHTML += `<div class="hoverer">${nfl.endOfPeriod()}</div>`;
         }
         if(event.status.type.name === "STATUS_HALFTIME") {
-            nflData.innerHTML += `${nfl.halfTime()}`
+            nflData.innerHTML += `<div class="hoverer">${nfl.halfTime()}</div>`
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            nflData.innerHTML += `${nfl.scheduledGame()}`;
+            nflData.innerHTML += `<div class="hoverer">${nfl.scheduledGame()}</div>`;
         }
         if(event.status.type.name === "STATUS_FINAL") {
-            nflData.innerHTML += `${nfl.gameOver()}`;
+            nflData.innerHTML += `<div class="hoverer">${nfl.gameOver()}</div>`;
         }
     });
-    if (longNFLList.length === 0) {
-        nflData.innerHTML += `<h4>There are no active games.</h4>`
-    }
     document.querySelectorAll('.game-row').forEach(row => {
         row.addEventListener('click', (event) => {
             individualNFLGame(event.currentTarget.id);
@@ -358,11 +348,7 @@ const showLessCFB = () => {
     const cfbScheduled = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const cfbFinal = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_FINAL");
     const cfbEndofQuarter = sportsData.CFB.slice(0, sportsData.CFB.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
-    const cfgGames = cfbHalfTime.length + cfbInProgress.length + cfbScheduled.length;
-    if (!sportsData.CFB || cfgGames == 0) {
-        cfbData.innerHTML = `<h4>No CFB games available.</h4>`;
-    }
-    const cfbSmallList = [...cfbScheduled, ...cfbInProgress, ...cfbHalfTime, ...cfbEndofQuarter].slice(0, 3);
+    const cfbSmallList = [...cfbScheduled, ...cfbInProgress, ...cfbHalfTime, ...cfbEndofQuarter, ...cfbFinal].slice(0, 3);
     cfbSmallList.forEach(event => {
         const cfb = cfbVariables(event);
         cfb.awayRank = cfb.awayRank > 25 ? "" : cfb.awayRank;
@@ -370,19 +356,19 @@ const showLessCFB = () => {
         cfb.awayID = cfb.possession === cfb.awayID ? "🏈" : "";
         cfb.homeID = cfb.possession === cfb.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            cfbData.innerHTML += cfb.scheduledGame();
+            cfbData.innerHTML += `<div class="hoverer">${cfb.scheduledGame()}</div>`;
         }
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            cfbData.innerHTML += cfb.inProgress();
+            cfbData.innerHTML += `<div class="hoverer">${cfb.inProgress()}</div>`;
         }
         if(event.status.type.name === "STATUS_HALFTIME") {
-            cfbData.innerHTML += cfb.halfTime();
+            cfbData.innerHTML += `<div class="hoverer">${cfb.halfTime()}</div>`;
         }
         if(event.status.type.name === "STATUS_END_PERIOD") {
-            cfbData.innerHTML += cfb.endOfPeriod();
+            cfbData.innerHTML += `<div class="hoverer">${cfb.endOfPeriod()}</div>`;
         }
         if(event.status.type.name === "STATUS_FINAL") {
-            cfbData.innerHTML += cfb.gameOver();
+            cfbData.innerHTML += `<div class="hoverer">${cfb.gameOver()}</div>`;
         }
     }),
     document.getElementById("show-all-cfb").addEventListener("click", showAllCFB);
@@ -408,19 +394,19 @@ const showAllCFB = () => {
         cfb.awayID = cfb.possession === cfb.awayID ? "🏈" : "";
         cfb.homeID = cfb.possession === cfb.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            cfbData.innerHTML += cfb.scheduledGame();
+            cfbData.innerHTML += `<div class="hoverer">${cfb.scheduledGame()}</div>`;
         }
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            cfbData.innerHTML += cfb.inProgress();
+            cfbData.innerHTML += `<div class="hoverer">${cfb.inProgress()}</div>`;
         }
         if(event.status.type.name === "STATUS_HALFTIME") {
-            cfbData.innerHTML += cfb.halfTime();
+            cfbData.innerHTML += `<div class="hoverer">${cfb.halfTime()}</div>`;
         }
         if(event.status.type.name === "STATUS_END_PERIOD") {
-            cfbData.innerHTML += cfb.endOfPeriod();
+            cfbData.innerHTML += `<div class="hoverer">${cfb.endOfPeriod()}</div>`;
         }
         if(event.status.type.name === "STATUS_FINAL") {
-            cfbData.innerHTML += cfb.gameOver();
+            cfbData.innerHTML += `<div class="hoverer">${cfb.gameOver()}</div>`;
         }
     }),
     document.getElementById("back-to").addEventListener("click", showNothing);
