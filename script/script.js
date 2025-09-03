@@ -186,7 +186,6 @@ const individualNFLGame = (gameId) => {
     if(!game) return;
     const nfl = nflVariables(game);
     sportsDiv.innerHTML = `
-        <h1>${nfl.awayTeam} at ${nfl.homeTeam}</h1>
         <p id="game-status">${nfl.renderIndividualView()}</p>
         <button id="nfl-scores">NFL Games</button>
         </br></br>
@@ -213,7 +212,6 @@ const individualCFBGame = (gameId) => {
     cfb.awayRank = cfb.awayRank > 25 ? "" : cfb.awayRank;
     cfb.homeRank = cfb.homeRank > 25 ? "" : cfb.homeRank;
     sportsDiv.innerHTML = `
-        <h1>${cfb.awayTeam} ${cfb.awayRank} at ${cfb.homeTeam} ${cfb.homeRank}</h1>
         <p id="game-status">${cfb.renderIndividualView()}</p>
         <button id="cfb-scores">CFB Games</button>
         </br></br>

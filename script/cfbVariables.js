@@ -7,6 +7,9 @@ function cfbVariables(event) {
         shortHomeTeam: event.competitions[0].competitors[0].team.abbreviation,
         homeLogo: event.competitions[0].competitors[0].team.logo,
         awayLogo: event.competitions[0].competitors[1].team.logo,
+        homeRecord: event.competitions[0].competitors[0].records[0].summary,
+        awayRecord: event.competitions[0].competitors[0].records[0].summary,
+        spread: event.competitions[0]?.odds?.[0]?.details || "",
         awayId: event.competitions[0].competitors[1].id,
         homeId: event.competitions[0].competitors[0].id,
         gameStatus: event.status.type.description,
@@ -20,7 +23,7 @@ function cfbVariables(event) {
         ballPosition: event.competitions[0].situation?.downDistanceText || 'Switching Possession',
         posession: event.competitions[0].situation?.possession || "",
         gameStatus: event.status.type.description,
-        
+        venue: event.competitions[0].venue.fullName,
         scheduledGame() {
             return `
                 <div id="${this.gameId}" class="game-row scheduled">
@@ -152,11 +155,34 @@ function cfbVariables(event) {
         renderIndividualView() {
             if (this.gameStatus === "Scheduled") {
                 return `
-                    Game status: ${this.gameStatus} <br>
-                    ${this.awayTeam} at ${this.homeTeam} <br>
-                    ${this.time} <br>
-                    ${this.situation?.note || ''}
-                `
+                    <div id="${this.gameId}" class="game-row individual-game-row">
+                    <!-- Away team: logo, score, abbrev -->
+                    <div class="team away individual-away">
+                        <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
+                        <div class="individual-team-info">
+                            <div class="score"></div>
+                            <div class="abbr individual-details">${this.shortAwayTeam} - ${this.awayRecord}</div>
+                        </div>
+                    </div>
+
+                    <!-- Center: inning/short detail -->
+                    <div class="individual-center">
+                        <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
+                        <div class="center-item">${this.venue}</div>
+                        <div class="center-item">${this.scheduleTime}</div>
+                        <div class="center-item">${this.spread}</div>
+                    </div>
+
+                    <!-- Home team: score, abbrev, logo -->
+                    <div class="team home">
+                        <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
+                        <div class="individual-team-info">
+                            <div class="score"></div>
+                            <div class="abbr individual-details">${this.shortHomeTeam} - ${this.homeRecord}</div>
+                        </div>
+                    </div>
+                </div>
+                `;
             }
         }
     }
