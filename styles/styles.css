@@ -162,6 +162,10 @@
     text-align: center;
 }
 
+.second-section {
+    margin-top: 10px;
+}
+
 /* =========================
    Responsive Design
 ========================= */
@@ -179,40 +183,40 @@
     .game-row {
         min-height: 70px;
     }
-    .individual-game-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-      "away home"
-      "center center";
-    gap: 1rem;
-    text-align: center;
-  }
+        .individual-game-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+        "away home"
+        "center center";
+        gap: 1rem;
+        text-align: center;
+    }
 
-  .individual-game-row .away {
-    grid-area: away;
-  }
+    .individual-game-row .away {
+        grid-area: away;
+    }
 
-  .individual-game-row .home {
-    grid-area: home;
-  }
+    .individual-game-row .home {
+        grid-area: home;
+    }
 
-  .individual-game-row .individual-center {
-    grid-area: center;
-  }
+    .individual-game-row .individual-center {
+        grid-area: center;
+    }
 
-  /* Center logos + text under them */
-  .individual-game-row .team {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+    /* Center logos + text under them */
+    .individual-game-row .team {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-  /* Add spacing under odds (last center item) */
-  .individual-game-row .individual-center .center-item:last-child {
-    margin-bottom: 0.75rem;
-  }
+    /* Add spacing under odds (last center item) */
+    .individual-game-row .individual-center .center-item:last-child {
+        margin-bottom: 0.75rem;
+    }
 }
 
 /* =========================
