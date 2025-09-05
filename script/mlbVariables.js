@@ -7,6 +7,10 @@ function mlbVariables(game) {
         shortAwayTeam: game.competitions[0].competitors[1].team.abbreviation,
         homeScore: game.competitions[0].competitors[0].score,
         awayScore: game.competitions[0].competitors[1].score,
+        homeOdds: game.competitions[0].odds?.[0]?.homeTeamOdds?.moneyLine || "",
+        awayOdds: game.competitions[0].odds?.[0]?.awayTeamOdds?.moneyLine || "",
+        homeRecord: game.competitions[0].competitors[0].records[0].summary,
+        awayRecord: game.competitions[0].competitors[1].records[0].summary,
         futureWeather: game.weather?.displayValue || "",
         currentWeather: game.weather?.conditionId || "",
         temperature: game.weather?.temperature || "",
@@ -137,6 +141,12 @@ function mlbVariables(game) {
             `;
         },
         renderIndividualView() {
+            if(this.homeOdds > 0) {
+                this.homeOdds = `+${this.homeOdds}`;
+            }
+            if(this.awayOdds > 0) {
+                this.awayOdds = `+${this.awayOdds}`;
+            }
             if (this.gameStatus === "Final") {
                 return `
                     <div class="mlb-teams">
@@ -152,19 +162,43 @@ function mlbVariables(game) {
 
             if (this.gameStatus === "Scheduled") {
                 return `
-                    <div class="mlb-teams">
-                        <h2>${this.awayTeam} ${this.awayOverallRecord} (Away: ${this.awayAwayRecord}) at ${this.homeTeam}: ${this.homeOverallRecord} (Home: ${this.homeHomeRecord})</h2>
+                    <div id="${this.gameId}" class="game-row individual-game-row">
+                        <!-- Away team: logo, score, abbrev -->
+                        <div class="team away individual-away">
+                            <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.shortAwayTeam} - ${this.awayRecord}</div>
+                                <div class="abbr individual-details">${this.awayOdds}</div>
+                            </div>
+                        </div>
+
+                        <!-- Center: inning/short detail -->
+                        <div class="individual-center">
+                            <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
+                            <div class="center-item">${this.teamsPlaying}</div>
+                            <div class="weather">${this.futureWeather ? `${this.futureWeather} and ${this.temperature}°` : ''} at ${this.venue}</div>
+                            
+                        </div>
+
+                        <!-- Home team: score, abbrev, logo -->
+                        <div class="team home">
+                            <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.shortHomeTeam} - ${this.homeRecord}</div>
+                                <div class="abbr individual-details">${this.homeOdds}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="position-play">
-                        <p>Game status: ${this.gameStatus}</p>
-                        ${this.teamsPlaying ? `<p>${this.teamsPlaying}</p>` : ''}
-                        ${this.preGameMessage ? `<p>${this.preGameMessage}</p>` : ''}
-                        <p>Pitching Today:</p>
-                        <p>${this.probableAwayStarter} - ${this.probableAwayStarterStats} ERA</p>
-                        <p>${this.probableHomeStarter} - ${this.probableHomeStarterStats} ERA</p>
-                    </div>
-                    <div class="weather">
-                        ${this.futureWeather ? `${this.futureWeather} ${this.temperature}°` : ''} at ${this.venue}
+                    <div id="${this.gameId}" class="game-row individual-game-row second-section">
+                        <div class="team away individual-away">
+                            <div class="abbr individual-details">${this.probableAwayStarter} - ${this.probableAwayStarterStats} ERA</div>
+                        </div>
+                        <div class="individual-center">Pitching Today</div>
+                        <div class="team home">
+                            <div class="abbr individual-details">${this.probableHomeStarter} - ${this.probableHomeStarterStats} ERA</div>
+                        </div>
                     </div>
                 `;
             }
