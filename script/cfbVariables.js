@@ -8,7 +8,7 @@ function cfbVariables(event) {
         homeLogo: event.competitions[0].competitors[0].team.logo,
         awayLogo: event.competitions[0].competitors[1].team.logo,
         homeRecord: event.competitions[0].competitors[0].records[0].summary,
-        awayRecord: event.competitions[0].competitors[0].records[0].summary,
+        awayRecord: event.competitions[0].competitors[1].records[0].summary,
         spread: event.competitions[0]?.odds?.[0]?.details || "",
         awayId: event.competitions[0].competitors[1].id,
         homeId: event.competitions[0].competitors[0].id,
@@ -31,8 +31,8 @@ function cfbVariables(event) {
                     <div class="team away">
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
-                            <div class="score">${this.awayRank}</div>
-                            <div class="abbr">${this.shortAwayTeam}</div>
+                            <div class="">${this.awayRank} ${this.shortAwayTeam}</div>
+                            <div class="abbr">${this.awayRecord}</div>
                         </div>
                     </div>
 
@@ -44,8 +44,8 @@ function cfbVariables(event) {
                     <!-- Home team: score, abbrev, logo -->
                     <div class="team home">
                         <div class="team-info">
-                            <div class="score">${this.homeRank}</div>
-                            <div class="abbr">${this.shortHomeTeam}</div>
+                            <div class="">${this.homeRank} ${this.shortHomeTeam}</div>
+                            <div class="abbr">${this.homeRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
@@ -161,7 +161,7 @@ function cfbVariables(event) {
                         <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
                         <div class="individual-team-info">
                             <div class="score"></div>
-                            <div class="abbr individual-details">${this.shortAwayTeam} - ${this.awayRecord}</div>
+                            <div class="abbr individual-details">${this.awayRank} ${this.shortAwayTeam} - ${this.awayRecord}</div>
                         </div>
                     </div>
 
@@ -178,7 +178,7 @@ function cfbVariables(event) {
                         <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
                         <div class="individual-team-info">
                             <div class="score"></div>
-                            <div class="abbr individual-details">${this.shortHomeTeam} - ${this.homeRecord}</div>
+                            <div class="abbr individual-details">${this.homeRank} ${this.shortHomeTeam} - ${this.homeRecord}</div>
                         </div>
                     </div>
                 </div>
