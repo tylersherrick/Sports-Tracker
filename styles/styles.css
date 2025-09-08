@@ -145,6 +145,27 @@
     object-fit: contain;
 }
 
+.individual-small-logo {
+    width: 30px;
+    height: 30px;
+}
+
+.individual-small-logo {
+    display: none;
+}
+
+.pitcher-section .individual-details {
+    display: flex;
+    align-items: center;   /* vertically centers text with logo */
+    gap: 0.5rem;           /* space between logo and text */
+}
+
+/* optional: make the logos smaller */
+.individual-small-logo {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
 .individual-details::after {
     margin-left: 30px;
 }
@@ -177,13 +198,16 @@
         width: 20%;
         height: 20%;
     }
+    .individual-small-logo {
+        display: inline-block;
+    }
     .base-map {
         margin-right: 1%;
     }
     .game-row {
         min-height: 70px;
     }
-        .individual-game-row {
+    .individual-game-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: auto auto;
@@ -216,6 +240,24 @@
     /* Add spacing under odds (last center item) */
     .individual-game-row .individual-center .center-item:last-child {
         margin-bottom: 0.75rem;
+    }
+     .second-section {
+        display: flex;
+        flex-direction: column;  /* stack vertically */
+        align-items: center;     /* center everything */
+        gap: 0.5rem;             /* spacing between items */
+    }
+
+    .second-section .individual-center {
+        order: 0; /* put “Pitching Today” first */
+        margin-bottom: 0.5rem;  /* optional spacing */
+    }
+
+    .second-section .team.away,
+    .second-section .team.home {
+        order: 1; /* both pitchers below */
+        width: 100%; /* optional: full width */
+        text-align: center; 
     }
 }
 
