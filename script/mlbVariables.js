@@ -1,65 +1,65 @@
 function mlbVariables(game) {
     return {
         gameId: game.id,
-        homeTeam: game.competitions[0].competitors[0].team.displayName,
-        shortHomeTeam: game.competitions[0].competitors[0].team.abbreviation,
-        awayTeam: game.competitions[0].competitors[1].team.displayName,
-        shortAwayTeam: game.competitions[0].competitors[1].team.abbreviation,
-        homeScore: game.competitions[0].competitors[0].score,
-        awayScore: game.competitions[0].competitors[1].score,
-        homeOdds: game.competitions[0].odds?.[0]?.homeTeamOdds?.moneyLine || "",
-        awayOdds: game.competitions[0].odds?.[0]?.awayTeamOdds?.moneyLine || "",
-        homeRecord: game.competitions[0].competitors[0].records[0].summary,
-        awayRecord: game.competitions[0].competitors[1].records[0].summary,
-        futureWeather: game.weather?.displayValue || "",
-        currentWeather: game.weather?.conditionId || "",
-        temperature: game.weather?.temperature || "",
-        venue: game.competitions[0].venue.fullName,
-        gameSummary: game.competitions[0].headlines?.[0]?.shortLinkText || "",
-        preGameMessage: game.competitions[0].headlines?.[0]?.shortLinkText || "",
-        lastPlay: game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "",
         attendance: game.competitions[0].attendance,
-        gameStatus: game.status.type.description,
-        teamsPlaying: game.status.type.shortDetail,
+        awayAvg: { stat: game.competitions[0].competitors[1].leaders[0].abbreviation, athlete: game.competitions[0].competitors[1].leaders[0].leaders[0].athlete.fullName },
+        awayAwayRecord: game.competitions[0].competitors[1].records[2]?.summary,
+        awayHR: { stat: game.competitions[0].competitors[1].leaders[1].abbreviation, athlete: game.competitions[0].competitors[1].leaders[1].leaders[0].athlete.fullName },
+        awayLogo: game.competitions[0].competitors[1].team.logo,
+        awayMLBRating: { stat: game.competitions[0].competitors[1].leaders[3].abbreviation, athlete: game.competitions[0].competitors[1].leaders[3].leaders[0].athlete.fullName },
+        awayOdds: game.competitions[0].odds?.[0]?.awayTeamOdds?.moneyLine || "",
+        awayOverallRecord: game.competitions[0].competitors[1].records[0]?.summary,
+        awayRBI: { stat: game.competitions[0].competitors[1].leaders[2].abbreviation, athlete: game.competitions[0].competitors[1].leaders[2].leaders[0].athlete.fullName },
+        awayRecord: game.competitions[0].competitors[1].records[0].summary,
+        awayScore: game.competitions[0].competitors[1].score,
+        awayTeam: game.competitions[0].competitors[1].team.displayName,
+        awayTeamId: game.competitions[0].competitors[1].team.id,
+        battingTeamId: game.competitions[0].situation?.batter?.athlete?.team?.id,
         balls: game.competitions[0].situation?.balls ?? 0,
-        strikes: game.competitions[0].situation?.strikes ?? 0,
-        outs: game.competitions[0].outsText,
-        inning: game.status.type.detail,
-        shortInning: game.status.type.shortDetail,
-        inningStatus: game.competitions[0].situation?.lastPlay?.type.text || "",
         currentBatter: game.competitions[0].situation?.batter?.athlete?.displayName || "",
         currentBatterId: game.competitions[0].situation?.batter?.athlete?.team?.id || "",
         currentPitcher: game.competitions[0].situation?.pitcher?.athlete?.displayName || "",
-        gameShortDetail: game.status.type.shortDetail,
-        onFirst: game.competitions[0].situation?.onFirst ?? false,
-        onSecond: game.competitions[0].situation?.onSecond ?? false,
-        onThird: game.competitions[0].situation?.onThird ?? false,
-        homeLogo: game.competitions[0].competitors[0].team.logo,
-        awayLogo: game.competitions[0].competitors[1].team.logo,
-        homeOverallRecord: game.competitions[0].competitors[0].records[0]?.summary,
-        homeHomeRecord: game.competitions[0].competitors[0].records[1]?.summary,
-        homeAwayRecord: game.competitions[0].competitors[0].records[2]?.summary,
-        awayOverallRecord: game.competitions[0].competitors[1].records[0]?.summary,
-        awayHomeRecord: game.competitions[0].competitors[1].records[1]?.summary,
-        awayAwayRecord: game.competitions[0].competitors[1].records[2]?.summary,
-        probableHomeStarter: game.competitions[0].competitors[0].probables?.[0]?.athlete?.displayName || "",
-        probableAwayStarter: game.competitions[0].competitors[1].probables?.[0]?.athlete?.displayName || "",
-        probableHomeStarterStats: game.competitions[0].competitors[0].probables?.[0]?.record || "",
-        probableAwayStarterStats: game.competitions[0].competitors[1].probables?.[0]?.record || "",
-        battingTeamId: game.competitions[0].situation?.batter?.athlete?.team?.id,
-        homeTeamId: game.competitions[0].competitors[0].team.id,
-        awayTeamId: game.competitions[0].competitors[1].team.id,
-        homeAvg: { stat: game.competitions[0].competitors[0].leaders[0].abbreviation, athlete: game.competitions[0].competitors[0].leaders[0].leaders[0].athlete.fullName },
-        homeHR: { stat: game.competitions[0].competitors[0].leaders[1].abbreviation, athlete: game.competitions[0].competitors[0].leaders[1].leaders[0].athlete.fullName },
-        homeRBI: { stat: game.competitions[0].competitors[0].leaders[2].abbreviation, athlete: game.competitions[0].competitors[0].leaders[2].leaders[0].athlete.fullName },
-        homeMLBRating: { stat: game.competitions[0].competitors[0].leaders[3].abbreviation, athlete: game.competitions[0].competitors[0].leaders[3].leaders[0].athlete.fullName },
-        awayAvg: { stat: game.competitions[0].competitors[1].leaders[0].abbreviation, athlete: game.competitions[0].competitors[1].leaders[0].leaders[0].athlete.fullName },
-        awayHR: { stat: game.competitions[0].competitors[1].leaders[1].abbreviation, athlete: game.competitions[0].competitors[1].leaders[1].leaders[0].athlete.fullName },
-        awayRBI: { stat: game.competitions[0].competitors[1].leaders[2].abbreviation, athlete: game.competitions[0].competitors[1].leaders[2].leaders[0].athlete.fullName },
-        awayMLBRating: { stat: game.competitions[0].competitors[1].leaders[3].abbreviation, athlete: game.competitions[0].competitors[1].leaders[3].leaders[0].athlete.fullName },
+        currentWeather: game.weather?.conditionId || "",
         dueUp1: game.competitions[0].situation?.dueUp?.[0]?.athlete?.fullName,
         dueUp2: game.competitions[0].situation?.dueUp?.[1]?.athlete?.fullName,
         dueUp3: game.competitions[0].situation?.dueUp?.[2]?.athlete?.fullName,
+        futureWeather: game.weather?.displayValue || "",
+        gameShortDetail: game.status.type.shortDetail,
+        gameStatus: game.status.type.description,
+        gameSummary: game.competitions[0].headlines?.[0]?.shortLinkText || "",
+        homeAvg: { stat: game.competitions[0].competitors[0].leaders[0].abbreviation, athlete: game.competitions[0].competitors[0].leaders[0].leaders[0].athlete.fullName },
+        homeAwayRecord: game.competitions[0].competitors[0].records[2]?.summary,
+        homeHR: { stat: game.competitions[0].competitors[0].leaders[1].abbreviation, athlete: game.competitions[0].competitors[0].leaders[1].leaders[0].athlete.fullName },
+        homeHomeRecord: game.competitions[0].competitors[0].records[1]?.summary,
+        homeLogo: game.competitions[0].competitors[0].team.logo,
+        homeMLBRating: { stat: game.competitions[0].competitors[0].leaders[3].abbreviation, athlete: game.competitions[0].competitors[0].leaders[3].leaders[0].athlete.fullName },
+        homeOdds: game.competitions[0].odds?.[0]?.homeTeamOdds?.moneyLine || "",
+        homeOverallRecord: game.competitions[0].competitors[0].records[0]?.summary,
+        homeRBI: { stat: game.competitions[0].competitors[0].leaders[2].abbreviation, athlete: game.competitions[0].competitors[0].leaders[2].leaders[0].athlete.fullName },
+        homeRecord: game.competitions[0].competitors[0].records[0].summary,
+        homeScore: game.competitions[0].competitors[0].score,
+        homeTeam: game.competitions[0].competitors[0].team.displayName,
+        homeTeamId: game.competitions[0].competitors[0].team.id,
+        inning: game.status.type.detail,
+        inningStatus: game.competitions[0].situation?.lastPlay?.type.text || "",
+        lastPlay: game.competitions[0].situation?.lastPlay?.text ? game.competitions[0].situation.lastPlay.text : "",
+        onFirst: game.competitions[0].situation?.onFirst ?? false,
+        onSecond: game.competitions[0].situation?.onSecond ?? false,
+        onThird: game.competitions[0].situation?.onThird ?? false,
+        outs: game.competitions[0].outsText,
+        preGameMessage: game.competitions[0].headlines?.[0]?.shortLinkText || "",
+        probableAwayStarter: game.competitions[0].competitors[1].probables?.[0]?.athlete?.displayName || "Undecided",
+        probableAwayStarterStats: game.competitions[0].competitors[1].probables?.[0]?.record || "",
+        probableHomeStarter: game.competitions[0].competitors[0].probables?.[0]?.athlete?.displayName || "Undecided",
+        probableHomeStarterStats: game.competitions[0].competitors[0].probables?.[0]?.record || "",
+        shortAwayTeam: game.competitions[0].competitors[1].team.abbreviation,
+        shortHomeTeam: game.competitions[0].competitors[0].team.abbreviation,
+        shortInning: game.status.type.shortDetail,
+        strikes: game.competitions[0].situation?.strikes ?? 0,
+        teamsPlaying: game.status.type.shortDetail,
+        temperature: game.weather?.temperature || "",
+        venue: game.competitions[0].venue.fullName,
+        weather: "",
         scheduledGame() {
             return `
                 <div id="${this.gameId}" class="game-row scheduled">
@@ -147,6 +147,15 @@ function mlbVariables(game) {
             if(this.awayOdds > 0) {
                 this.awayOdds = `+${this.awayOdds}`;
             }
+            this.weather = this.venue || "";
+            if (this.futureWeather || this.currentWeather) {
+                const useFuture = typeof this.futureWeather === "string" && isNaN(this.futureWeather) && this.futureWeather.length > 1;
+                const forecast = useFuture ? this.futureWeather : this.currentWeather || "";
+                const temp = this.temperature ? ` and ${this.temperature}°` : "";
+                if (forecast) {
+                    this.weather = `${forecast}${temp} at ${this.venue}`;
+                }
+            }
             if (this.gameStatus === "Final") {
                 return `
                     <div class="mlb-teams">
@@ -172,16 +181,11 @@ function mlbVariables(game) {
                                 <div class="abbr individual-details">${this.awayOdds}</div>
                             </div>
                         </div>
-
-                        <!-- Center: inning/short detail -->
                         <div class="individual-center">
                             <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
                             <div class="center-item">${this.teamsPlaying}</div>
-                            <div class="weather">${this.futureWeather ? `${this.futureWeather} and ${this.temperature}°` : ''} at ${this.venue}</div>
-                            
+                            <div class="weather">${this.weather}</div>
                         </div>
-
-                        <!-- Home team: score, abbrev, logo -->
                         <div class="team home">
                             <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
                             <div class="individual-team-info">
@@ -191,13 +195,22 @@ function mlbVariables(game) {
                             </div>
                         </div>
                     </div>
-                    <div id="${this.gameId}" class="game-row individual-game-row second-section">
+                    <div id="${this.gameId}" class="game-row individual-game-row second-section pitcher-section">
                         <div class="team away individual-away">
-                            <div class="abbr individual-details">${this.probableAwayStarter} - ${this.probableAwayStarterStats} ERA</div>
+                            <div class="abbr individual-details">
+                                <img src="${this.awayLogo}" alt="${this.awayTeam}" class="individual-small-logo" />
+                                ${this.probableAwayStarter || "Undecided"}
+                                ${this.probableAwayStarterStats ? ` - ${this.probableAwayStarterStats} ERA` : ""}
+                            </div>
                         </div>
                         <div class="individual-center">Pitching Today</div>
                         <div class="team home">
-                            <div class="abbr individual-details">${this.probableHomeStarter} - ${this.probableHomeStarterStats} ERA</div>
+                            
+                            <div class="abbr individual-details">
+                                <img src="${this.homeLogo}" alt="${this.homeTeam}" class="individual-small-logo" />
+                                ${this.probableHomeStarter || "Undecided"}
+                                ${this.probableHomeStarterStats ? ` - ${this.probableHomeStarterStats} ERA` : ""}
+                            </div>
                         </div>
                     </div>
                 `;
