@@ -185,26 +185,9 @@ function mlbVariables(game) {
                         </div>
                     </div>`
             }
-
-
-
-            if (this.gameStatus === "Final") {
-                return `
-                    <div class="mlb-teams">
-                        <h3>${this.awayTeam}: ${this.awayScore}</h3>
-                        <h3>${this.homeTeam}: ${this.homeScore}</h3>
-                    </div>
-                    <div class="position-play">
-                        ${this.gameSummary ? `<p>${this.gameSummary}</p>` : ''}
-                        <p>Attendance: ${this.attendance}</p>
-                    </div>
-                `;
-            }
-
             if (this.gameStatus === "Scheduled") {
                 return `
                     <div id="${this.gameId}" class="game-row individual-game-row">
-                        <!-- Away team: logo, score, abbrev -->
                         <div class="team away individual-away">
                             <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
                             <div class="individual-team-info">
@@ -251,7 +234,6 @@ function mlbVariables(game) {
             if (this.gameStatus === "In Progress") {
                 return `
                     <div id="${this.gameId}" class="game-row individual-game-row">
-                        <!-- Away team: logo, score, abbrev -->
                         <div class="team away individual-away">
                             <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
                             <div class="individual-team-info">
@@ -282,10 +264,36 @@ function mlbVariables(game) {
                         </div>
                     </div>
                     ${this.nextBatters}
-                    
                 `;
             }
 
+            if (this.gameStatus === "Final") {
+                return `
+                    <div id="${this.gameId}" class="game-row individual-game-row">
+                        <div class="team away individual-away">
+                            <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.shortAwayTeam} - ${this.awayRecord}</div>
+                                <div class="abbr individual-details">Away - ${this.awayAwayRecord}</div>
+                            </div>
+                        </div>
+                        <div class="individual-center">
+                            <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
+                            <div class="center-item"><strong>${this.teamsPlaying}</strong>: ${this.awayScore} - ${this.homeScore}</div>
+                            <div class="center-item">${this.gameSummary}</div>
+                        </div>
+                        <div class="team home">
+                            <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.shortHomeTeam} - ${this.homeRecord}</div>
+                                <div class="abbr individual-details">Home - ${this.homeHomeRecord}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
             return "Game info unavailable.";
         }
     };
