@@ -60,6 +60,8 @@ function mlbVariables(game) {
         temperature: game.weather?.temperature || "",
         venue: game.competitions[0].venue.fullName,
         weather: "",
+        ballsStrikesOuts: "",
+        nextBatters: "",
         scheduledGame() {
             return `
                 <div id="${this.gameId}" class="game-row scheduled">
@@ -156,6 +158,36 @@ function mlbVariables(game) {
                     this.weather = `${forecast}${temp} at ${this.venue}`;
                 }
             }
+            if(this.currentPitcher != "") {
+                this.currentPitcher = `Pitching: ${this.currentPitcher}`;
+            }
+            if(this.currentBatter != "") {
+                this.currentBatter = `At bat: ${this.currentBatter}`;
+            }
+            this.ballsStrikesOuts = `${this.balls} - ${this.strikes} &nbsp; ${this.outs}`;
+            if(this.teamsPlaying.includes("Mid") || this.teamsPlaying.includes("End")) {
+                this.inning = "";
+                this.balls = "";
+                this.strikes = "";
+                this.outs = "";
+                this.ballsStrikesOuts = "";
+                this.nextBatters = `
+                <div id="${this.gameId}" class="game-row individual-game-row second-section pitcher-section">
+                        <div class="team away individual-away">
+                            <div class="abbr individual-details">
+                                ${this.dueUp1}</br></br> ${this.dueUp2}</br></br> ${this.dueUp3}
+                            </div>
+                        </div>
+                        <div class="individual-center">Due Up</div>
+                        <div class="team home">
+                            
+                            <div class="abbr individual-details"></div>
+                        </div>
+                    </div>`
+            }
+
+
+
             if (this.gameStatus === "Final") {
                 return `
                     <div class="mlb-teams">
@@ -218,18 +250,39 @@ function mlbVariables(game) {
 
             if (this.gameStatus === "In Progress") {
                 return `
-                    <div class="mlb-teams">
-                        <h3>${this.awayTeam}: ${this.awayScore}</h3> 
-                        <h3>${this.homeTeam}: ${this.homeScore}</h3>
+                    <div id="${this.gameId}" class="game-row individual-game-row">
+                        <!-- Away team: logo, score, abbrev -->
+                        <div class="team away individual-away">
+                            <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.shortAwayTeam} - ${this.awayRecord}</div>
+                                <div class="abbr individual-details">${this.awayOdds}</div>
+                            </div>
+                        </div>
+                        <div class="individual-center">
+                            <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
+                            <div class="center-item">Score: ${this.awayScore} - ${this.homeScore} &nbsp; ${this.inning} &nbsp;  ${this.ballsStrikesOuts}</div>
+                            <div class="center-item">${this.currentPitcher}</div>
+                            <div class="center-item">${this.currentBatter}</div>
+                            <div class="center-item">${this.lastPlay}</div>
+                            <div class="base-map center-item">
+                                <div class="base first-base ${this.onFirst ? 'occupied' : ''}"></div>
+                                <div class="base second-base ${this.onSecond ? 'occupied' : ''}"></div>
+                                <div class="base third-base ${this.onThird ? 'occupied' : ''}"></div>
+                            </div>
+                        </div>
+                        <div class="team home">
+                            <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.shortHomeTeam} - ${this.homeRecord}</div>
+                                <div class="abbr individual-details">${this.homeOdds}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="position-play">
-                        <p>${this.balls}-${this.strikes} - ${this.outs}</p>
-                        <p>${this.currentPitcher} pitching to ${this.currentBatter}</p>
-                        <p>${this.lastPlay}</p>
-                    </div>
-                    <div class="weather">
-                        ${this.currentWeather} and ${this.temperature}° at ${this.venue}
-                    </div>
+                    ${this.nextBatters}
+                    
                 `;
             }
 

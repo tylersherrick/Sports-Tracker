@@ -253,17 +253,32 @@ function nflVariables(event) {
             }
             if (this.gameStatus === "In Progress") {
                 return `
-                    <div class="individua-game"
-                        <div class="nfl-teams">
-                            <h3>${this.awayTeam}: ${this.awayScore}</h3> 
-                            <h3>${this.homeTeam}: ${this.homeScore}</h3>
+                    <div id="${this.gameId}" class="game-row individual-game-row">
+                        <!-- Away team: logo, score, abbrev -->
+                        <div class="team away individual-away">
+                            <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.shortAwayTeam} - ${this.awayRecord}</div>
+                                <div class="abbr individual-details">${this.awayOdds}</div>
+                            </div>
                         </div>
-                        <div class="position-play">
-                            <p>${this.ballPosition}</p>
-                            <p>${this.lastPlay}</p>
+
+                        <!-- Center: inning/short detail -->
+                        <div class="individual-center">
+                            <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
+                            <div class="center-item">${this.time}</div>
+                            <div class="center-item">${this.awayScore} - ${this.homeScore}</div>
                         </div>
-                        <div class="weather">
-                            ${this.weather} and ${this.temperature}° at ${this.venue}
+
+                        <!-- Home team: score, abbrev, logo -->
+                        <div class="team home">
+                            <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.shortHomeTeam} - ${this.homeRecord}</div>
+                                <div class="abbr individual-details">${this.homeOdds}</div>
+                            </div>
                         </div>
                     </div>
                 `;
