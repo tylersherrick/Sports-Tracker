@@ -9,7 +9,7 @@
     align-items: center;
     width: 30px;
     height: 30px;
-    margin-left: 10px;
+    margin: 0 auto; /* center horizontally */
 }
 
 .base {
@@ -43,7 +43,7 @@
 ========================= */
 #mlb-data, #nfl-data, #cfb-data, #nhl-data, #nba-data, #cbb-data {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 across on large screens */
+    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
     margin-left: 2%;
 }
@@ -63,8 +63,6 @@
     border-radius: 8px;
     transform: translateY(0);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-    /* Taller cards */
     min-height: 110px;
 }
 
@@ -125,14 +123,6 @@
 }
 
 /* =========================
-   Base map adjustments
-========================= */
-.base-map {
-    margin-left: auto;
-    margin-top: 1%;
-}
-
-/* =========================
    Individual Game
 ========================= */
 .individual-game {
@@ -148,29 +138,25 @@
 .individual-small-logo {
     width: 30px;
     height: 30px;
-}
-
-.individual-small-logo {
+    object-fit: contain;
     display: none;
 }
 
 .pitcher-section .individual-details {
     display: flex;
-    align-items: center;   /* vertically centers text with logo */
-    gap: 0.5rem;           /* space between logo and text */
+    align-items: center;
+    gap: 0.5rem;
 }
 
-/* optional: make the logos smaller */
-.individual-small-logo {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-}
 .individual-details::after {
     margin-left: 30px;
 }
 
+/* Center everything in individual-center */
 .individual-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
 
@@ -192,21 +178,22 @@
 ========================= */
 @media (max-width: 750px) {
     #mlb-data, #nfl-data, #cfb-data, #nhl-data, #nba-data, #cbb-data {
-        grid-template-columns: 1fr; /* single column on smaller screens */
+        grid-template-columns: 1fr;
     }
+
     .away-logo, .home-logo {
         width: 20%;
         height: 20%;
     }
+
     .individual-small-logo {
         display: inline-block;
     }
-    .base-map {
-        margin-right: 1%;
-    }
+
     .game-row {
         min-height: 70px;
     }
+
     .individual-game-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -218,17 +205,9 @@
         text-align: center;
     }
 
-    .individual-game-row .away {
-        grid-area: away;
-    }
-
-    .individual-game-row .home {
-        grid-area: home;
-    }
-
-    .individual-game-row .individual-center {
-        grid-area: center;
-    }
+    .individual-game-row .away { grid-area: away; }
+    .individual-game-row .home { grid-area: home; }
+    .individual-game-row .individual-center { grid-area: center; }
 
     /* Center logos + text under them */
     .individual-game-row .team {
@@ -241,23 +220,24 @@
     .individual-game-row .individual-center .center-item:last-child {
         margin-bottom: 0.75rem;
     }
-     .second-section {
+
+    .second-section {
         display: flex;
-        flex-direction: column;  /* stack vertically */
-        align-items: center;     /* center everything */
-        gap: 0.5rem;             /* spacing between items */
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .second-section .individual-center {
-        order: 0; /* put “Pitching Today” first */
-        margin-bottom: 0.5rem;  /* optional spacing */
+        order: 0;
+        margin-bottom: 0.5rem;
     }
 
     .second-section .team.away,
     .second-section .team.home {
-        order: 1; /* both pitchers below */
-        width: 100%; /* optional: full width */
-        text-align: center; 
+        order: 1;
+        width: 100%;
+        text-align: center;
     }
 }
 
@@ -282,13 +262,13 @@
 .game-row.in-progress .team.away,
 .game-row.scheduled .team.away,
 .game-row.over .team.away {
-    flex-direction: row; /* left side */
+    flex-direction: row;
 }
 
 .game-row.in-progress .team.home,
 .game-row.scheduled .team.home,
 .game-row.over .team.home {
-    flex-direction: row-reverse; /* right side */
+    flex-direction: row-reverse;
 }
 
 .game-row.in-progress .team-logo,
@@ -340,18 +320,4 @@
 
 .inning-outs {
     margin-bottom: 5px;
-}
-
-/* Fix the base map centering specifically */
-.game-row.in-progress .base-map,
-.game-row.scheduled .base-map,
-.game-row.over .base-map {
-    display: grid;
-    grid-template-columns: repeat(3, 10px);
-    grid-template-rows: repeat(3, 10px);
-    justify-items: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    margin: 0 auto;
 }
