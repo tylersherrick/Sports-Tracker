@@ -1,33 +1,31 @@
 function cfbVariables(event) {
     return {
         gameId: event.id,
+        awayId: event.competitions[0].competitors[1].id,
+        awayLogo: event.competitions[0].competitors[1].team.logo,
+        awayRank: event.competitions[0].competitors[1].curatedRank.current,
+        awayRecord: event.competitions[0].competitors[1].records[0].summary,
+        awayScore: event.competitions[0].competitors[1].score,
         awayTeam: event.competitions[0].competitors[1].team.shortDisplayName,
+        ballPosition: event.competitions[0].situation?.downDistanceText || 'Switching Possession',
+        gameStatus: event.status.type.description,
+        homeId: event.competitions[0].competitors[0].id,
+        homeLogo: event.competitions[0].competitors[0].team.logo,
+        homeRank: event.competitions[0].competitors[0].curatedRank.current,
+        homeRecord: event.competitions[0].competitors[0].records[0].summary,
+        homeScore: event.competitions[0].competitors[0].score,
         homeTeam: event.competitions[0].competitors[0].team.shortDisplayName,
+        posession: event.competitions[0].situation?.possession || "",
+        scheduleTime: event.status.type.shortDetail,
         shortAwayTeam: event.competitions[0].competitors[1].team.abbreviation,
         shortHomeTeam: event.competitions[0].competitors[0].team.abbreviation,
-        homeLogo: event.competitions[0].competitors[0].team.logo,
-        awayLogo: event.competitions[0].competitors[1].team.logo,
-        homeRecord: event.competitions[0].competitors[0].records[0].summary,
-        awayRecord: event.competitions[0].competitors[1].records[0].summary,
-        spread: event.competitions[0]?.odds?.[0]?.details || "",
-        awayId: event.competitions[0].competitors[1].id,
-        homeId: event.competitions[0].competitors[0].id,
-        gameStatus: event.status.type.description,
-        awayScore: event.competitions[0].competitors[1].score,
-        homeScore: event.competitions[0].competitors[0].score,
-        time: event.status.type.detail,
-        scheduleTime: event.status.type.shortDetail, 
-        awayRank: event.competitions[0].competitors[1].curatedRank.current,
-        homeRank: event.competitions[0].competitors[0].curatedRank.current,
         situation: event.competitions[0].situation || "",
-        ballPosition: event.competitions[0].situation?.downDistanceText || 'Switching Possession',
-        posession: event.competitions[0].situation?.possession || "",
-        gameStatus: event.status.type.description,
+        spread: event.competitions[0]?.odds?.[0]?.details || "",
+        time: event.status.type.detail,
         venue: event.competitions[0].venue.fullName,
         scheduledGame() {
             return `
                 <div id="${this.gameId}" class="game-row scheduled">
-                    <!-- Away team: logo, score, abbrev -->
                     <div class="team away">
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
@@ -35,13 +33,9 @@ function cfbVariables(event) {
                             <div class="abbr">${this.awayRecord}</div>
                         </div>
                     </div>
-
-                    <!-- Center: inning/short detail -->
                     <div class="game-center">
                         <div class="inning-outs">${this.scheduleTime}</div>
                     </div>
-
-                    <!-- Home team: score, abbrev, logo -->
                     <div class="team home">
                         <div class="team-info">
                             <div class="">${this.homeRank} ${this.shortHomeTeam}</div>
@@ -55,7 +49,6 @@ function cfbVariables(event) {
         inProgress() {
             return `
                 <div id="${this.gameId}" class="game-row scheduled">
-                    <!-- Away team: logo, score, abbrev -->
                     <div class="team away">
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
@@ -63,15 +56,11 @@ function cfbVariables(event) {
                             <div class="abbr">${this.shortAwayTeam}</div>
                         </div>
                     </div>
-
-                    <!-- Center: inning/short detail -->
                     <div class="game-center">
                         <div class="inning-outs">
                             ${this.scheduleTime}
                         </div>
                     </div>
-
-                    <!-- Home team: score, abbrev, logo -->
                     <div class="team home">
                         <div class="team-info">
                             <div class="score">${this.homeRank}</div>
@@ -156,7 +145,6 @@ function cfbVariables(event) {
             if (this.gameStatus === "Scheduled") {
                 return `
                     <div id="${this.gameId}" class="game-row individual-game-row">
-                    <!-- Away team: logo, score, abbrev -->
                     <div class="team away individual-away">
                         <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
                         <div class="individual-team-info">
@@ -164,16 +152,12 @@ function cfbVariables(event) {
                             <div class="abbr individual-details">${this.awayRank} ${this.shortAwayTeam} - ${this.awayRecord}</div>
                         </div>
                     </div>
-
-                    <!-- Center: inning/short detail -->
                     <div class="individual-center">
                         <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
                         <div class="center-item">${this.venue}</div>
                         <div class="center-item">${this.scheduleTime}</div>
                         <div class="center-item">${this.spread}</div>
                     </div>
-
-                    <!-- Home team: score, abbrev, logo -->
                     <div class="team home">
                         <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
                         <div class="individual-team-info">
