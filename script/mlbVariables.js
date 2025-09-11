@@ -47,6 +47,7 @@ function mlbVariables(game) {
         onSecond: game.competitions[0].situation?.onSecond ?? false,
         onThird: game.competitions[0].situation?.onThird ?? false,
         outs: game.competitions[0].outsText,
+        overUnder: game.competitions[0]?.odds?.[0]?.overUnder || "",
         preGameMessage: game.competitions[0].headlines?.[0]?.shortLinkText || "",
         probableAwayStarter: game.competitions[0].competitors[1].probables?.[0]?.athlete?.displayName || "Undecided",
         probableAwayStarterStats: game.competitions[0].competitors[1].probables?.[0]?.record || "",
@@ -65,25 +66,22 @@ function mlbVariables(game) {
         scheduledGame() {
             return `
                 <div id="${this.gameId}" class="game-row scheduled">
-                    <!-- Away team: logo, score, abbrev -->
                     <div class="team away">
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
                             <div class="score"></div>
                             <div class="abbr">${this.shortAwayTeam}</div>
+                            <div class="abbr">${this.awayRecord}</div>
                         </div>
                     </div>
-
-                    <!-- Center: inning/short detail -->
                     <div class="game-center">
                         <div class="inning-outs">${this.shortInning}</div>
                     </div>
-
-                    <!-- Home team: score, abbrev, logo -->
                     <div class="team home">
                         <div class="team-info">
                             <div class="score"></div>
                             <div class="abbr">${this.shortHomeTeam}</div>
+                            <div class="abbr">${this.homeRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
@@ -93,7 +91,6 @@ function mlbVariables(game) {
         inProgressGame() {
             return `
                 <div id="${this.gameId}" class="game-row in-progress">
-                    <!-- Away team: logo, score, abbrev -->
                     <div class="team away">
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
@@ -199,7 +196,8 @@ function mlbVariables(game) {
                         <div class="individual-center">
                             <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
                             <div class="center-item">${this.teamsPlaying}</div>
-                            <div class="weather">${this.weather}</div>
+                            <div class="center-item">Over Under: ${this.overUnder}</div>
+                            <div class="center-item">${this.weather}</div>
                         </div>
                         <div class="team home">
                             <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">

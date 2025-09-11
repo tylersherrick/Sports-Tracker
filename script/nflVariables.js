@@ -38,6 +38,7 @@ function nflVariables(event) {
                         <div class="team-info">
                             <div class="score"></div>
                             <div class="abbr">${this.shortAwayTeam}</div>
+                            <div class="abbr">${this.awayRecord}</div>
                         </div>
                     </div>
                     <div class="game-center">
@@ -47,6 +48,7 @@ function nflVariables(event) {
                         <div class="team-info">
                             <div class="score"></div>
                             <div class="abbr">${this.shortHomeTeam}</div>
+                            <div class="abbr">${this.homeRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
