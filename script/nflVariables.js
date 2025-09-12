@@ -66,9 +66,8 @@ function nflVariables(event) {
                         </div>
                     </div>
                     <div class="game-center">
-                        <div class="inning-outs">
-                            ${this.scheduleTime}
-                        </div>
+                        <div class="inning-outs">${this.scheduleTime}</div>
+                        <div class="abbr">${this.awayScore} - ${this.homeScore}</div>
                     </div>
                     <div class="team home">
                         <div class="team-info">
@@ -91,9 +90,8 @@ function nflVariables(event) {
                         </div>
                     </div>
                     <div class="game-center">
-                        <div class="inning-outs">
-                            ${this.scheduleTime}
-                        </div>
+                        <div class="inning-outs">${this.scheduleTime} </div>
+                        <div class="abbr">${this.awayScore} - ${this.homeScore}</div>
                     </div>
                     <div class="team home">
                         <div class="team-info">
@@ -116,9 +114,8 @@ function nflVariables(event) {
                         </div>
                     </div>
                     <div class="game-center">
-                        <div class="inning-outs">
-                            ${this.scheduleTime}
-                        </div>
+                        <div class="inning-outs">${this.scheduleTime} </div>
+                        <div class="abbr">${this.awayScore} - ${this.homeScore}</div>
                     </div>
                     <div class="team home">
                         <div class="team-info">
@@ -163,34 +160,6 @@ function nflVariables(event) {
             if(this.awayOdds > 0) {
                 this.awayOdds = `+${this.awayOdds}`;
             }
-            if (this.gameStatus === "Final") {
-                return `
-                    <div id="${this.gameId}" class="game-row individual-game-row">
-                        <div class="team away individual-away">
-                            <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
-                            <div class="individual-team-info">
-                                <div class="score"></div>
-                                <div class="abbr individual-details">${this.shortAwayTeam} - ${this.awayRecord}</div>
-                                <div class="abbr individual-details">${this.awayOdds}</div>
-                            </div>
-                        </div>
-                        <div class="individual-center">
-                            <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
-                            <div class="center-item"><strong>${this.scheduleTime}</strong>: ${this.awayScore} - ${this.homeScore}</div>
-                            <div class="center-item"><strong>Attendance</strong>: ${this.attendance}</div>
-                            <div class="center-item">${this.gameSummary}</div>
-                        </div>
-                        <div class="team home">
-                            <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
-                            <div class="individual-team-info">
-                                <div class="score"></div>
-                                <div class="abbr individual-details">${this.shortHomeTeam} - ${this.homeRecord}</div>
-                                <div class="abbr individual-details">${this.homeOdds}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
             if (this.gameStatus === "Scheduled") {
                 return `
                     <div id="${this.gameId}" class="game-row individual-game-row">
@@ -227,7 +196,6 @@ function nflVariables(event) {
                             <div class="individual-team-info">
                                 <div class="score"></div>
                                 <div class="abbr individual-details">${this.shortAwayTeam} - ${this.awayRecord}</div>
-                                <div class="abbr individual-details">${this.awayOdds}</div>
                             </div>
                         </div>
                         <div class="individual-center">
@@ -240,7 +208,6 @@ function nflVariables(event) {
                             <div class="individual-team-info">
                                 <div class="score"></div>
                                 <div class="abbr individual-details">${this.shortHomeTeam} - ${this.homeRecord}</div>
-                                <div class="abbr individual-details">${this.homeOdds}</div>
                             </div>
                         </div>
                     </div>
@@ -254,7 +221,6 @@ function nflVariables(event) {
                             <div class="individual-team-info">
                                 <div class="score"></div>
                                 <div class="abbr individual-details">${this.shortAwayTeam} - ${this.awayRecord}</div>
-                                <div class="abbr individual-details">${this.awayOdds}</div>
                             </div>
                         </div>
                         <div class="individual-center">
@@ -267,7 +233,6 @@ function nflVariables(event) {
                             <div class="individual-team-info">
                                 <div class="score"></div>
                                 <div class="abbr individual-details">${this.shortHomeTeam} - ${this.homeRecord}</div>
-                                <div class="abbr individual-details">${this.homeOdds}</div>
                             </div>
                         </div>
                     </div>
@@ -281,7 +246,6 @@ function nflVariables(event) {
                             <div class="individual-team-info">
                                 <div class="score"></div>
                                 <div class="abbr individual-details">${this.shortAwayTeam} - ${this.awayRecord}</div>
-                                <div class="abbr individual-details">${this.awayOdds}</div>
                             </div>
                         </div>
                         <div class="individual-center">
@@ -294,13 +258,37 @@ function nflVariables(event) {
                             <div class="individual-team-info">
                                 <div class="score"></div>
                                 <div class="abbr individual-details">${this.shortHomeTeam} - ${this.homeRecord}</div>
-                                <div class="abbr individual-details">${this.homeOdds}</div>
                             </div>
                         </div>
                     </div>
                 `;
             }
-
+            if (this.gameStatus === "Final") {
+                return `
+                    <div id="${this.gameId}" class="game-row individual-game-row">
+                        <div class="team away individual-away">
+                            <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.shortAwayTeam} - ${this.awayRecord}</div>
+                            </div>
+                        </div>
+                        <div class="individual-center">
+                            <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
+                            <div class="center-item"><strong>${this.scheduleTime}</strong>: ${this.awayScore} - ${this.homeScore}</div>
+                            <div class="center-item"><strong>Attendance</strong>: ${this.attendance}</div>
+                            <div class="center-item">${this.gameSummary}</div>
+                        </div>
+                        <div class="team home">
+                            <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.shortHomeTeam} - ${this.homeRecord}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
             return "Game info unavailable.";
         }
     }
