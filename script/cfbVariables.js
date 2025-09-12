@@ -57,9 +57,10 @@ function cfbVariables(event) {
                         </div>
                     </div>
                     <div class="game-center">
-                        <div class="inning-outs">
-                            ${this.scheduleTime}
-                        </div>
+                        <div class="game-center">
+                        <div class="inning-outs">${this.scheduleTime} </div>
+                        <div class="abbr">${this.awayScore} - ${this.homeScore}</div>
+                    </div>
                     </div>
                     <div class="team home">
                         <div class="team-info">
@@ -82,7 +83,8 @@ function cfbVariables(event) {
                         </div>
                     </div>
                     <div class="game-center">
-                        <div class="inning-outs">${this.scheduleTime}</div>
+                        <div class="inning-outs">${this.scheduleTime} </div>
+                        <div class="abbr">${this.awayScore} - ${this.homeScore}</div>
                     </div>
                     <div class="team home">
                         <div class="team-info">
@@ -105,7 +107,8 @@ function cfbVariables(event) {
                         </div>
                     </div>
                     <div class="game-center">
-                        <div class="inning-outs">${this.scheduleTime}</div>
+                        <div class="inning-outs">${this.scheduleTime} </div>
+                        <div class="abbr">${this.awayScore} - ${this.homeScore}</div>
                     </div>
                     <div class="team home">
                         <div class="team-info">
@@ -166,6 +169,107 @@ function cfbVariables(event) {
                         </div>
                     </div>
                 </div>
+                `;
+            }
+            if (this.gameStatus === "In Progress") {
+                return `
+                    <div id="${this.gameId}" class="game-row individual-game-row">
+                        <div class="team away individual-away">
+                            <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.awayRank} ${this.shortAwayTeam} - ${this.awayRecord}</div>
+                            </div>
+                        </div>
+                        <div class="individual-center">
+                            <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
+                            <div class="center-item">${this.time}</div>
+                            <div class="center-item">${this.awayScore} - ${this.homeScore}</div>
+                        </div>
+                        <div class="team home">
+                            <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.homeRank} ${this.shortHomeTeam} - ${this.homeRecord}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            if (this.gameStatus === "End of Period") {
+                return `
+                    <div id="${this.gameId}" class="game-row individual-game-row">
+                        <div class="team away individual-away">
+                            <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.awayRank} ${this.shortAwayTeam} - ${this.awayRecord}</div>
+                            </div>
+                        </div>
+                        <div class="individual-center">
+                            <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
+                            <div class="center-item">${this.scheduleTime}</div>
+                            <div class="center-item">${this.awayScore} - ${this.homeScore}</div>
+                        </div>
+                        <div class="team home">
+                            <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.homeRank} ${this.shortHomeTeam} - ${this.homeRecord}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            if (this.gameStatus === "Half Time") {
+                return `
+                    <div id="${this.gameId}" class="game-row individual-game-row">
+                        <div class="team away individual-away">
+                            <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.awayRank} ${this.shortAwayTeam} - ${this.awayRecord}</div>
+                            </div>
+                        </div>
+                        <div class="individual-center">
+                            <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
+                            <div class="center-item">${this.scheduleTime}</div>
+                            <div class="center-item">${this.awayScore} - ${this.homeScore}</div>
+                        </div>
+                        <div class="team home">
+                            <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.homeRank} ${this.shortHomeTeam} - ${this.homeRecord}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            if (this.gameStatus === "Final") {
+                return `
+                    <div id="${this.gameId}" class="game-row individual-game-row">
+                        <div class="team away individual-away">
+                            <img src="${this.awayLogo}" class="individual-logo" alt="${this.awayTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.awayRank} ${this.shortAwayTeam} - ${this.awayRecord}</div>
+                            </div>
+                        </div>
+                        <div class="individual-center">
+                            <div class="center-item">${this.awayTeam} at ${this.homeTeam}</div>
+                            <div class="center-item"><strong>${this.scheduleTime}</strong>: ${this.awayScore} - ${this.homeScore}</div>
+                            <div class="center-item"><strong>Attendance</strong>: ${this.attendance}</div>
+                            <div class="center-item">${this.gameSummary}</div>
+                        </div>
+                        <div class="team home">
+                            <img src="${this.homeLogo}" class="individual-logo" alt="${this.homeTeam}">
+                            <div class="individual-team-info">
+                                <div class="score"></div>
+                                <div class="abbr individual-details">${this.homeRank} ${this.shortHomeTeam} - ${this.homeRecord}</div>
+                            </div>
+                        </div>
+                    </div>
                 `;
             }
         }
