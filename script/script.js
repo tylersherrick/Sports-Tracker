@@ -101,6 +101,9 @@ fetchGamesData().then(() => {
       if(currentView === 'individualCFBGame' && selectedGameId) {
         individualCFBGame(selectedGameId);
       }
+      if(currentView === 'individualNHLGame' && selectedGameId) {
+        individualNHLGame(selectedGameId);
+      }
       else {
         updateViews();
       }
@@ -224,6 +227,30 @@ const individualCFBGame = (gameId) => {
     });
     document.getElementById('cfb-scores').addEventListener('click', () => {
         currentView = 'cfb';
+        updateViews();
+    });
+};
+
+const individualNHLGame = (gameId) => {
+    if(!gameId) gameId = selectedGameId;
+    clearAllSections();
+    selectedGameId = gameId;
+    currentView = "individualCFBGame";
+    const game = sportsData.NHL.find(g => g.id === gameId);
+    if(!game) return;
+    const nhl = nhlVariables(game);
+    sportsDiv.innerHTML = `
+        <p id="game-status">${nhl.renderIndividualView()}</p>
+        <button id="nhl-scores">NHL Games</button>
+        </br></br>
+        <button id="back-button">All Games</button>
+    `;
+    document.getElementById('back-button').addEventListener('click', () => {
+        currentView = 'showLess';
+        updateViews();
+    });
+    document.getElementById('nhl-scores').addEventListener('click', () => {
+        currentView = 'nhl';
         updateViews();
     });
 };
@@ -474,9 +501,11 @@ const showLessNHL = () => {
             nhlData.innerHTML += `<div class="hoverer">${nhl.gameOver()}</div>`;
         }
     })
-    if(nhlSmallList === 0) {
-        nhlData.innerHTML += `<h4>There are no active games.</h4.`;
-    }
+    document.querySelectorAll('.game-row').forEach(row => {
+        row.addEventListener('click', (event) => {
+            individualNHLGame(event.currentTarget.id);
+        })
+    });
     document.getElementById("show-all-nhl").addEventListener("click", showAllNHL);
     currentView = 'showLess';
 }
@@ -512,9 +541,11 @@ const showAllNHL = () => {
             nhlData.innerHTML += `<div class="hoverer">${nhl.gameOver()}</div>`;
         }
     });
-    if(nhlLongList === 0) {
-        nhlData.innerHTML += `<h4>There are no active games.</h4.`;
-    }
+    document.querySelectorAll('.game-row').forEach(row => {
+        row.addEventListener('click', (event) => {
+            individualNHLGame(event.currentTarget.id);
+        })
+    });
     document.getElementById("back-to-main").addEventListener("click", showNothing);
     currentView = 'nhl';
 }
