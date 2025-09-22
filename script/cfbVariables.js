@@ -23,29 +23,6 @@ function cfbVariables(event) {
         spread: event.competitions[0]?.odds?.[0]?.details || "",
         time: event.status.type.detail,
         venue: event.competitions[0].venue.fullName,
-        scheduledGame() {
-            return `
-                <div id="${this.gameId}" class="game-row scheduled">
-                    <div class="team away">
-                        <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
-                        <div class="team-info">
-                            <div class="">${this.awayRank} ${this.shortAwayTeam}</div>
-                            <div class="abbr">${this.awayRecord}</div>
-                        </div>
-                    </div>
-                    <div class="game-center">
-                        <div class="inning-outs">${this.scheduleTime}</div>
-                    </div>
-                    <div class="team home">
-                        <div class="team-info">
-                            <div class="">${this.homeRank} ${this.shortHomeTeam}</div>
-                            <div class="abbr">${this.homeRecord}</div>
-                        </div>
-                        <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
-                    </div>
-                </div>
-            `
-        },
         inProgress() {
             return `
                 <div id="${this.gameId}" class="game-row scheduled">
@@ -66,6 +43,29 @@ function cfbVariables(event) {
                         <div class="team-info">
                             <div class="score">${this.homeRank}</div>
                             <div class="abbr">${this.shortHomeTeam}</div>
+                        </div>
+                        <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
+                    </div>
+                </div>
+            `
+        },
+        scheduledGame() {
+            return `
+                <div id="${this.gameId}" class="game-row scheduled">
+                    <div class="team away">
+                        <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
+                        <div class="team-info">
+                            <div class="">${this.awayRank} ${this.shortAwayTeam}</div>
+                            <div class="abbr">${this.awayRecord}</div>
+                        </div>
+                    </div>
+                    <div class="game-center">
+                        <div class="inning-outs">${this.scheduleTime}</div>
+                    </div>
+                    <div class="team home">
+                        <div class="team-info">
+                            <div class="">${this.homeRank} ${this.shortHomeTeam}</div>
+                            <div class="abbr">${this.homeRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>

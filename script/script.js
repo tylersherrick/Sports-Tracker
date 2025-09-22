@@ -57,6 +57,7 @@ const updateViews = () => {
         showLessMLB();
         showLessNFL();
         showLessCFB();
+        showLessNHL();
     } 
     if (currentView === 'mlb') {
         showAllMLB();
@@ -300,8 +301,6 @@ const showLessNFL = () => {
     const smallNFLList = [...nflInProgress, ...nflHalfTime, ...nflEndQuarter, ...nflScheduled, ...nflGameOver].slice(0, 3);
     smallNFLList.forEach(event => {
         const nfl = nflVariables(event);
-        nfl.awayID = nfl.possession === nfl.awayID ? "🏈" : "";
-        nfl.homeID = nfl.possession === nfl.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
             nflData.innerHTML += `<div class="hoverer">${nfl.inProgressGame()}</div>`;
         }
@@ -341,8 +340,6 @@ const showAllNFL = () => {
     const longNFLList = [...nflInProgress, ...nflHalfTime, ...nflEndQuarter, ...nflScheduled, ...nflFinal];
     longNFLList.forEach(event => {
         const nfl = nflVariables(event);
-        nfl.awayID = nfl.possession === nfl.awayID ? "🏈" : "";
-        nfl.homeID = nfl.possession === nfl.homeID ? "🏈" : "";
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
             nflData.innerHTML += `<div class="hoverer">${nfl.inProgressGame()}</div>`;
         }
@@ -457,61 +454,24 @@ const showLessNHL = () => {
     const nhlYetToStart = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_SCHEDULED");
     const nhlInProgress = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_IN_PROGRESS");
     const nhlEndofPeriod = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_END_PERIOD");
-    const nhlSmallList = [...nhlInProgress, ...nhlEndofPeriod, ...nhlYetToStart].slice(0, 3);
+    const nhlFinal = sportsData.NHL.slice(0, sportsData.NHL.length).filter(event => event.status.type.name === "STATUS_FINAL");
+    const nhlSmallList = [...nhlInProgress, ...nhlEndofPeriod, ...nhlYetToStart, ...nhlFinal].slice(0, 3);
     if (!sportsData.NHL || nhlSmallList == 0) {
         nhlData.innerHTML = `<h4>No NHL games available.</h4>`;
     }
     nhlSmallList.forEach(event => {
-        const awayTeam = event.competitions[0].competitors[1].team.displayName;
-        const homeTeam = event.competitions[0].competitors[0].team.displayName;
-        const awayScore = event.competitions[0].competitors[1].score;
-        const homeScore = event.competitions[0].competitors[0].score;
-        const time = event.status.type.detail;
+        const nhl = nhlVariables(event);
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            nhlData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} - ${awayScore} </br>
-                            ${homeTeam} - ${homeScore}
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            nhlData.innerHTML += `<div class="hoverer">${nhl.inProgress()}</div>`;
         }
         if(event.status.type.name === "STATUS_END_PERIOD") {
-            nhlData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} - ${awayScore} </br>
-                            ${homeTeam} - ${homeScore}
-                        </p>
-                        <p class="game-details">
-                            End of Period
-                        </p>
-                    </div>
-                </div>
-            `;
+            nhlData.innerHTML += `<div class="hoverer">${nhl.endOfPeriod()}</div>`;
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            nhlData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} </br>
-                            ${homeTeam}
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            nhlData.innerHTML += `<div class="hoverer">${nhl.scheduledGame()}</div>`;
+        }
+        if(event.status.type.name === "STATUS_FINAL") {
+            nhlData.innerHTML += `<div class="hoverer">${nhl.gameOver()}</div>`;
         }
     })
     if(nhlSmallList === 0) {
@@ -538,66 +498,18 @@ const showAllNHL = () => {
         const awayScore = event.competitions[0].competitors[1].score;
         const homeScore = event.competitions[0].competitors[0].score;
         const time = event.status.type.detail;
+        const nhl = nhlVariables(event);
         if(event.status.type.name === "STATUS_IN_PROGRESS") {
-            nhlData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} - ${awayScore} </br>
-                            ${homeTeam} - ${homeScore}
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            nhlData.innerHTML += `<div class="hoverer">${nhl.inProgress()}</div>`;
         }
         if(event.status.type.name === "STATUS_END_PERIOD") {
-            nhlData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} - ${awayScore} </br>
-                            ${homeTeam} - ${homeScore}
-                        </p>
-                        <p class="game-details">
-                            End of Period
-                        </p>
-                    </div>
-                </div>
-            `;
+            nhlData.innerHTML += `<div class="hoverer">${nhl.endOfPeriod()}</div>`;
         }
         if(event.status.type.name === "STATUS_SCHEDULED") {
-            nhlData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} </br>
-                            ${homeTeam}
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            nhlData.innerHTML += `<div class="hoverer">${nhl.scheduledGame()}</div>`;
         }
         if(event.status.type.name === "STATUS_FINAL") {
-            nhlData.innerHTML += `
-                <div class="game-row">
-                    <div class="game-info">
-                        <p class="game-details">
-                            ${time} </br></br>
-                            ${awayTeam} - ${awayScore} </br>
-                            ${homeTeam} - ${homeScore}
-                        </p>
-                        <p class="game-details">
-                        </p>
-                    </div>
-                </div>
-            `;
+            nhlData.innerHTML += `<div class="hoverer">${nhl.gameOver()}</div>`;
         }
     });
     if(nhlLongList === 0) {

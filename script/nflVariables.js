@@ -1,4 +1,6 @@
 function nflVariables(event) {
+    //nfl.awayID = nfl.possession === nfl.awayID ? "🏈" : "";
+    //nfl.homeID = nfl.possession === nfl.homeID ? "🏈" : "";
     return {
         gameId: event.id,
         attendance: event.competitions[0].attendance,
@@ -56,6 +58,8 @@ function nflVariables(event) {
             `;
         },
         inProgressGame() {
+            const awayPossession = this.possession === this.awayID ? "🏈" : "";
+            const homePossession = this.possession === this.homeID ? "🏈" : "";
             return `
                 <div id="${this.gameId}" class="game-row scheduled">
                     <div class="team away">
@@ -65,13 +69,16 @@ function nflVariables(event) {
                             <div class="abbr">${this.awayRecord}</div>
                         </div>
                     </div>
+                    <div class="abbr">${awayPossession}</div>
                     <div class="game-center">
+                        
                         <div class="inning-outs">${this.scheduleTime}</div>
-                        <div class="abbr">${this.awayScore} - ${this.homeScore}</div>
+                        <div class="abbr">${this.awayScore} - ${this.homeScore}</div> 
                     </div>
+                    <div class="abbr">${homePossession}</div>
                     <div class="team home">
                         <div class="team-info">
-                            <div class="abbr">${this.shortHomeTeam}</div>
+                            <div class="abbr">${homePossession} ${this.shortHomeTeam}</div>
                             <div class="abbr">${this.homeRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
