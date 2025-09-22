@@ -1,6 +1,4 @@
 function nflVariables(event) {
-    //nfl.awayID = nfl.possession === nfl.awayID ? "🏈" : "";
-    //nfl.homeID = nfl.possession === nfl.homeID ? "🏈" : "";
     return {
         gameId: event.id,
         attendance: event.competitions[0].attendance,
@@ -78,7 +76,7 @@ function nflVariables(event) {
                     <div class="abbr">${homePossession}</div>
                     <div class="team home">
                         <div class="team-info">
-                            <div class="abbr">${homePossession} ${this.shortHomeTeam}</div>
+                            <div class="abbr">${this.shortHomeTeam}</div>
                             <div class="abbr">${this.homeRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
