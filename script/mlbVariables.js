@@ -94,10 +94,11 @@ function mlbVariables(game) {
                     <div class="team away">
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
-                            <div class="score">${this.awayScore}</div>
                             <div class="abbr">${this.shortAwayTeam}</div>
+                            <div class="abbr">${this.awayRecord}</div>
                         </div>
                     </div>
+                    <div class="abbr">${this.awayScore}</div>
                     <div class="game-center">
                         <div class="inning-outs">${this.shortInning} - ${this.outs}</div>
                         <div class="base-map">
@@ -106,10 +107,13 @@ function mlbVariables(game) {
                             <div class="base third-base ${this.onThird ? 'occupied' : ''}"></div>
                         </div>
                     </div>
+                                            <div class="abbr">${this.homeScore}</div>
+
                     <div class="team home">
                         <div class="team-info">
-                            <div class="score">${this.homeScore}</div>
+                            
                             <div class="abbr">${this.shortHomeTeam}</div>
+                            <div class="abbr">${this.homeRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
@@ -122,17 +126,18 @@ function mlbVariables(game) {
                     <div class="team away">
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
-                            <div class="score">${this.awayScore}</div>
                             <div class="abbr">${this.shortAwayTeam}</div>
+                            <div class="abbr">${this.awayRecord}</div>
                         </div>
                     </div>
                     <div class="game-center">
                         <div class="inning-outs">${this.shortInning}</div>
+                        <div class="inning-outs">${this.awayScore} - ${this.homeScore}</div>
                     </div>
                     <div class="team home">
                         <div class="team-info">
-                            <div class="score">${this.homeScore}</div>
                             <div class="abbr">${this.shortHomeTeam}</div>
+                            <div class="abbr">${this.homeRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>

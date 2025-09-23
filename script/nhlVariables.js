@@ -26,6 +26,7 @@ function nhlVariables(event) {
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
                             <div class="abbr">${this.shortAwayTeam}</div>
+                            <div class="abbr">${this.awayRecord}</div>
                         </div>
                     </div>
                     <div class="game-center">
@@ -37,6 +38,7 @@ function nhlVariables(event) {
                     <div class="team home">
                         <div class="team-info">
                             <div class="abbr">${this.shortHomeTeam}</div>
+                            <div class="abbr">${this.homeRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
@@ -49,8 +51,8 @@ function nhlVariables(event) {
                     <div class="team away">
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
-                            <div class="score">${this.awayScore}</div>
                             <div class="abbr">${this.shortAwayTeam}</div>
+                            <div class="abbr">${this.awayRecord}</div>
                         </div>
                     </div>
                     <div class="game-center">
@@ -59,8 +61,8 @@ function nhlVariables(event) {
                     </div>
                     <div class="team home">
                         <div class="team-info">
-                            <div class="score">${this.homeScore}</div>
                             <div class="abbr">${this.shortHomeTeam}</div>
+                            <div class="abbr">${this.homeRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
@@ -74,6 +76,7 @@ function nhlVariables(event) {
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
                             <div class="">${this.shortAwayTeam}</div>
+                            <div class="abbr">${this.awayRecord}</div>
                         </div>
                     </div>
                     <div class="game-center">
@@ -82,6 +85,7 @@ function nhlVariables(event) {
                     <div class="team home">
                         <div class="team-info">
                             <div class="">${this.shortHomeTeam}</div>
+                            <div class="abbr">${this.homeRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
@@ -95,6 +99,7 @@ function nhlVariables(event) {
                         <img src="${this.awayLogo}" class="team-logo" alt="${this.awayTeam}">
                         <div class="team-info">
                             <div class="abbr">${this.shortAwayTeam}</div>
+                            <div class="abbr">${this.awayRecord}</div>
                         </div>
                     </div>
                     <div class="game-center">
@@ -104,6 +109,7 @@ function nhlVariables(event) {
                     <div class="team home">
                         <div class="team-info">
                             <div class="abbr">${this.shortHomeTeam}</div>
+                            <div class="abbr">${this.awayRecord}</div>
                         </div>
                         <img src="${this.homeLogo}" class="team-logo" alt="${this.homeTeam}">
                     </div>
