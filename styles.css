@@ -1,0 +1,323 @@
+/* =========================
+   Base & Reset
+========================= */
+.base-map {
+    display: grid;
+    grid-template-columns: repeat(3, 10px);
+    grid-template-rows: repeat(3, 10px);
+    justify-items: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto; /* center horizontally */
+}
+
+.base {
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.first-base {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+.second-base {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.third-base {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.occupied {
+    background-color: lightblue;
+}
+
+/* =========================
+   Containers
+========================= */
+#mlb-data, #nfl-data, #cfb-data, #nhl-data, #nba-data, #cbb-data {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-left: 2%;
+}
+
+/* =========================
+   Game Row (Card)
+========================= */
+.game-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    margin: 0;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    transform: translateY(0);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 110px;
+}
+
+.hoverer:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.12);
+}
+
+/* =========================
+   Game Info & Details
+========================= */
+.game-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.game-details {
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+    color: #333;
+}
+
+.game-info p {
+    margin: 0;
+    padding: 0;
+}
+
+/* =========================
+   Buttons
+========================= */
+#back-to-main, #back-to-all, #back-to {
+    margin-bottom: 2%;
+    background-color: #eee;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#back-to-main:hover, #back-to-all:hover, #back-to:hover {
+    background-color: #ddd;
+}
+
+/* =========================
+   Logos
+========================= */
+.away-logo, .home-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.game-info img {
+    margin-right: 0.5rem;
+}
+
+/* =========================
+   Individual Game
+========================= */
+.individual-game {
+    margin-left: 10%;
+}
+
+.individual-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.individual-small-logo {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    display: none;
+}
+
+.pitcher-section .individual-details {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.individual-details::after {
+    margin-left: 30px;
+}
+
+/* Center everything in individual-center */
+.individual-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.center-item {
+    margin-top: 5px;
+    margin-bottom: 8px;
+}
+
+.individual-team-info {
+    text-align: center;
+}
+
+.second-section {
+    margin-top: 10px;
+}
+
+/* =========================
+   Responsive Design
+========================= */
+@media (max-width: 1000px) {
+    #mlb-data, #nfl-data, #cfb-data, #nhl-data, #nba-data, #cbb-data {
+        grid-template-columns: 1fr;
+    }
+
+    .away-logo, .home-logo {
+        width: 20%;
+        height: 20%;
+    }
+
+    .individual-small-logo {
+        display: inline-block;
+    }
+
+    .game-row {
+        min-height: 70px;
+    }
+
+    .individual-game-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+        "away home"
+        "center center";
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .individual-game-row .away { grid-area: away; }
+    .individual-game-row .home { grid-area: home; }
+    .individual-game-row .individual-center { grid-area: center; }
+
+    /* Center logos + text under them */
+    .individual-game-row .team {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Add spacing under odds (last center item) */
+    .individual-game-row .individual-center .center-item:last-child {
+        margin-bottom: 0.75rem;
+    }
+
+    .second-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .second-section .individual-center {
+        order: 0;
+        margin-bottom: 0.5rem;
+    }
+
+    .second-section .team.away,
+    .second-section .team.home {
+        order: 1;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* =========================
+   In-Progress / Scheduled / Over Game Layout
+========================= */
+.game-row.in-progress,
+.game-row.scheduled,
+.game-row.over {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-row.in-progress .team,
+.game-row.scheduled .team,
+.game-row.over .team {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.game-row.in-progress .team.away,
+.game-row.scheduled .team.away,
+.game-row.over .team.away {
+    flex-direction: row;
+}
+
+.game-row.in-progress .team.home,
+.game-row.scheduled .team.home,
+.game-row.over .team.home {
+    flex-direction: row-reverse;
+}
+
+.game-row.in-progress .team-logo,
+.game-row.scheduled .team-logo,
+.game-row.over .team-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.game-row.in-progress .team-info,
+.game-row.scheduled .team-info,
+.game-row.over .team-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.game-row.in-progress .score,
+.game-row.scheduled .score,
+.game-row.over .score {
+    font-weight: bold;
+}
+
+.game-row.in-progress .abbr,
+.game-row.scheduled .abbr,
+.game-row.over .abbr {
+    color: #555;
+}
+
+.game-row.in-progress .game-center,
+.game-row.scheduled .game-center,
+.game-row.over .game-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.game-row.in-progress .inning-outs,
+.game-row.scheduled .inning-outs,
+.game-row.over .inning-outs {
+    font-weight: 550;
+}
+
+.inning-outs {
+    margin-bottom: 5px;
+}
