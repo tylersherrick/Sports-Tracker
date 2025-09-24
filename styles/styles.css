@@ -176,7 +176,7 @@
 /* =========================
    Responsive Design
 ========================= */
-@media (max-width: 750px) {
+@media (max-width: 1000px) {
     #mlb-data, #nfl-data, #cfb-data, #nhl-data, #nba-data, #cbb-data {
         grid-template-columns: 1fr;
     }
