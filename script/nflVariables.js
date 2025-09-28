@@ -71,7 +71,8 @@ function nflVariables(event) {
                     <div class="game-center">
                         
                         <div class="inning-outs">${this.scheduleTime}</div>
-                        <div class="abbr">${this.awayScore} - ${this.homeScore}</div> 
+                        <div class="inning-outs">${this.ballPosition}</div> 
+                        <div class="inning-outs">${this.awayScore} - ${this.homeScore}</div> 
                     </div>
                     <div class="abbr">${homePossession}</div>
                     <div class="team home">
